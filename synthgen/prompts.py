@@ -287,9 +287,8 @@ Description of the synthetic dataset with the given information with bullet poin
 Remember, the generated description would be used to describe the synthetic dataset which is created based on the given information.
 Remember, the generated description should be informative, detailed but at the same time relevant to the given information.
 Remember, the generated description must be generated always on English.
-Remember, the generated description must be structured by using the Valid Markdown rules, to look clean and easy to read/
+Remember, the generated description must be structured by using the Valid Markdown rules, to look clean and easy to read
 Remember, try to use bullet points(list items) to make the description more structured and easy to read.
-Remember, the task categories must have the correct values based on the dataset type (text-generation or question-answering).
 """
 
 MARKDOWN_DESCRIPTION_USER_PROMPT = """
