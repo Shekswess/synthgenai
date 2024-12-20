@@ -1,4 +1,4 @@
-"""SynthGen package for generating Synthetic Raw, Instruction, and Preference Datasets."""
+"""SynthGen - Package for generating Synthetic Raw, Instruction, and Preference Datasets."""
 
 from .dataset_generator import (
     RawDatasetGenerator,

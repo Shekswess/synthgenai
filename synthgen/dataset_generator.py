@@ -2,13 +2,14 @@
 
 from loguru import logger
 from pydantic import ValidationError
+import time
 
 from .data_model import (
     DatasetGeneratorConfig,
     EntryInstructDataset,
     EntryPreferenceDataset,
     EntryRawDataset,
-    EntryKeywords
+    EntryKeywords,
 )
 from .dataset import Dataset
 from .llm import LLM
@@ -80,7 +81,11 @@ class DatasetGenerator:
                 num_keywords=remaining_keywords,
             )
             response = self.llm.generate(messages)
-            response = convert_json(response)
+            try:
+                response = convert_json(response)
+            except ValueError as e:
+                logger.error(f"Invalid JSON response: {e}, retrying...")
+                continue
             new_keywords = response.get("keywords", [])
             if not new_keywords:
                 logger.warning("No new keywords generated, breaking the loop")
@@ -89,6 +94,9 @@ class DatasetGenerator:
             logger.info(
                 f"Generated {len(new_keywords)} new keywords, {len(keywords)} total keywords"
             )
+        if len(keywords) > num_keywords:
+            logger.warning("More keywords generated than required, truncating")
+            keywords = keywords[:num_keywords]
         try:
             keywords = EntryKeywords(keywords=keywords)
         except ValidationError as e:
@@ -141,13 +149,22 @@ class DatasetGenerator:
             if entry:
                 data.append(entry)
                 logger.info(f"Generated entry for keyword: {keyword}")
+                logger.info(f"Number of entry generated: {len(data)}")
+            else:
+                logger.warning(
+                    f"Skipping entry for keyword: {keyword} due to validation error"
+                )
         self.dataset.set_data(data)
 
     def generate_dataset(self):
         """Generate the complete dataset."""
+        start_time = time.time()
         self._generate_keywords()
         self._generate_description()
         self._generate_entries()
+        end_time = time.time()
+        total_time = end_time - start_time
+        logger.info(f"Total time taken to generate dataset: {total_time:.2f} seconds")
         return self.dataset
 
 

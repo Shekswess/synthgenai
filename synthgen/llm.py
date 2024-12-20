@@ -3,8 +3,13 @@
 import os
 
 import litellm
-from litellm import completion, get_supported_openai_params, supports_response_schema
+from litellm import (
+    completion,
+    get_supported_openai_params,
+    supports_response_schema,
+)
 from loguru import logger
+
 
 from .data_model import InputMessage, LLMConfig
 
