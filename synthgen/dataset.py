@@ -224,7 +224,7 @@ class Dataset:
                     )
                 hf_token = self._get_hf_token(hf_token)
                 if not repo_exists(repo_id=hf_repo_name):
-                    create_repo(repo_id=hf_repo_name, token=hf_token)
+                    create_repo(repo_id=hf_repo_name, token=hf_token, repo_type="dataset")
                     logger.info(f"Created new Hugging Face repo: {hf_repo_name}")
 
                 hf_dataset.push_to_hub(
