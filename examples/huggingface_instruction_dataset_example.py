@@ -1,5 +1,7 @@
 """Example of generating a instruction dataset using the Hugging Face API"""
 
+# For asynchronous dataset generation
+# import asyncio
 import os
 
 from synthgen import (
@@ -41,6 +43,9 @@ if __name__ == "__main__":
 
     # Generating the dataset
     dataset = dataset_generator.generate_dataset()
+
+    # Generating the dataset asynchronously
+    # dataset = asyncio.run(dataset_generator.agenerate_dataset())
 
     # Saving the dataset to the locally and to the Hugging Face repository
     dataset.save_dataset(
