@@ -8,6 +8,7 @@ from synthgen.llm import LLM
 
 
 def test_llm_initialization(monkeypatch):
+    """Test the initialization of the LLM class."""
     monkeypatch.setenv("OPENAI_API_KEY", "api_key")
     llm_config = LLMConfig(
         model="gpt-3.5-turbo", temperature=0.7, top_p=0.9, max_tokens=1100
@@ -20,6 +21,7 @@ def test_llm_initialization(monkeypatch):
 
 
 def test_check_allowed_models():
+    """Test the _check_allowed_models method."""
     llm_config = LLMConfig(
         model="disallowed-model", temperature=0.7, top_p=0.9, max_tokens=1100
     )
@@ -28,6 +30,7 @@ def test_check_allowed_models():
 
 
 def test_check_llm_api_keys(monkeypatch):
+    """Test the _check_llm_api_keys method."""
     monkeypatch.setenv("OPENAI_API_KEY", "api_key")
     llm_config = LLMConfig(
         model="gpt-3.5-turbo", temperature=0.7, top_p=0.9, max_tokens=1100
@@ -37,6 +40,7 @@ def test_check_llm_api_keys(monkeypatch):
 
 
 def test_check_langfuse_api_keys(monkeypatch):
+    """Test the _check_langfuse_api_keys method."""
     monkeypatch.setenv("LANGFUSE_PUBLIC_KEY", "public_key")
     monkeypatch.setenv("LANGFUSE_SECRET_KEY", "secret_key")
     monkeypatch.setenv("LANGFUSE_HOST", "host")
@@ -50,6 +54,7 @@ def test_check_langfuse_api_keys(monkeypatch):
 
 
 def test_check_ollama():
+    """Test the _check_ollama method"""
     llm_config = LLMConfig(
         model="ollama/model", temperature=0.7, top_p=0.9, max_tokens=1100
     )

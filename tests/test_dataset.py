@@ -43,6 +43,7 @@ This synthetic dataset focuses on AI, machine learning, and deep learning applic
 
 
 def test_dataset_initialization():
+    """Test the initialization of the Dataset class."""
     dataset_config = DatasetConfig(
         topic="Test Topic",
         domains=["domain1", "domain2"],
@@ -59,6 +60,7 @@ def test_dataset_initialization():
 
 
 def test_getters_and_setters():
+    """Test the getters and setters of the Dataset class."""
     dataset_config = DatasetConfig(
         topic="Test Topic",
         domains=["domain1", "domain2"],
@@ -67,8 +69,8 @@ def test_getters_and_setters():
         num_entries=10,
     )
     dataset = Dataset(dataset_config)
-    dataset.set_dataset_type("Test Type")
-    assert dataset.get_dataset_type() == "Test Type"
+    dataset.set_dataset_type("Instruction Dataset")
+    assert dataset.get_dataset_type() == "Instruction Dataset"
     dataset.set_description("Test Description")
     assert dataset.get_description() == "Test Description"
     dataset.set_keywords(["keyword1", "keyword2"])
@@ -78,6 +80,7 @@ def test_getters_and_setters():
 
 
 def test_prepare_local_save(monkeypatch):
+    """Test the _prepare_local_save method of the Dataset class."""
     dataset_config = DatasetConfig(
         topic="Test Topic",
         domains=["domain1", "domain2"],
@@ -92,6 +95,7 @@ def test_prepare_local_save(monkeypatch):
 
 
 def test_get_hf_token(monkeypatch):
+    """Test the _get_hf_token method of the Dataset class."""
     dataset_config = DatasetConfig(
         topic="Test Topic",
         domains=["domain1", "domain2"],
