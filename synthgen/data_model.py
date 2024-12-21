@@ -1,7 +1,7 @@
 """Pydantic models for the SynthGen package."""
 
 from enum import Enum
-from typing import Literal, Union
+from typing import Literal
 
 from pydantic import BaseModel, Field
 
@@ -107,25 +107,18 @@ class EntryInstructDataset(BaseModel):
     generated_text: InstructGeneratedText
 
 
-class SystemUserPreferenceMessage(BaseModel):
+class PreferenceMessage(BaseModel):
     """Pydantic model for a message in the Preference dataset."""
 
-    role: Literal["system", "user"]
+    role: Literal["user", "system", "assistant"]
     content: str
-
-
-class AssistantPreferenceMessage(BaseModel):
-    """Pydantic model for a message in the Preference dataset."""
-
-    role: Literal["assistant"]
-    content: str
-    option: Literal["chosen", "rejected"]
+    option: Literal["chosen", "rejected"] = None
 
 
 class PreferenceGeneratedText(BaseModel):
     """Pydantic model for the generated text in the Preference dataset."""
 
-    messages: list[Union[SystemUserPreferenceMessage, AssistantPreferenceMessage]]
+    messages: list[PreferenceMessage]
 
 
 class EntryPreferenceDataset(BaseModel):
