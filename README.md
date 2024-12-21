@@ -4,6 +4,9 @@
 
 SynthGen is a package for generating Synthetic Raw, Instruction, and Preference Datasets. The idea is to have a tool which is simple to use and can generate datasets on different topics by utilizing LLMs from different API providers. The package is designed to be modular and can be easily extended to include some different API providers for LLMs and new features.
 
+> [!IMPORTANT]
+> The package is still in the early stages of development and some features may not be fully implemented or tested. If you find any issues or have any suggestions, feel free to open an issue or create a pull request.
+
 ## Why SynthGen now? 🤔
 
 Interest in synthetic data generation has surged recently, driven by the growing recognition of data as a critical asset in AI development. As Ilya Sutskever, one of the most important figures in AI, says: 'Data is the fossil fuel of AI.' The more quality data we have, the better our models can perform. However, access to data is often restricted due to privacy concerns, or it may be prohibitively expensive to collect. Additionally, the vast amount of high-quality data on the internet has already been extensively mined. Synthetic data generation addresses these challenges by allowing us to create diverse and useful datasets using current pre-trained Large Language Models (LLMs). Beyond LLMs, synthetic data also holds immense potential for training and fine-tuning Small Language Models (SLMs), which are gaining popularity due to their efficiency and suitability for specific, resource-constrained applications. By leveraging synthetic data for both LLMs and SLMs, we can enhance performance across a wide range of use cases while balancing resource efficiency and model effectiveness. This approach enables us to harness the strengths of both synthetic and authentic datasets to achieve optimal outcomes.
@@ -411,4 +414,38 @@ This project is licensed under the MIT License - see the LICENSE.md file for det
 
 ## Repo Structure 📂
 
-To be added
+```
+.
+├── .github
+│   └── workflows
+│       ├── build_n_release.yml
+│       └── tests.yml
+├── assets
+│   └── logo_header.png
+├── examples
+│   ├── anthropic_instruction_dataset_example.py
+│   ├── bedrock_raw_dataset_example.py
+│   ├── gemini_langfuse_raw_dataset_example.py
+│   ├── groq_preference_dataset_example.py
+│   ├── huggingface_instruction_dataset_example.py
+│   ├── mistral_preference_dataset_example.py
+│   ├── ollama_preference_dataset_example.py
+│   └── openai_raw_dataset_example.py
+├── synthgen
+│   ├── data_model.py
+│   ├── dataset_generator.py
+│   ├── dataset.py
+│   ├── __init__.py
+│   ├── llm.py
+│   ├── prompts.py
+│   └── utils.py
+├── tests
+│   ├── test_dataset.py
+│   └── test_llm.py
+├── .gitignore
+├── .python-version
+├── LICENSE
+├── pyproject.toml
+├── README.md
+└── uv.lock
+```
