@@ -1,6 +1,7 @@
 """Dataset Module"""
 
 import os
+import random
 import re
 
 from datasets import Dataset as HFDataset
@@ -71,6 +72,15 @@ class Dataset:
             str: The additional description of the dataset.
         """
         return self.additional_description
+
+    def set_num_keywords(self, num_keywords: int):
+        """
+        Set the number of keywords for the dataset.
+
+        Args:
+            num_keywords (int): The number of keywords for the dataset.
+        """
+        self.num_keywords = num_keywords
 
     def get_num_keywords(self) -> int:
         """
@@ -205,6 +215,7 @@ class Dataset:
         """
         try:
             dataset_path = self._prepare_local_save(dataset_path)
+            random.shuffle(self.data)
             hf_dataset = HFDataset.from_list(mapping=self.data, split="train")
             hf_dataset.save_to_disk(os.path.join(dataset_path, "data"))
             logger.info(f"Dataset saved locally at {dataset_path}")
