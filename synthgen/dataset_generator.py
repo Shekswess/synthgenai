@@ -1,15 +1,17 @@
 """Dataset Generator module."""
 
+import asyncio
+import time
+
 from loguru import logger
 from pydantic import ValidationError
-import time
 
 from .data_model import (
     DatasetGeneratorConfig,
     EntryInstructDataset,
+    EntryKeywords,
     EntryPreferenceDataset,
     EntryRawDataset,
-    EntryKeywords,
 )
 from .dataset import Dataset
 from .llm import LLM
@@ -25,7 +27,9 @@ from .prompts import (
     MARKDOWN_DESCRIPTION_SYSTEM_PROMPT,
     MARKDOWN_DESCRIPTION_USER_PROMPT,
 )
-from .utils import convert_json
+from .utils import convert_json_entry, convert_json_keywords
+
+BATCH_SIZE = 5
 
 
 class DatasetGenerator:
@@ -74,15 +78,15 @@ class DatasetGenerator:
             messages = self._create_messages(
                 KEYWORD_SYSTEM_PROMPT,
                 KEYWORD_USER_PROMPT,
-                topic=self.dataset.topic,
-                domains=", ".join(self.dataset.domains),
-                language=self.dataset.language,
-                additional_description=self.dataset.additional_description,
+                topic=self.dataset.get_topic(),
+                domains=", ".join(self.dataset.get_domains()),
+                language=self.dataset.get_language(),
+                additional_description=self.dataset.get_additional_description(),
                 num_keywords=remaining_keywords,
             )
             response = self.llm.generate(messages)
             try:
-                response = convert_json(response)
+                response = convert_json_keywords(response)
             except ValueError as e:
                 logger.error(f"Invalid JSON response: {e}, retrying...")
                 continue
@@ -107,7 +111,9 @@ class DatasetGenerator:
     def _generate_description(self):
         """Generate a description for the dataset."""
         logger.info("Generating dataset description")
+        tmp_llm_temperature = self.llm.get_temperature()
         self.llm.set_response_format(None)
+        self.llm.set_temperature(None)
         messages = self._create_messages(
             MARKDOWN_DESCRIPTION_SYSTEM_PROMPT,
             MARKDOWN_DESCRIPTION_USER_PROMPT,
@@ -121,9 +127,10 @@ class DatasetGenerator:
         )
         response = self.llm.generate(messages)
         self.dataset.set_description(response)
+        self.llm.set_temperature(tmp_llm_temperature)
         logger.info("Dataset description generated")
 
-    def _generate_entry(self, keyword: str) -> str:
+    def _generate_entry(self, keyword: str):
         """
         Generate an entry for the dataset. Must be implemented by subclasses.
 
@@ -132,9 +139,42 @@ class DatasetGenerator:
         """
         raise NotImplementedError("Subclasses must implement _generate_entry")
 
+    async def _agenerate_entry(self, keyword: str):
+        """
+        Generate an entry for the dataset asynchronously. Must be implemented by subclasses.
+
+        Args:
+            keyword (str): The keyword for which to generate the entry.
+        """
+        raise NotImplementedError("Subclasses must implement _generate_aentry")
+
     def _set_dataset_type(self):
         """Set the dataset type. Must be implemented by subclasses."""
         raise NotImplementedError("Subclasses must implement _set_dataset_type")
+
+    async def _agenerate_entries(self):
+        """Generate entries for the dataset asynchronously."""
+        logger.info("Generating entries for dataset asynchronously")
+        if self.llm.check_response_format():
+            self.llm.set_response_format({"type": "json_object"})
+        self._set_dataset_type()
+        data = []
+        keywords = self.dataset.get_keywords()
+        for i in range(0, len(keywords), BATCH_SIZE):
+            batch_keywords = keywords[i: i + BATCH_SIZE]
+            tasks = [self._agenerate_entry(keyword) for keyword in batch_keywords]
+            entries = await asyncio.gather(*tasks)
+            time.sleep(10)
+            for keyword, entry in zip(batch_keywords, entries):
+                if entry:
+                    data.append(entry)
+                    logger.info(f"Generated entry for keyword: {keyword}")
+                    logger.info(f"Number of entries generated: {len(data)}")
+                else:
+                    logger.warning(
+                        f"Skipping entry for keyword: {keyword} due to validation error"
+                    )
+        self.dataset.set_data(data)
 
     def _generate_entries(self):
         """Generate entries for the dataset."""
@@ -160,8 +200,31 @@ class DatasetGenerator:
         """Generate the complete dataset."""
         start_time = time.time()
         self._generate_keywords()
-        self._generate_description()
         self._generate_entries()
+        num_entries = len(self.dataset.get_data())
+        if num_entries != self.dataset.get_num_keywords():
+            logger.warning(
+                f"Lower number of entries generated than required: {num_entries}, because of validation errors"
+            )
+            self.dataset.set_num_keywords(num_entries)
+        self._generate_description()
+        end_time = time.time()
+        total_time = end_time - start_time
+        logger.info(f"Total time taken to generate dataset: {total_time:.2f} seconds")
+        return self.dataset
+
+    async def agenerate_dataset(self):
+        """Generate the complete dataset asynchronously."""
+        start_time = time.time()
+        self._generate_keywords()
+        await self._agenerate_entries()
+        num_entries = len(self.dataset.get_data())
+        if num_entries != self.dataset.get_num_keywords():
+            logger.warning(
+                f"Lower number of entries generated than required: {num_entries}, because of validation errors"
+            )
+            self.dataset.set_num_keywords(num_entries)
+        self._generate_description()
         end_time = time.time()
         total_time = end_time - start_time
         logger.info(f"Total time taken to generate dataset: {total_time:.2f} seconds")
@@ -175,7 +238,7 @@ class RawDatasetGenerator(DatasetGenerator):
         """Set the dataset type to 'Raw Dataset'."""
         self.dataset.set_dataset_type("Raw Dataset")
 
-    def _generate_entry(self, keyword: str) -> str:
+    def _generate_entry(self, keyword: str) -> dict:
         """
         Generate a raw dataset entry for the given keyword.
 
@@ -183,7 +246,7 @@ class RawDatasetGenerator(DatasetGenerator):
             keyword (str): The keyword for which to generate the entry.
 
         Returns:
-            str: The generated raw dataset entry.
+            dict: The generated raw dataset entry.
 
         Raises:
             ValidationError: If the generated entry does not match the data model.
@@ -196,8 +259,38 @@ class RawDatasetGenerator(DatasetGenerator):
             language=self.dataset.get_language(),
         )
         response = self.llm.generate(messages)
-        response = convert_json(response)
         try:
+            response = convert_json_entry(response)
+            entry = EntryRawDataset(**response)
+            logger.debug(f"Raw dataset entry: {entry}")
+        except ValidationError as e:
+            logger.error(f"Validation error for keyword {keyword}: {e}")
+            return None
+        return entry.model_dump()
+
+    async def _agenerate_entry(self, keyword: str) -> dict:
+        """
+        Generate a raw dataset entry for the given keyword asynchronously.
+
+        Args:
+            keyword (str): The keyword for which to generate the entry.
+
+        Returns:
+            dict: The generated raw dataset entry.
+
+        Raises:
+            ValidationError: If the generated entry does not match the data model.
+        """
+        messages = self._create_messages(
+            ENTRY_RAW_DATASET_SYSTEM_PROMPT,
+            ENTRY_RAW_DATASET_USER_PROMPT,
+            keyword=keyword,
+            topic=self.dataset.get_topic(),
+            language=self.dataset.get_language(),
+        )
+        response = await self.llm.agenerate(messages)
+        try:
+            response = convert_json_entry(response)
             entry = EntryRawDataset(**response)
             logger.debug(f"Raw dataset entry: {entry}")
         except ValidationError as e:
@@ -213,7 +306,7 @@ class InstructionDatasetGenerator(DatasetGenerator):
         """Set the dataset type to 'Instruction Dataset'."""
         self.dataset.set_dataset_type("Instruction Dataset")
 
-    def _generate_entry(self, keyword: str) -> str:
+    def _generate_entry(self, keyword: str) -> dict:
         """
         Generate an instruction dataset entry for the given keyword.
 
@@ -221,7 +314,7 @@ class InstructionDatasetGenerator(DatasetGenerator):
             keyword (str): The keyword for which to generate the entry.
 
         Returns:
-            str: The generated instruction dataset entry.
+            dict: The generated instruction dataset entry.
 
         Raises:
             ValidationError: If the generated entry does not match the data model.
@@ -234,8 +327,38 @@ class InstructionDatasetGenerator(DatasetGenerator):
             language=self.dataset.get_language(),
         )
         response = self.llm.generate(messages)
-        response = convert_json(response)
         try:
+            response = convert_json_entry(response)
+            entry = EntryInstructDataset(**response)
+            logger.debug(f"Instruction dataset entry: {entry}")
+        except ValidationError as e:
+            logger.error(f"Validation error for keyword {keyword}: {e}")
+            return None
+        return entry.model_dump()
+
+    async def _agenerate_entry(self, keyword: str) -> dict:
+        """
+        Generate an instruction dataset entry for the given keyword asynchronously.
+
+        Args:
+            keyword (str): The keyword for which to generate the entry.
+
+        Returns:
+            dict: The generated instruction dataset entry.
+
+        Raises:
+            ValidationError: If the generated entry does not match the data model.
+        """
+        messages = self._create_messages(
+            ENTRY_INSTRUCT_SYSTEM_PROMPT,
+            ENTRY_INSTRUCT_USER_PROMPT,
+            keyword=keyword,
+            topic=self.dataset.get_topic(),
+            language=self.dataset.get_language(),
+        )
+        response = await self.llm.agenerate(messages)
+        try:
+            response = convert_json_entry(response)
             entry = EntryInstructDataset(**response)
             logger.debug(f"Instruction dataset entry: {entry}")
         except ValidationError as e:
@@ -251,7 +374,7 @@ class PreferenceDatasetGenerator(DatasetGenerator):
         """Set the dataset type to 'Preference Dataset'."""
         self.dataset.set_dataset_type("Preference Dataset")
 
-    def _generate_entry(self, keyword: str) -> str:
+    def _generate_entry(self, keyword: str) -> dict:
         """
         Generate a preference dataset entry for the given keyword.
 
@@ -259,7 +382,7 @@ class PreferenceDatasetGenerator(DatasetGenerator):
             keyword (str): The keyword for which to generate the entry.
 
         Returns:
-            str: The generated preference dataset entry.
+            dict: The generated preference dataset entry.
 
         Raises:
             ValidationError: If the generated entry does not match the data model.
@@ -272,8 +395,38 @@ class PreferenceDatasetGenerator(DatasetGenerator):
             language=self.dataset.get_language(),
         )
         response = self.llm.generate(messages)
-        response = convert_json(response)
         try:
+            response = convert_json_entry(response)
+            entry = EntryPreferenceDataset(**response)
+            logger.debug(f"Preference dataset entry: {entry}")
+        except ValidationError as e:
+            logger.error(f"Validation error for keyword {keyword}: {e}")
+            return None
+        return entry.model_dump()
+
+    async def _agenerate_entry(self, keyword: str) -> dict:
+        """
+        Generate a preference dataset entry for the given keyword asynchronously.
+
+        Args:
+            keyword (str): The keyword for which to generate the entry.
+
+        Returns:
+            dict: The generated preference dataset entry.
+
+        Raises:
+            ValidationError: If the generated entry does not match the data model.
+        """
+        messages = self._create_messages(
+            ENTRY_PREFERENCE_SYSTEM_PROMPT,
+            ENTRY_PREFERENCE_USER_PROMPT,
+            keyword=keyword,
+            topic=self.dataset.get_topic(),
+            language=self.dataset.get_language(),
+        )
+        response = await self.llm.agenerate(messages)
+        try:
+            response = convert_json_entry(response)
             entry = EntryPreferenceDataset(**response)
             logger.debug(f"Preference dataset entry: {entry}")
         except ValidationError as e:
