@@ -1,11 +1,12 @@
 """Utility functions for the SynthGen package."""
 
 import json
+
 import yaml
 from loguru import logger
 
 
-def convert_json(response) -> dict:
+def convert_json_keywords(response) -> dict:
     """
     Convert a JSON string response to a dictionary.
 
@@ -31,6 +32,36 @@ def convert_json(response) -> dict:
     if not isinstance(response, dict):
         logger.error("LLM isn't returning a valid JSON object")
         raise TypeError("LLM isn't returning a valid JSON object")
+
+    return response
+
+
+def convert_json_entry(response) -> dict:
+    """
+    Convert a JSON string response to a dictionary.
+
+    Args:
+        response (str): The JSON string response.
+
+    Returns:
+        dict: The converted dictionary.
+
+    Raises:
+        ValueError: If the JSON response is invalid.
+        TypeError: If the response is not a valid JSON object.
+    """
+    if "```json" in response:
+        response = response.replace("```json", "").replace("```", "")
+
+    try:
+        response = json.loads(response)
+    except json.JSONDecodeError:
+        logger.error("Invalid JSON response")
+        response = {}
+
+    if not isinstance(response, dict):
+        logger.error("LLM isn't returning a valid JSON object")
+        response = {}
 
     return response
 
@@ -94,7 +125,6 @@ def merge_metadata(hf_generated_card: str, llm_generated_card: str) -> str:
         raise ValueError("Invalid YAML string: missing sections")
 
     merged_metadata = {**hf_generated_card_metadata, **llm_generated_card_metadata}
-
 
     merged_yaml = yaml.dump(merged_metadata, default_flow_style=False)
 
