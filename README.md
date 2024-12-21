@@ -1,4 +1,4 @@
-# SynthGen - Package for generating Synthetic Raw, Instruction, and Preference Datasets.
+# SynthGen - Package for Generating  Raw, Instruction, and Preference Synthetic Datasets.
 
 ![header_logo_image](./assets/logo_header.png)
 
@@ -6,7 +6,7 @@ SynthGen is a package for generating Synthetic Raw, Instruction, and Preference 
 
 ## Why SynthGen now? 🤔
 
-Recently, there has been a lot of interest in the field of synthetic data generation. As one of the most important people in AI, Ilya Sutskever, says: "Data is the fossil fuel of AI.". The more data we have, the better models we can train. However, in many cases, the data is not available due to privacy concerns, or it is too expensive to collect. This is where synthetic data generation comes into play. By generating synthetic data using current pre-trained LLMs, we can train new models on it and then fine-tune them on real data. This way, we can get the best of both worlds.
+Interest in synthetic data generation has surged recently, driven by the growing recognition of data as a critical asset in AI development. As Ilya Sutskever, one of the most important figures in AI, says: 'Data is the fossil fuel of AI.' The more quality data we have, the better our models can perform. However, access to data is often restricted due to privacy concerns, or it may be prohibitively expensive to collect. Additionally, the vast amount of high-quality data on the internet has already been extensively mined. Synthetic data generation addresses these challenges by allowing us to create diverse and useful datasets using current pre-trained Large Language Models (LLMs). Beyond LLMs, synthetic data also holds immense potential for training and fine-tuning Small Language Models (SLMs), which are gaining popularity due to their efficiency and suitability for specific, resource-constrained applications. By leveraging synthetic data for both LLMs and SLMs, we can enhance performance across a wide range of use cases while balancing resource efficiency and model effectiveness. This approach enables us to harness the strengths of both synthetic and authentic datasets to achieve optimal outcomes.
 
 ## Tools used for building SynthGen 🧰
 
@@ -43,14 +43,57 @@ pip install ./dist/synthgen-{version}-py3-none-any.whl
 
 ## Usage 👨‍💻
 
-### Quick Start
+### Quick Start 🏃
+
+The available API providers for LLMs are:
+- **Groq**
+- **Mistral AI**
+- **Gemini**
+- **Bedrock**
+- **Anthropic**
+- **OpenAI**
+- **Hugging Face**
+- **Ollama**
+
+For observing the generated datasets, you can use **Langfuse** for tracebility and monitoring of the LLMs.
+
+To use the LLMs from different API providers, to observe the generated datasets, and to save the generated datasets on Hugging Face Hub, you need to set the following environment variables:
+```
+# API keys for different LLM providers
+GROQ_API_KEY=
+MISTRAL_API_KEY=
+GEMINI_API_KEY=
+AWS_ACCESS_KEY_ID=
+AWS_SECRET_ACCESS_KEY=
+AWS_REGION=
+AWS_PROFILE=
+ANTHROPIC_API_KEY=
+OPENAI_API_KEY=
+HUGGINGFACE_API_KEY=
+
+# Langfuse API keys
+LANGFUSE_PUBLIC_KEY=
+LANGFUSE_SECRET_KEY=
+LANGFUSE_HOST=
+
+# Huggingface token for uploading datasets on Huggingface
+HF_TOKEN=
+```
 
 Currently there are three types of datasets that can be generated using SynthGen:
-- Raw Datasets
-- Instruction Datasets
-- Preference Datasets
+- **Raw Datasets**
+- **Instruction Datasets**
+- **Preference Datasets**
 
-#### Raw Datasets
+The datasets can be generated:
+- **Synchronously** - each dataset entry is generated one by one
+- **Asynchronously** - batch of dataset entries is generated at once
+
+> [!NOTE]
+> Asynchronous generation is faster than synchronous generation, but some of LLM providers can have limitations on the number of tokens that can be generated at once.
+
+#### Raw Datasets 🟢
+
 To generate a raw dataset, you can use the following code:
 
 ```python
@@ -103,6 +146,10 @@ raw_dataset_generator = RawDatasetGenerator(dataset_generator_config)
 # Generating the dataset
 raw_dataset = raw_dataset_generator.generate_dataset()
 
+# Generating the dataset asynchroniously
+# raw_dataset = raw_dataset_generator.agenerate_dataset()
+
+# Name of the Hugging Face repository where the dataset will be saved
 hf_repo_name = "organization_or_user_name/dataset_name" # optional
 
 # Saving the dataset to the locally and to the Hugging Face repository(optional)
@@ -125,7 +172,7 @@ Example of generated entry for the raw dataset:
 }
 ```
 
-#### Instruction Datasets
+#### Instruction Datasets 💬
 
 To generate an instruction dataset, you can use the following code:
 
@@ -179,6 +226,10 @@ instruction_dataset_generator = InstructionDatasetGenerator(dataset_generator_co
 # Generating the dataset
 instruction_dataset = instruction_dataset_generator.generate_dataset()
 
+# Generating the dataset asynchroniously
+# instruction_dataset = instruction_dataset_generator.agenerate_dataset()
+
+# Name of the Hugging Face repository where the dataset will be saved
 hf_repo_name = "organization_or_user_name/dataset_name" # optional
 
 # Saving the dataset to the locally and to the Hugging Face repository(optional)
@@ -199,7 +250,7 @@ Example of generated entry for the instruction dataset:
         "messages": [
             {
                 "role": "system",
-                "content": "generated system(instruction) prompt"
+                "content": "generated system (instruction) prompt"
             },
             {
                 "role": "user",
@@ -214,7 +265,7 @@ Example of generated entry for the instruction dataset:
 }
 ```
 
-#### Preference Datasets
+#### Preference Datasets 🌟
 
 To generate a preference dataset, you can use the following code:
 
@@ -248,7 +299,6 @@ llm_config = LLMConfig(
 )
 
 # Creating the DatasetConfig
-
 dataset_config = DatasetConfig(
     topic="topic_name",
     domains=["domain1", "domain2"],
@@ -269,6 +319,10 @@ preference_dataset_generator = PreferenceDatasetGenerator(dataset_generator_conf
 # Generating the dataset
 preference_dataset = preference_dataset_generator.generate_dataset()
 
+# Generating the dataset asynchroniously
+# preference_dataset = preference_dataset_generator.agenerate_dataset()
+
+# Name of the Hugging Face repository where the dataset will be saved
 hf_repo_name = "organization_or_user_name/dataset_name" # optional
 
 # Saving the dataset to the locally and to the Hugging Face repository(optional)
@@ -289,11 +343,13 @@ Example of generated entry for the preference dataset:
         "messages": [
             {
                 "role": "system",
-                "content": "generated system(instruction) prompt"
+                "content": "generated system (instruction) prompt",
+                "option": null
             },
             {
                 "role": "user",
-                "content": "generated user prompt"
+                "content": "generated user prompt",
+                "option": null
             },
             {
                 "role": "assistant",
@@ -310,7 +366,7 @@ Example of generated entry for the preference dataset:
 }
 ```
 
-#### More Examples
+#### More Examples 📖
 
 More examples with different combinations of LLM API providers and dataset configurations can be found in the [examples](./examples) directory.
 
@@ -331,13 +387,17 @@ Examples of generated synthetic datasets can be found on the [SynthGen Datasets 
 - [x] [OpenAI](https://openai.com) - more info about OpenAI models that can be used, can be found [here](https://docs.litellm.ai/docs/providers/openai)
 - [x] [Hugging Face](https://huggingface.co/) - more info about Hugging Face models that can be used, can be found [here](https://docs.litellm.ai/docs/providers/hugging-face)
 - [x] [Ollama](https://ollama.com/) - more info about Ollama models that can be used, can be found [here](https://docs.litellm.ai/docs/providers/ollama)
+- [ ] [SageMaker](https://aws.amazon.com/sagemaker/) - needs to be added 
+- [ ] [Azure](https://azure.microsoft.com/en-us/services/machine-learning/) - needs to be added
+- [ ] [Vertex AI](https://cloud.google.com/vertex-ai) - needs to be added
+- [ ] [vLLM](https://vllm.ai/) - needs to be added
 
 ## Next Steps 🚀
 
+- [ ] Code refactoring, removing redundant code and improving the code quality
 - [ ] Add more API providers for LLMs (SageMaker, Azure, Vertex AI, vLLM, etc.)
 - [ ] Add more configuration options for the datasets
 - [ ] Add different types of datasets (e.g. QA, Translation, Summarization, Classification)
-- [ ] Add asynchronous generation of datasets
 - [ ] Add CLI for generating datasets
 - [ ] Add more examples and tutorials
 
