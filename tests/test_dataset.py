@@ -2,8 +2,8 @@
 
 import os
 
-from synthgen.data_model import DatasetConfig
-from synthgen.dataset import Dataset
+from synthgenai.data_model import DatasetConfig
+from synthgenai.dataset import Dataset
 
 TEST_STRING = """
 ```

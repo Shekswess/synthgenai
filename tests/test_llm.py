@@ -3,8 +3,8 @@
 import litellm
 import pytest
 
-from synthgen.data_model import LLMConfig
-from synthgen.llm import LLM
+from synthgenai.data_model import LLMConfig
+from synthgenai.llm import LLM
 
 
 def test_llm_initialization(monkeypatch):

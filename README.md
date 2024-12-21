@@ -1,17 +1,17 @@
-# SynthGen - Package for Generating  Raw, Instruction, and Preference Synthetic Datasets.
+# SynthGenAI - Package for Generating  Raw, Instruction, and Preference Synthetic Datasets.
 
 ![header_logo_image](./assets/logo_header.png)
 
-SynthGen is a package for generating Synthetic Raw, Instruction, and Preference Datasets. The idea is to have a tool which is simple to use and can generate datasets on different topics by utilizing LLMs from different API providers. The package is designed to be modular and can be easily extended to include some different API providers for LLMs and new features.
+SynthGenAI is a package for generating Synthetic Raw, Instruction, and Preference Datasets. The idea is to have a tool which is simple to use and can generate datasets on different topics by utilizing LLMs from different API providers. The package is designed to be modular and can be easily extended to include some different API providers for LLMs and new features.
 
 > [!IMPORTANT]
 > The package is still in the early stages of development and some features may not be fully implemented or tested. If you find any issues or have any suggestions, feel free to open an issue or create a pull request.
 
-## Why SynthGen now? 🤔
+## Why SynthGenAI now? 🤔
 
 Interest in synthetic data generation has surged recently, driven by the growing recognition of data as a critical asset in AI development. As Ilya Sutskever, one of the most important figures in AI, says: 'Data is the fossil fuel of AI.' The more quality data we have, the better our models can perform. However, access to data is often restricted due to privacy concerns, or it may be prohibitively expensive to collect. Additionally, the vast amount of high-quality data on the internet has already been extensively mined. Synthetic data generation addresses these challenges by allowing us to create diverse and useful datasets using current pre-trained Large Language Models (LLMs). Beyond LLMs, synthetic data also holds immense potential for training and fine-tuning Small Language Models (SLMs), which are gaining popularity due to their efficiency and suitability for specific, resource-constrained applications. By leveraging synthetic data for both LLMs and SLMs, we can enhance performance across a wide range of use cases while balancing resource efficiency and model effectiveness. This approach enables us to harness the strengths of both synthetic and authentic datasets to achieve optimal outcomes.
 
-## Tools used for building SynthGen 🧰
+## Tools used for building SynthGenAI 🧰
 
 The package is built using Python and the following libraries:
 - [uv](https://docs.astral.sh/uv/), An extremely fast Python package and project manager, written in Rust.
@@ -34,14 +34,14 @@ To use the package, you need to have the following requirements installed:
 To install the package, you can use the following command:
 
 ```bash
-pip install synthgen
+pip install synthgenai
 ```
 
 or you can install the package directly from the source code using the following command:
 
 ```bash
 uv build
-pip install ./dist/synthgen-{version}-py3-none-any.whl
+pip install ./dist/synthgenai-{version}-py3-none-any.whl
 ```
 
 ## Usage 👨‍💻
@@ -83,7 +83,7 @@ LANGFUSE_HOST=
 HF_TOKEN=
 ```
 
-Currently there are three types of datasets that can be generated using SynthGen:
+Currently there are three types of datasets that can be generated using SynthGenAI:
 - **Raw Datasets**
 - **Instruction Datasets**
 - **Preference Datasets**
@@ -102,7 +102,7 @@ To generate a raw dataset, you can use the following code:
 ```python
 import os
 
-from synthgen import (
+from synthgenai import (
     DatasetConfig,
     DatasetGeneratorConfig,
     LLMConfig,
@@ -182,7 +182,7 @@ To generate an instruction dataset, you can use the following code:
 ```python
 import os
 
-from synthgen import (
+from synthgenai import (
     DatasetConfig,
     DatasetGeneratorConfig,
     LLMConfig,
@@ -275,7 +275,7 @@ To generate a preference dataset, you can use the following code:
 ```python
 import os
 
-from synthgen import (
+from synthgenai import (
     DatasetConfig,
     DatasetGeneratorConfig,
     LLMConfig,
@@ -378,7 +378,7 @@ More examples with different combinations of LLM API providers and dataset confi
 
 ## Generated Datasets 📚
 
-Examples of generated synthetic datasets can be found on the [SynthGen Datasets Collection](https://huggingface.co/collections/Shekswess/synthgen-datasets-6764ad878718b1e567653022) on Hugging Face Hub.
+Examples of generated synthetic datasets can be found on the [SynthGenAI Datasets Collection](https://huggingface.co/collections/Shekswess/synthgenai-datasets-6764ad878718b1e567653022) on Hugging Face Hub.
 
 ## Supported API Providers 💪
 
@@ -431,7 +431,7 @@ This project is licensed under the MIT License - see the LICENSE.md file for det
 │   ├── mistral_preference_dataset_example.py
 │   ├── ollama_preference_dataset_example.py
 │   └── openai_raw_dataset_example.py
-├── synthgen
+├── synthgenai
 │   ├── data_model.py
 │   ├── dataset_generator.py
 │   ├── dataset.py

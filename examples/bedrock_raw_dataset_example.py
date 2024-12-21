@@ -4,7 +4,7 @@
 # import asyncio
 import os
 
-from synthgen import (
+from synthgenai import (
     DatasetConfig,
     DatasetGeneratorConfig,
     LLMConfig,
