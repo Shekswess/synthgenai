@@ -21,9 +21,7 @@ jobs:
         run: uv python install
 
       - name: Install the project
-        run: uv add conditions-ai --dev pytest
+        run: uv add synthgenai --dev pytest
 
       - name: Run tests
-        env:
-          OPENAI_API_KEY: ${{secrets.OPENAI_API_KEY}}
         run: uv run pytest tests/
