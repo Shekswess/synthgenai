@@ -1,0 +1,67 @@
+default_language_version:
+    python: python3.12
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.5.0
+    hooks:
+      - id: check-ast
+      - id: check-byte-order-marker
+      - id: check-case-conflict
+      - id: check-docstring-first
+      - id: check-executables-have-shebangs
+      - id: check-json
+      - id: check-yaml
+        exclude: .*_template\.yaml
+      - id: check-toml
+      - id: debug-statements
+      - id: detect-private-key
+      - id: end-of-file-fixer
+      - id: trailing-whitespace
+      - id: mixed-line-ending
+      - id: requirements-txt-fixer
+
+  - repo: https://github.com/pre-commit/mirrors-mypy
+    rev: v1.8.0
+    hooks:
+      - id: mypy
+        args: [--strict, --ignore-missing-imports]
+        additional_dependencies:
+        - "pydantic>=1.10.4"
+
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.4.4
+    hooks:
+      - id: ruff
+        args: [ --fix ]
+      - id: ruff-format
+
+  - repo: https://github.com/asottile/pyupgrade
+    rev: v3.15.0
+    hooks:
+      - id: pyupgrade
+        args: [--py36-plus]
+
+  - repo: https://github.com/Yelp/detect-secrets
+    rev: v1.4.0
+    hooks:
+      - id: detect-secrets
+        name: "detect-secrets"
+        args: ["--exclude-files", '.*\.ipynb$']
+      - id: detect-secrets
+        name: "detect-secrets-jupyter"
+        args:
+          [
+            "--exclude-files",
+            ".*[^i][^p][^y][^n][^b]$",
+            "--exclude-lines",
+            '"(hash|id|authorship_tag|image/\w+)":.*',
+          ]
+
+  - repo: https://github.com/Lucas-C/pre-commit-hooks
+    rev: v1.1.10
+    hooks:
+    -   id: insert-license
+        files: ^app/.*\.py$
+        args:
+        - --license-filepath
+        - LICENSE.txt

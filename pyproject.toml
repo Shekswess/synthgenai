@@ -1,0 +1,77 @@
+[project]
+name = "synthgenai"
+version = "0.1.0"
+description = "SynthGenAI - Package for generating Synthetic Raw, Instruction, and Preference Datasets."
+readme = "README.md"
+requires-python = ">=3.10"
+authors = [{name = "Bojan Jakimovski - Shekswess", email = "jakimovski_bojan@outlook.com"}]
+dependencies = [
+    "boto3>=1.35.82",
+    "datasets>=3.2.0",
+    "huggingface-hub>=0.26.5",
+    "langfuse>=2.57.0",
+    "litellm>=1.55.2",
+    "loguru>=0.7.3",
+    "pre-commit>=4.0.1",
+    "pydantic>=2.10.3",
+    "ruff>=0.8.3",
+]
+
+[tool.setuptools.packages.find]
+exclude = ["tests", "tests.*", "assets", "assets.*", "examples", "examples.*"]
+
+[tool.ruff]
+exclude = [
+    ".bzr",
+    ".direnv",
+    ".eggs",
+    ".git",
+    ".git-rewrite",
+    ".hg",
+    ".ipynb_checkpoints",
+    ".mypy_cache",
+    ".nox",
+    ".pants.d",
+    ".pyenv",
+    ".pytest_cache",
+    ".pytype",
+    ".ruff_cache",
+    ".svn",
+    ".tox",
+    ".venv",
+    ".vscode",
+    "__pypackages__",
+    "_build",
+    "buck-out",
+    "build",
+    "dist",
+    "node_modules",
+    "site-packages",
+    "venv",
+]
+
+line-length = 90
+indent-width = 4
+
+target-version = "py312"
+
+[tool.ruff.lint]
+select = ["E4", "E7", "E9", "F"]
+ignore = ["C901", "E501"]
+
+fixable = ["ALL"]
+
+dummy-variable-rgx = "^(_+|(_+[a-zA-Z0-9_]*[a-zA-Z0-9]+?))$"
+
+[tool.ruff.format]
+quote-style = "double"
+
+indent-style = "space"
+
+skip-magic-trailing-comma = false
+
+line-ending = "auto"
+
+docstring-code-format = true
+
+docstring-code-line-length = "dynamic"
