@@ -17,8 +17,9 @@ dependencies = [
     "ruff>=0.8.3",
 ]
 
-[tool.setuptools.packages.find]
-exclude = ["tests", "tests.*", "assets", "assets.*", "examples", "examples.*"]
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
 
 [tool.ruff]
 exclude = [
