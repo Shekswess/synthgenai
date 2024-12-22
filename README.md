@@ -100,6 +100,8 @@ The datasets can be generated:
 To generate a raw dataset, you can use the following code:
 
 ```python
+# For asynchronous dataset generation
+# import asyncio
 import os
 
 from synthgenai import (
@@ -149,8 +151,8 @@ raw_dataset_generator = RawDatasetGenerator(dataset_generator_config)
 # Generating the dataset
 raw_dataset = raw_dataset_generator.generate_dataset()
 
-# Generating the dataset asynchroniously
-# raw_dataset = raw_dataset_generator.agenerate_dataset()
+# Generating the dataset asynchronously
+# raw_dataset = asyncio.run(raw_dataset_generator.agenerate_dataset())
 
 # Name of the Hugging Face repository where the dataset will be saved
 hf_repo_name = "organization_or_user_name/dataset_name" # optional
@@ -180,6 +182,8 @@ Example of generated entry for the raw dataset:
 To generate an instruction dataset, you can use the following code:
 
 ```python
+# For asynchronous dataset generation
+# import asyncio
 import os
 
 from synthgenai import (
@@ -229,8 +233,8 @@ instruction_dataset_generator = InstructionDatasetGenerator(dataset_generator_co
 # Generating the dataset
 instruction_dataset = instruction_dataset_generator.generate_dataset()
 
-# Generating the dataset asynchroniously
-# instruction_dataset = instruction_dataset_generator.agenerate_dataset()
+# Generating the dataset asynchronously
+# instruction_dataset = asyncio.run(instruction_dataset_generator.agenerate_dataset())
 
 # Name of the Hugging Face repository where the dataset will be saved
 hf_repo_name = "organization_or_user_name/dataset_name" # optional
@@ -273,6 +277,8 @@ Example of generated entry for the instruction dataset:
 To generate a preference dataset, you can use the following code:
 
 ```python
+# For asynchronous dataset generation
+# import asyncio
 import os
 
 from synthgenai import (
@@ -322,8 +328,8 @@ preference_dataset_generator = PreferenceDatasetGenerator(dataset_generator_conf
 # Generating the dataset
 preference_dataset = preference_dataset_generator.generate_dataset()
 
-# Generating the dataset asynchroniously
-# preference_dataset = preference_dataset_generator.agenerate_dataset()
+# Generating the dataset asynchronously
+# preference_dataset = asyncio.run(preference_dataset_generator.agenerate_dataset())
 
 # Name of the Hugging Face repository where the dataset will be saved
 hf_repo_name = "organization_or_user_name/dataset_name" # optional
