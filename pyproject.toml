@@ -1,6 +1,6 @@
 [project]
 name = "synthgenai"
-version = "0.1.0dev"
+version = "0.1.0"
 description = "SynthGenAI - Package for generating Synthetic Raw, Instruction, and Preference Datasets."
 readme = "README.md"
 requires-python = ">=3.10"
