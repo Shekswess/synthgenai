@@ -1,4 +1,4 @@
-"""Utility functions for the SynthGen package."""
+"""Utility functions for the SynthGenAI package."""
 
 import json
 

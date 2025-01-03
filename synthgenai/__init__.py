@@ -4,6 +4,7 @@ from .dataset_generator import (
     RawDatasetGenerator,
     InstructionDatasetGenerator,
     PreferenceDatasetGenerator,
-    SummarizationDatasetGenerator
+    SummarizationDatasetGenerator,
+    SentimentAnalysisDatasetGenerator,
 )
 from .data_model import DatasetGeneratorConfig, LLMConfig, DatasetConfig

@@ -114,7 +114,7 @@ class LLM:
                     if os.environ.get(env_vars) is None:
                         logger.error(f"{env_vars} is not set")
                         raise ValueError(f"{env_vars} is not set")
-        logger.info("LLM API Provider needed API keys are set")
+        logger.info("Necessary LLM API Keys are set")
 
     def _check_langfuse_api_keys(self) -> None:
         """Check if the required API keys for Langfuse are set"""

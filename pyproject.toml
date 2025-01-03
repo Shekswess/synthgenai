@@ -1,7 +1,7 @@
 [project]
 name = "synthgenai"
 version = "0.2.0"
-description = "SynthGenAI - Package for generating Synthetic Raw, Instruction, and Preference Datasets."
+description = "SynthGenAI - Package for generating Synthetic Datasets."
 readme = "README.md"
 requires-python = ">=3.10"
 authors = [{name = "Bojan Jakimovski - Shekswess", email = "jakimovski_bojan@outlook.com"}]
