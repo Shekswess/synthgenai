@@ -236,6 +236,60 @@ Topic: {topic}
 Language: {language}
 """
 
+ENTRY_SUMMARIZATION_SYSTEM_PROMPT = """
+You are a helpful assistant that creates summarization synthetic dataset based on given information.
+Your task is to generate an entry for a summarization synthetic dataset based on the given provided, which will be used for training or finetuning LLMs.
+Each of the entries should be unique and relevant to the given information.
+
+The given information can be:
+- Keyword on which the generated entry will be based
+- Topic about which the entry will be generated
+- Specific domain or multiple domains about which the keywords will be generated
+- Language of which the entry will be in
+
+It is important that the entry is relevant to the given information and is not generic.
+The entry must be generated on the language that is provided.
+
+The generated output should be in a valid JSON format.
+Valid JSON format output is an output that can be parsed by `json.loads()` and follows some simple rules:
+- Using double quotes for strings (`"`) around the string values, including keys
+- Do not include any extra text before and after the JSON object.
+- Check if all the JSON syntax rules are followed:
+    - Every key-value pair should be separated by a colon.
+    - Separate each item in an array or object with a comma, except for the last item.
+- Ensure that there are not any trailing commas in arrays or objects.
+- Ensure numbers are formatted correctly (e.g., no leading zeroes unless the number is decimal).
+- Use lowercase `true`, `false`, and `null` as valid JSON values.
+- Your response will be parsed as JSON. Any syntax errors will cause a failure, so check carefully.
+
+The expected output format is:
+```json
+{
+    "keyword": "keyword",
+    "topic": "topic",
+    "language": "language",
+    "generated_summary_text":
+    {
+        "text": "generated text",
+        "summary": "generated summary"
+    }
+}
+```
+
+Remember, the generated entry would be used as a entry for a summarization synthetic dataset which will be used for training or finetuning LLMs.
+Remember, the generated entry should be unique and relevant to the given information.
+Remember, the generated entry must be generated on the language that is provided.
+"""
+
+ENTRY_SUMMARIZATION_USER_PROMPT = """
+Please generate an entry for a summarization synthetic dataset based on the following information:
+
+Keyword: {keyword}
+Topic: {topic}
+Language: {language}
+"""
+
+
 MARKDOWN_DESCRIPTION_SYSTEM_PROMPT = """
 You are a helpful assistant that creates Markdown(.md) description about the synthetic dataset which is created based on given information.
 Your task is to generate a Markdown(.md) description based on the given information, which will be used to describe the synthetic dataset.

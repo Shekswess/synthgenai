@@ -12,6 +12,7 @@ class DatasetType(str, Enum):
     RAW = "Raw Dataset"
     INSTRUCTION = "Instruction Dataset"
     PREFERENCE = "Preference Dataset"
+    SUMMARIZATION = "Summarization Dataset"
 
 
 class LLMConfig(BaseModel):
@@ -132,3 +133,19 @@ class EntryPreferenceDataset(BaseModel):
     topic: str
     language: str
     generated_text: PreferenceGeneratedText
+
+
+class GeneratedSummaryText(BaseModel):
+    """Pydantic model for the generated summary text."""
+
+    text: str
+    summary: str
+
+
+class EntrySummarizationDataset(BaseModel):
+    """Pydantic model for the Summarization dataset."""
+
+    keyword: str
+    topic: str
+    language: str
+    generated_summary_text: GeneratedSummaryText

@@ -12,6 +12,7 @@ from .data_model import (
     EntryKeywords,
     EntryPreferenceDataset,
     EntryRawDataset,
+    EntrySummarizationDataset,
 )
 from .dataset import Dataset
 from .llm import LLM
@@ -22,6 +23,8 @@ from .prompts import (
     ENTRY_PREFERENCE_USER_PROMPT,
     ENTRY_RAW_DATASET_SYSTEM_PROMPT,
     ENTRY_RAW_DATASET_USER_PROMPT,
+    ENTRY_SUMMARIZATION_SYSTEM_PROMPT,
+    ENTRY_SUMMARIZATION_USER_PROMPT,
     KEYWORD_SYSTEM_PROMPT,
     KEYWORD_USER_PROMPT,
     MARKDOWN_DESCRIPTION_SYSTEM_PROMPT,
@@ -161,7 +164,7 @@ class DatasetGenerator:
         data = []
         keywords = self.dataset.get_keywords()
         for i in range(0, len(keywords), BATCH_SIZE):
-            batch_keywords = keywords[i: i + BATCH_SIZE]
+            batch_keywords = keywords[i : i + BATCH_SIZE]
             tasks = [self._agenerate_entry(keyword) for keyword in batch_keywords]
             entries = await asyncio.gather(*tasks)
             time.sleep(10)
@@ -429,6 +432,74 @@ class PreferenceDatasetGenerator(DatasetGenerator):
             response = convert_json_entry(response)
             entry = EntryPreferenceDataset(**response)
             logger.debug(f"Preference dataset entry: {entry}")
+        except ValidationError as e:
+            logger.error(f"Validation error for keyword {keyword}: {e}")
+            return None
+        return entry.model_dump()
+
+
+class SummarizationDatasetGenerator(DatasetGenerator):
+    """Summarization Dataset Generator class."""
+
+    def _set_dataset_type(self):
+        """Set the dataset type to 'Summarization Dataset'."""
+        self.dataset.set_dataset_type("Summarization Dataset")
+
+    def _generate_entry(self, keyword: str) -> dict:
+        """
+        Generate a summarization dataset entry for the given keyword.
+
+        Args:
+            keyword (str): The keyword for which to generate the entry.
+
+        Returns:
+            dict: The generated summarization dataset entry.
+
+        Raises:
+            ValidationError: If the generated entry does not match the data model.
+        """
+        messages = self._create_messages(
+            ENTRY_SUMMARIZATION_SYSTEM_PROMPT,
+            ENTRY_SUMMARIZATION_USER_PROMPT,
+            keyword=keyword,
+            topic=self.dataset.get_topic(),
+            language=self.dataset.get_language(),
+        )
+        response = self.llm.generate(messages)
+        try:
+            response = convert_json_entry(response)
+            entry = EntrySummarizationDataset(**response)
+            logger.debug(f"Summarization dataset entry: {entry}")
+        except ValidationError as e:
+            logger.error(f"Validation error for keyword {keyword}: {e}")
+            return None
+        return entry.model_dump()
+
+    async def _agenerate_entry(self, keyword: str) -> dict:
+        """
+        Generate a summarization dataset entry for the given keyword asynchronously.
+
+        Args:
+            keyword (str): The keyword for which to generate the entry.
+
+        Returns:
+            dict: The generated summarization dataset entry.
+
+        Raises:
+            ValidationError: If the generated entry does not match the data model.
+        """
+        messages = self._create_messages(
+            ENTRY_SUMMARIZATION_SYSTEM_PROMPT,
+            ENTRY_SUMMARIZATION_USER_PROMPT,
+            keyword=keyword,
+            topic=self.dataset.get_topic(),
+            language=self.dataset.get_language(),
+        )
+        response = await self.llm.agenerate(messages)
+        try:
+            response = convert_json_entry(response)
+            entry = EntrySummarizationDataset(**response)
+            logger.debug(f"Summarization dataset entry: {entry}")
         except ValidationError as e:
             logger.error(f"Validation error for keyword {keyword}: {e}")
             return None
