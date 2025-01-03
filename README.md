@@ -1,4 +1,4 @@
-# SynthGenAI - Package for Generating Synthetic Datasets.
+# SynthGenAI-Package for Generating Synthetic Datasets
 
 ![header_logo_image](./assets/logo_header.png)
 
