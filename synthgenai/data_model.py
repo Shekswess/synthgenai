@@ -1,4 +1,4 @@
-"""Pydantic models for the SynthGen package."""
+"""Pydantic models for the SynthGenAI package."""
 
 from enum import Enum
 from typing import Literal
@@ -149,3 +149,19 @@ class EntrySummarizationDataset(BaseModel):
     topic: str
     language: str
     generated_summary_text: GeneratedSummaryText
+
+
+class GeneratedSentimentAnalysis(BaseModel):
+    """Pydantic model for the generated sentiment analysis."""
+
+    text: str
+    sentiment: Literal["positive", "negative", "neutral"]
+
+
+class EntrySentimentAnalysisDataset(BaseModel):
+    """Pydantic model for the Sentiment Analysis dataset."""
+
+    keyword: str
+    topic: str
+    language: str
+    generated_sentiment_analysis: GeneratedSentimentAnalysis

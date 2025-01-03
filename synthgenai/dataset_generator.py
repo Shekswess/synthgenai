@@ -1,6 +1,7 @@
 """Dataset Generator module."""
 
 import asyncio
+import random
 import time
 
 from loguru import logger
@@ -12,6 +13,7 @@ from .data_model import (
     EntryKeywords,
     EntryPreferenceDataset,
     EntryRawDataset,
+    EntrySentimentAnalysisDataset,
     EntrySummarizationDataset,
 )
 from .dataset import Dataset
@@ -23,6 +25,8 @@ from .prompts import (
     ENTRY_PREFERENCE_USER_PROMPT,
     ENTRY_RAW_DATASET_SYSTEM_PROMPT,
     ENTRY_RAW_DATASET_USER_PROMPT,
+    ENTRY_SENTIMENT_SYSTEM_PROMPT,
+    ENTRY_SENTIMENT_USER_PROMPT,
     ENTRY_SUMMARIZATION_SYSTEM_PROMPT,
     ENTRY_SUMMARIZATION_USER_PROMPT,
     KEYWORD_SYSTEM_PROMPT,
@@ -500,6 +504,76 @@ class SummarizationDatasetGenerator(DatasetGenerator):
             response = convert_json_entry(response)
             entry = EntrySummarizationDataset(**response)
             logger.debug(f"Summarization dataset entry: {entry}")
+        except ValidationError as e:
+            logger.error(f"Validation error for keyword {keyword}: {e}")
+            return None
+        return entry.model_dump()
+
+
+class SentimentAnalysisDatasetGenerator(DatasetGenerator):
+    """Sentiment Analysis Dataset Generator class."""
+
+    def _set_dataset_type(self):
+        """Set the dataset type to 'Sentiment Analysis Dataset'."""
+        self.dataset.set_dataset_type("Sentiment Analysis Dataset")
+
+    def _generate_entry(self, keyword: str) -> dict:
+        """
+        Generate a sentiment analysis dataset entry for the given keyword.
+
+        Args:
+            keyword (str): The keyword for which to generate the entry.
+
+        Returns:
+            dict: The generated sentiment analysis dataset entry.
+
+        Raises:
+            ValidationError: If the generated entry does not match the data model.
+        """
+        messages = self._create_messages(
+            ENTRY_SENTIMENT_SYSTEM_PROMPT,
+            ENTRY_SENTIMENT_USER_PROMPT,
+            keyword=keyword,
+            topic=self.dataset.get_topic(),
+            language=self.dataset.get_language(),
+            sentiment=random.choice(["positive", "negative", "neutral"]),
+        )
+        response = self.llm.generate(messages)
+        try:
+            response = convert_json_entry(response)
+            entry = EntrySentimentAnalysisDataset(**response)
+            logger.debug(f"Sentiment analysis dataset entry: {entry}")
+        except ValidationError as e:
+            logger.error(f"Validation error for keyword {keyword}: {e}")
+            return None
+        return entry.model_dump()
+
+    async def _agenerate_entry(self, keyword: str) -> dict:
+        """
+        Generate a sentiment analysis dataset entry for the given keyword asynchronously.
+
+        Args:
+            keyword (str): The keyword for which to generate the entry.
+
+        Returns:
+            dict: The generated sentiment analysis dataset entry.
+
+        Raises:
+            ValidationError: If the generated entry does not match the data model.
+        """
+        messages = self._create_messages(
+            ENTRY_SENTIMENT_SYSTEM_PROMPT,
+            ENTRY_SENTIMENT_USER_PROMPT,
+            keyword=keyword,
+            topic=self.dataset.get_topic(),
+            language=self.dataset.get_language(),
+            sentiment=random.choice(["positive", "negative", "neutral"]),
+        )
+        response = await self.llm.agenerate(messages)
+        try:
+            response = convert_json_entry(response)
+            entry = EntrySentimentAnalysisDataset(**response)
+            logger.debug(f"Sentiment analysis dataset entry: {entry}")
         except ValidationError as e:
             logger.error(f"Validation error for keyword {keyword}: {e}")
             return None
