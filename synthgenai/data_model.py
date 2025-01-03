@@ -3,7 +3,7 @@
 from enum import Enum
 from typing import Literal
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, AnyUrl
 
 
 class DatasetType(str, Enum):
@@ -23,12 +23,16 @@ class LLMConfig(BaseModel):
         temperature (float): The temperature value from 0.0 to 1.0.
         top_p (float): The top_p value from 0.0 to 1.0.
         max_tokens (int): The maximum number of tokens to generate completions from 1000 to max value.
+        api_base (AnyUrl): The API base URL.
+        api_key (str): The API key.
     """
 
     model: str = Field(..., min_length=1)
     temperature: float = Field(None, ge=0.0, le=1.0)
     top_p: float = Field(None, ge=0.0, le=1.0)
     max_tokens: int = Field(None, gt=1000)
+    api_base: AnyUrl = Field(None)
+    api_key: str = Field(None)
 
 
 class DatasetConfig(BaseModel):
