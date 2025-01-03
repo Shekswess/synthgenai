@@ -1,9 +1,9 @@
-"""Pydantic models for the SynthGen package."""
+"""Pydantic models for the SynthGenAI package."""
 
 from enum import Enum
 from typing import Literal
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, AnyUrl
 
 
 class DatasetType(str, Enum):
@@ -12,6 +12,7 @@ class DatasetType(str, Enum):
     RAW = "Raw Dataset"
     INSTRUCTION = "Instruction Dataset"
     PREFERENCE = "Preference Dataset"
+    SUMMARIZATION = "Summarization Dataset"
 
 
 class LLMConfig(BaseModel):
@@ -23,12 +24,16 @@ class LLMConfig(BaseModel):
         temperature (float): The temperature value from 0.0 to 1.0.
         top_p (float): The top_p value from 0.0 to 1.0.
         max_tokens (int): The maximum number of tokens to generate completions from 1000 to max value.
+        api_base (AnyUrl): The API base URL.
+        api_key (str): The API key.
     """
 
     model: str = Field(..., min_length=1)
     temperature: float = Field(None, ge=0.0, le=1.0)
     top_p: float = Field(None, ge=0.0, le=1.0)
     max_tokens: int = Field(None, gt=1000)
+    api_base: AnyUrl = Field(None)
+    api_key: str = Field(None)
 
 
 class DatasetConfig(BaseModel):
@@ -128,3 +133,35 @@ class EntryPreferenceDataset(BaseModel):
     topic: str
     language: str
     generated_text: PreferenceGeneratedText
+
+
+class GeneratedSummaryText(BaseModel):
+    """Pydantic model for the generated summary text."""
+
+    text: str
+    summary: str
+
+
+class EntrySummarizationDataset(BaseModel):
+    """Pydantic model for the Summarization dataset."""
+
+    keyword: str
+    topic: str
+    language: str
+    generated_summary_text: GeneratedSummaryText
+
+
+class GeneratedSentimentAnalysis(BaseModel):
+    """Pydantic model for the generated sentiment analysis."""
+
+    text: str
+    sentiment: Literal["positive", "negative", "neutral"]
+
+
+class EntrySentimentAnalysisDataset(BaseModel):
+    """Pydantic model for the Sentiment Analysis dataset."""
+
+    keyword: str
+    topic: str
+    language: str
+    generated_sentiment_analysis: GeneratedSentimentAnalysis

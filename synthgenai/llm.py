@@ -19,10 +19,12 @@ ALLOWED_PREFIXES = [
     "mistral/",
     "gemini/",
     "bedrock/",
+    "sagemaker/",
     "claude",
     "gpt",
     "huggingface/",
     "ollama/",
+    "hosted_vllm/",
 ]
 
 
@@ -40,12 +42,17 @@ class LLM:
         self.temperature = llm_config.temperature
         self.top_p = llm_config.top_p
         self.max_tokens = llm_config.max_tokens
+        self.api_base = (
+            str(llm_config.api_base) if llm_config.api_base is not None else None
+        )
+        self.api_key = llm_config.api_key
         self.response_format = None
-        self.api_base = None
 
         self._check_allowed_models()
-        self._check_llm_api_keys()
+        if self.api_key is None:
+            self._check_llm_api_keys()
         self._check_langfuse_api_keys()
+        self._check_vllm()
         self._check_ollama()
 
         logger.info(f"Initialized LLM model for synthetic dataset creation: {self.model}")
@@ -63,6 +70,7 @@ class LLM:
             "mistral": "MISTRAL_API_KEY",
             "gemini": "GEMINI_API_KEY",
             "bedrock": ["AWS_ACCESS_KEY_ID", "AWS_SECRET_ACCESS_KEY", "AWS_REGION"],
+            "sagemaker": ["AWS_ACCESS_KEY_ID", "AWS_SECRET_ACCESS_KEY", "AWS_REGION"],
             "claude": "ANTHROPIC_API_KEY",
             "gpt": "OPENAI_API_KEY",
             "huggingface": "HUGGINGFACE_API_KEY",
@@ -75,7 +83,7 @@ class LLM:
                         var for var in env_vars if os.environ.get(var) is None
                     ]
                     if missing_vars:
-                        if key == "bedrock":
+                        if key == "bedrock" or key == "sagemaker":
                             if all(
                                 os.environ.get(var)
                                 for var in [
@@ -106,7 +114,7 @@ class LLM:
                     if os.environ.get(env_vars) is None:
                         logger.error(f"{env_vars} is not set")
                         raise ValueError(f"{env_vars} is not set")
-        logger.info("LLM API Provider needed API keys are set")
+        logger.info("Necessary LLM API Keys are set")
 
     def _check_langfuse_api_keys(self) -> None:
         """Check if the required API keys for Langfuse are set"""
@@ -121,11 +129,19 @@ class LLM:
         else:
             logger.warning("Langfuse API keys are not set")
 
+    def _check_vllm(self) -> None:
+        """Check if the model is a VLLM model"""
+        if self.model.startswith("hosted_vllm") and self.api_base is None:
+            logger.error("VLLM model detected without API Base")
+            raise ValueError("VLLM model detected without API Base")
+
     def _check_ollama(self) -> None:
         """Check if the model is an Ollama model"""
-        if self.model.startswith("ollama"):
+        if self.model.startswith("ollama") and self.api_base is None:
             self.api_base = "http://localhost:11434"
-            logger.info("Ollama model detected- setting API base to localhost")
+            logger.info(
+                "Ollama model detected without API Base - setting API Base to localhost"
+            )
 
     def set_temperature(self, temperature: Union[float, None]) -> None:
         """
@@ -198,6 +214,7 @@ class LLM:
                 top_p=self.top_p,
                 max_tokens=self.max_tokens,
                 api_base=self.api_base,
+                api_key=self.api_key,
             )
             logger.info(f"Generated completions using LLM model: {self.model}")
             return response.choices[0].message.content
@@ -224,6 +241,7 @@ class LLM:
                 top_p=self.top_p,
                 max_tokens=self.max_tokens,
                 api_base=self.api_base,
+                api_key=self.api_key,
             )
             logger.info(f"Generated completions using LLM model: {self.model}")
             return response.choices[0].message.content
