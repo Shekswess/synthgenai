@@ -171,7 +171,8 @@ class DatasetGenerator:
             batch_keywords = keywords[i : i + BATCH_SIZE]
             tasks = [self._agenerate_entry(keyword) for keyword in batch_keywords]
             entries = await asyncio.gather(*tasks)
-            time.sleep(10)
+            random_wait_time = random.randint(10, 20)
+            time.sleep(random_wait_time)
             for keyword, entry in zip(batch_keywords, entries):
                 if entry:
                     data.append(entry)
