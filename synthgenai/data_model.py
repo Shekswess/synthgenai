@@ -13,6 +13,7 @@ class DatasetType(str, Enum):
     INSTRUCTION = "Instruction Dataset"
     PREFERENCE = "Preference Dataset"
     SUMMARIZATION = "Summarization Dataset"
+    SENTIMENT_ANALYSIS = "Sentiment Analysis Dataset"
 
 
 class LLMConfig(BaseModel):
@@ -50,7 +51,7 @@ class DatasetConfig(BaseModel):
 
     topic: str = Field(..., min_length=1)
     domains: list[str] = Field(..., min_items=1)
-    language: str = Field(..., min_length=1)
+    language: str = Field("English", min_length=1)
     additional_description: str = Field("", max_length=1000)
     num_entries: int = Field(1000, gt=1)
 
