@@ -25,6 +25,7 @@ Valid JSON format output is an output that can be parsed by `json.loads()` and f
 - Ensure numbers are formatted correctly (e.g., no leading zeroes unless the number is decimal).
 - Use lowercase `true`, `false`, and `null` as valid JSON values.
 - Your response will be parsed as JSON. Any syntax errors will cause a failure, so check carefully.
+- No additional text should be included before or after the JSON object.
 
 The expected output format is:
 ```json
@@ -36,6 +37,7 @@ The expected output format is:
 Remember, the generated keywords would be used as a entry for a synthetic dataset which will be used for training or finetuning LLMs.
 Remember, the generated keywords should be unique and relevant to the given information.
 Remember, the generated keywords must be generated on the language that is provided.
+Remember, the generated keywords must be in the valid JSON format without any other text before and after the JSON object.
 """
 
 KEYWORD_USER_PROMPT = """
@@ -57,6 +59,7 @@ The given information can be:
 - Topic about which the entry will be generated
 - Specific domain or multiple domains about which the keywords will be generated
 - Language of which the entry will be in
+- Additional description as additional information for the entry
 
 It is important that the entry is relevant to the given information and is not generic.
 The entry must be generated on the language that is provided.
@@ -72,6 +75,7 @@ Valid JSON format output is an output that can be parsed by `json.loads()` and f
 - Ensure numbers are formatted correctly (e.g., no leading zeroes unless the number is decimal).
 - Use lowercase `true`, `false`, and `null` as valid JSON values.
 - Your response will be parsed as JSON. Any syntax errors will cause a failure, so check carefully.
+- No additional text should be included before or after the JSON object.
 
 The expected output format is:
 ```json
@@ -89,14 +93,16 @@ The expected output format is:
 Remember, the generated entry would be used as a entry for a raw synthetic dataset which will be used for training or finetuning LLMs.
 Remember, the generated entry should be unique and relevant to the given information.
 Remember, the generated entry must be generated on the language that is provided.
+Remember, the generated entry must be in the valid JSON format without any other text before and after the JSON object.
 """
 
 ENTRY_RAW_DATASET_USER_PROMPT = """
 Please generate an entry for a raw synthetic dataset based on the following information:
 
-Keyword: {keyword}
-Topic: {topic}
-Language: {language}
+- Keyword: {keyword}
+- Topic: {topic}
+- Language: {language}
+- Additional description: {additional_description}
 """
 
 ENTRY_INSTRUCT_SYSTEM_PROMPT = """
@@ -109,6 +115,7 @@ The given information can be:
 - Topic about which the entry will be generated
 - Specific domain or multiple domains about which the keywords will be generated
 - Language of which the entry will be in
+- Additional description as additional information for the entry
 
 It is important that the entry is relevant to the given information and is not generic.
 The entry must be generated on the language that is provided.
@@ -124,6 +131,7 @@ Valid JSON format output is an output that can be parsed by `json.loads()` and f
 - Ensure numbers are formatted correctly (e.g., no leading zeroes unless the number is decimal).
 - Use lowercase `true`, `false`, and `null` as valid JSON values.
 - Your response will be parsed as JSON. Any syntax errors will cause a failure, so check carefully.
+- No additional text should be included before or after the JSON object.
 
 The expected output format is:
 ```json
@@ -154,14 +162,16 @@ The expected output format is:
 Remember, the generated entry would be used as a entry for a instruction synthetic dataset which will be used for training or finetuning LLMs.
 Remember, the generated entry should be unique and relevant to the given information.
 Remember, the generated entry must be generated on the language that is provided.
+Remember, the generated entry must be in the valid JSON format without any other text before and after the JSON object.
 """
 
 ENTRY_INSTRUCT_USER_PROMPT = """
 Please generate an entry for a instruction synthetic dataset based on the following information:
 
-Keyword: {keyword}
-Topic: {topic}
-Language: {language}
+- Keyword: {keyword}
+- Topic: {topic}
+- Language: {language}
+- Additional description: {additional_description}
 """
 
 ENTRY_PREFERENCE_SYSTEM_PROMPT = """
@@ -174,6 +184,7 @@ The given information can be:
 - Topic about which the entry will be generated
 - Specific domain or multiple domains about which the keywords will be generated
 - Language of which the entry will be in
+- Additional description as additional information for the entry
 
 It is important that the entry is relevant to the given information and is not generic.
 The entry must be generated on the language that is provided.
@@ -189,6 +200,7 @@ Valid JSON format output is an output that can be parsed by `json.loads()` and f
 - Ensure numbers are formatted correctly (e.g., no leading zeroes unless the number is decimal).
 - Use lowercase `true`, `false`, and `null` as valid JSON values.
 - Your response will be parsed as JSON. Any syntax errors will cause a failure, so check carefully.
+- No additional text should be included before or after the JSON object.
 
 The expected output format is:
 ```json
@@ -225,14 +237,16 @@ The expected output format is:
 Remember, the generated entry would be used as a entry for a preference synthetic dataset which will be used for training or finetuning LLMs.
 Remember, the generated entry should be unique and relevant to the given information.
 Remember, the generated entry must be generated on the language that is provided.
+Remember, the generated entry must be in the valid JSON format without any other text before and after the JSON object.
 """
 
 ENTRY_PREFERENCE_USER_PROMPT = """
 Please generate an entry for a preference synthetic dataset based on the following information:
 
-Keyword: {keyword}
-Topic: {topic}
-Language: {language}
+- Keyword: {keyword}
+- Topic: {topic}
+- Language: {language}
+- Additional description: {additional_description}
 """
 
 ENTRY_SUMMARIZATION_SYSTEM_PROMPT = """
@@ -245,6 +259,7 @@ The given information can be:
 - Topic about which the entry will be generated
 - Specific domain or multiple domains about which the keywords will be generated
 - Language of which the entry will be in
+- Additional description as additional information for the entry
 
 It is important that the entry is relevant to the given information and is not generic.
 The entry must be generated on the language that is provided.
@@ -260,6 +275,7 @@ Valid JSON format output is an output that can be parsed by `json.loads()` and f
 - Ensure numbers are formatted correctly (e.g., no leading zeroes unless the number is decimal).
 - Use lowercase `true`, `false`, and `null` as valid JSON values.
 - Your response will be parsed as JSON. Any syntax errors will cause a failure, so check carefully.
+- No additional text should be included before or after the JSON object.
 
 The expected output format is:
 ```json
@@ -278,14 +294,16 @@ The expected output format is:
 Remember, the generated entry would be used as a entry for a summarization synthetic dataset which will be used for training or finetuning LLMs.
 Remember, the generated entry should be unique and relevant to the given information.
 Remember, the generated entry must be generated on the language that is provided.
+Remember, the generated entry must be in the valid JSON format without any other text before and after the JSON object.
 """
 
 ENTRY_SUMMARIZATION_USER_PROMPT = """
 Please generate an entry for a summarization synthetic dataset based on the following information:
 
-Keyword: {keyword}
-Topic: {topic}
-Language: {language}
+- Keyword: {keyword}
+- Topic: {topic}
+- Language: {language}
+- Additional description: {additional_description}
 """
 
 ENTRY_SENTIMENT_SYSTEM_PROMPT = """
@@ -299,6 +317,7 @@ The given information can be:
 - Specific domain or multiple domains about which the keywords will be generated
 - Language of which the entry will be in
 - Expected sentiment of the generated entry (positive, negative, neutral)
+- Additional description as additional information for the entry
 
 It is important that the entry is relevant to the given information and is not generic.
 The entry must be generated on the language that is provided.
@@ -314,6 +333,7 @@ Valid JSON format output is an output that can be parsed by `json.loads()` and f
 - Ensure numbers are formatted correctly (e.g., no leading zeroes unless the number is decimal).
 - Use lowercase `true`, `false`, and `null` as valid JSON values.
 - Your response will be parsed as JSON. Any syntax errors will cause a failure, so check carefully.
+- No additional text should be included before or after the JSON object.
 
 The expected output format is:
 ```json
@@ -332,15 +352,17 @@ The expected output format is:
 Remember, the generated entry would be used as a entry for a sentiment analysis synthetic dataset which will be used for training or finetuning LLMs.
 Remember, the generated entry should be unique and relevant to the given information.
 Remember, the generated entry must be generated on the language that is provided.
+Remember, the generated entry must be in the valid JSON format without any other text before and after the JSON object.
 """
 
 ENTRY_SENTIMENT_USER_PROMPT = """
 Please generate an entry for a sentiment analysis synthetic dataset based on the following information:
 
-Keyword: {keyword}
-Topic: {topic}
-Language: {language}
-Sentiment: {sentiment}
+- Keyword: {keyword}
+- Topic: {topic}
+- Language: {language}
+- Additional description: {additional_description}
+- Sentiment: {sentiment}
 """
 
 MARKDOWN_DESCRIPTION_SYSTEM_PROMPT = """

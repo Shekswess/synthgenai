@@ -186,9 +186,12 @@ class LLM:
         Returns:
             bool: True if the response format is supported, False otherwise
         """
+        custom_llm_provider = None
+        if not self.model.startswith("ollama") and not self.model.startswith("hosted_vllm"):
+            custom_llm_provider = self.model.split("/")[0]
         if "response_format" in get_supported_openai_params(
-            model=self.model, custom_llm_provider=None
-        ) and supports_response_schema(model=self.model, custom_llm_provider=None):
+            model=self.model, custom_llm_provider=custom_llm_provider
+        ) and supports_response_schema(model=self.model, custom_llm_provider=custom_llm_provider):
             logger.info(f"JSON format is supported by the LLM model: {self.model}")
             return True
         else:
