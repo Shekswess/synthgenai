@@ -355,6 +355,114 @@ Please generate an entry for a sentiment analysis synthetic dataset based on the
 - Sentiment: {sentiment}
 """
 
+ENTRY_CLASSIFICATION_SYSTEM_PROMPT = """
+You are a helpful assistant that creates text classification synthetic dataset based on given information.
+Your task is to generate an entry for a text classification synthetic dataset based on the given provided, which will be used for training or finetuning LLMs.
+Each of the entries should be unique and relevant to the given information.
+
+The given information can be:
+- Keyword on which the generated entry will be based
+- Topic about which the entry will be generated
+- Specific domain or multiple domains about which the keywords will be generated
+- Language of which the entry will be in
+- Expected label of the generated entry (from a list of labels)
+- Additional description as additional information for the entry
+
+It is important that the entry is relevant to the given information and is not generic.
+The entry must be generated on the language that is provided.
+
+The generated output should be in a valid JSON format.
+Valid JSON format output is an output that can be parsed by `json.loads()` and follows some simple rules:
+- Using double quotes for strings (`"`) around the string values, including keys
+- Do not include any extra text before and after the JSON object.
+- Check if all the JSON syntax rules are followed:
+    - Every key-value pair should be separated by a colon.
+    - Separate each item in an array or object with a comma, except for the last item.
+- Ensure that there are not any trailing commas in arrays or objects.
+- Ensure numbers are formatted correctly (e.g., no leading zeroes unless the number is decimal).
+- Use lowercase `true`, `false`, and `null` as valid JSON values.
+- Your response will be parsed as JSON. Any syntax errors will cause a failure, so check carefully.
+- No additional text should be included before or after the JSON object.
+
+The expected output format is:
+```json
+{
+    "keyword": "keyword",
+    "topic": "topic",
+    "language": "language",
+    "generated_entry":
+    {
+        "prompt": "generated text",
+        "label": "generated sentiment (which will be from a list of labels)"
+    }
+}
+```
+
+Remember, the generated entry would be used as a entry for a text classification synthetic dataset which will be used for training or finetuning LLMs.
+Remember, the generated entry should be unique and relevant to the given information.
+Remember, the generated entry must be generated on the language that is provided.
+Remember, the generated entry must be in the valid JSON format without any other text before and after the JSON object.
+"""
+
+ENTRY_CLASSIFICATION_USER_PROMPT = """
+Please generate an entry for a text classification synthetic dataset based on the following information:
+
+- Keyword: {keyword}
+- Topic: {topic}
+- Language: {language}
+- Additional description: {additional_description}
+- Label: {label}
+"""
+
+LABELS_SYSTEM_PROMPT = """
+You are a helpful assistant that creates labels for text classification synthetic dataset based on given information.
+Your task is to generate a given number of labels based on the given provided, which will be used to create a text classification synthetic dataset.
+Each of the labels should be unique and relevant to the given information.
+
+The given information can be:
+- Topic about which the labels will be generated
+- Specific domain or multiple domains about which the labels will be generated
+- Language of which the labels and later the generated dataset will be in
+- Additional description as a context for the labels
+
+It is important that the labels are relevant to the given information and are not generic.
+The labels must be generated on the language that is provided.
+
+The generated output should be in a valid JSON format.
+Valid JSON format output is an output that can be parsed by `json.loads()` and follows some simple rules:
+- Using double quotes for strings (`"`) around the string values, including keys
+- Do not include any extra text before and after the JSON object.
+- Check if all the JSON syntax rules are followed:
+    - Every key-value pair should be separated by a colon.
+    - Separate each item in an array or object with a comma, except for the last item.
+- Ensure that there are not any trailing commas in arrays or objects.
+- Ensure numbers are formatted correctly (e.g., no leading zeroes unless the number is decimal).
+- Use lowercase `true`, `false`, and `null` as valid JSON values.
+- Your response will be parsed as JSON. Any syntax errors will cause a failure, so check carefully.
+- No additional text should be included before or after the JSON object.
+
+The expected output format is:
+```json
+{
+    "labels": ["label 1", "label 2", "label 3"]
+}
+```
+
+Remember, the generated labels would be used as to generate an entry for a text classification synthetic dataset which will be used for training or finetuning LLMs.
+Remember, the generated labels should be unique and relevant to the given information.
+Remember, the generated labels must be generated on the language that is provided.
+Remember, the generated labels must be in the valid JSON format without any other text before and after the JSON object.
+"""
+
+LABELS_USER_PROMPT = """
+Generate a list of {num_labels} labels based on the following information:
+
+- Topic: {topic}
+- Language: {language}
+- Domains: {domains}
+- Additional description: {additional_description}
+"""
+
 MARKDOWN_DESCRIPTION_SYSTEM_PROMPT = """
 You are a helpful assistant that creates Markdown(.md) description about the synthetic dataset which is created based on given information.
 Your task is to generate a Markdown(.md) description based on the given information, which will be used to describe the synthetic dataset.

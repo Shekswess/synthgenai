@@ -14,6 +14,7 @@ class DatasetType(str, Enum):
     PREFERENCE = "Preference Dataset"
     SUMMARIZATION = "Summarization Dataset"
     SENTIMENT_ANALYSIS = "Sentiment Analysis Dataset"
+    TEXT_CLASSIFICATION = "Text Classification Dataset"
 
 
 class LLMConfig(BaseModel):
@@ -74,6 +75,12 @@ class EntryKeywords(BaseModel):
     """Pydantic model for the keywords in the generated text."""
 
     keywords: list[str]
+
+
+class EntryLabels(BaseModel):
+    """Pydantic model for the labels in the generated text."""
+
+    labels: list[str]
 
 
 class GeneratedText(BaseModel):
@@ -138,6 +145,13 @@ class GeneratedSentimentAnalysis(BaseModel):
     label: Literal["positive", "negative", "neutral"]
 
 
+class GeneratedTextClassification(BaseModel):
+    """Pydantic model for the generated text classification."""
+
+    prompt: str
+    label: str
+
+
 class EntryDataset(BaseModel):
     """Pydantic model for the dataset entry."""
 
@@ -150,4 +164,5 @@ class EntryDataset(BaseModel):
         GeneratedPreferenceText,
         GeneratedSummaryText,
         GeneratedSentimentAnalysis,
+        GeneratedTextClassification,
     ]

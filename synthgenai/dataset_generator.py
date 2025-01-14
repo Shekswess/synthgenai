@@ -11,6 +11,7 @@ from .data_model import (
     DatasetGeneratorConfig,
     EntryDataset,
     EntryKeywords,
+    EntryLabels,
 )
 from .dataset import Dataset
 from .llm import LLM
@@ -27,10 +28,14 @@ from .prompts import (
     ENTRY_SUMMARIZATION_USER_PROMPT,
     KEYWORD_SYSTEM_PROMPT,
     KEYWORD_USER_PROMPT,
+    ENTRY_CLASSIFICATION_SYSTEM_PROMPT,
+    ENTRY_CLASSIFICATION_USER_PROMPT,
+    LABELS_USER_PROMPT,
+    LABELS_SYSTEM_PROMPT,
     MARKDOWN_DESCRIPTION_SYSTEM_PROMPT,
     MARKDOWN_DESCRIPTION_USER_PROMPT,
 )
-from .utils import convert_json_entry, convert_json_keywords
+from .utils import convert_json_entry, convert_json_keywords_labels
 
 BATCH_SIZE = 5
 
@@ -93,7 +98,7 @@ class DatasetGenerator:
             response = self.llm.generate(messages)
             logger.debug(f"Keyword generation response: {response}")
             try:
-                response = convert_json_keywords(response)
+                response = convert_json_keywords_labels(response)
             except ValueError as e:
                 logger.error(f"Invalid JSON response: {e}, retrying...")
                 continue
@@ -114,6 +119,52 @@ class DatasetGenerator:
             logger.error(f"Validation error for keywords: {e}")
             raise e
         self.dataset.set_keywords(keywords.keywords)
+
+    def _generate_labels(self):
+        """Generate labels for the (text classification) dataset."""
+        logger.info("Generating labels for the dataset")
+        if self.llm.check_response_format():
+            self.llm.set_response_format({"type": "json_object"})
+        labels = []
+        num_labels = random.randint(2, 5)
+        while len(labels) < num_labels:
+            remaining_labels = min(num_labels - len(labels), 30)
+            additional_description = self.dataset.get_additional_description()
+            if labels:
+                additional_description += f" Previously generated labels: {', '.join(labels)}. \nGenerate new labels following the provided rules in the system prompt."
+            messages = self._create_messages(
+                LABELS_SYSTEM_PROMPT,
+                LABELS_USER_PROMPT,
+                topic=self.dataset.get_topic(),
+                domains=", ".join(self.dataset.get_domains()),
+                language=self.dataset.get_language(),
+                additional_description=additional_description,
+                num_labels=remaining_labels,
+            )
+            response = self.llm.generate(messages)
+            logger.debug(f"Label generation response: {response}")
+            try:
+                response = convert_json_keywords_labels(response)
+            except ValueError as e:
+                logger.error(f"Invalid JSON response: {e}, retrying...")
+                continue
+            new_labels = response.get("labels", [])
+            if not new_labels:
+                logger.warning("No new labels generated, breaking the loop")
+                break
+            labels.extend(new_labels)
+            logger.info(
+                f"Generated {len(new_labels)} new labels, {len(labels)} total labels"
+            )
+        if len(labels) > num_labels:
+            logger.warning("More labels generated than required, truncating")
+            labels = labels[:num_labels]
+        try:
+            labels = EntryLabels(labels=labels)
+        except ValidationError as e:
+            logger.error(f"Validation error for labels: {e}")
+            raise e
+        self.dataset.set_labels(labels.labels)
 
     def _generate_description(self):
         """Generate a description for the dataset."""
@@ -221,6 +272,9 @@ class DatasetGenerator:
         if self.llm.check_response_format():
             self.llm.set_response_format({"type": "json_object"})
         self._set_dataset_type()
+        logger.info(f"Dataset type: {self.dataset.get_dataset_type()}")
+        if self.dataset.get_dataset_type() == "Text Classification Dataset":
+            self._generate_labels()
         data = []
         keywords = self.dataset.get_keywords()
         for i in range(0, len(keywords), BATCH_SIZE):
@@ -245,6 +299,9 @@ class DatasetGenerator:
         if self.llm.check_response_format():
             self.llm.set_response_format({"type": "json_object"})
         self._set_dataset_type()
+        logger.info(f"Dataset type: {self.dataset.get_dataset_type()}")
+        if self.dataset.get_dataset_type() == "Text Classification Dataset":
+            self._generate_labels()
         data = []
         keywords = self.dataset.get_keywords()
         for keyword in keywords:
@@ -447,4 +504,37 @@ class SentimentAnalysisDatasetGenerator(DatasetGenerator):
             ENTRY_SENTIMENT_USER_PROMPT,
             ENTRY_SENTIMENT_SYSTEM_PROMPT,
             sentiment=random.choice(["positive", "negative", "neutral"]),
+        )
+
+
+class TextClassificationDatasetGenerator(DatasetGenerator):
+    """Text Classification Dataset Generator class."""
+
+    def _set_dataset_type(self):
+        """Set the dataset type to 'Text Classification Dataset'."""
+        self.dataset.set_dataset_type("Text Classification Dataset")
+
+    def _generate_entry(self, keyword: str):
+        """
+        Generate a text classification dataset entry for the given keyword.
+
+        Args:
+            keyword (str): The keyword for which to generate the entry.
+        """
+        return super()._generate_entry(
+            keyword, ENTRY_CLASSIFICATION_USER_PROMPT, ENTRY_CLASSIFICATION_SYSTEM_PROMPT
+        )
+
+    def _agenerate_entry(self, keyword: str):
+        """
+        Generate a text classification dataset entry for the given keyword asynchronously.
+
+        Args:
+            keyword (str): The keyword for which to generate the entry.
+        """
+        return super()._agenerate_entry(
+            keyword,
+            ENTRY_CLASSIFICATION_USER_PROMPT,
+            ENTRY_CLASSIFICATION_SYSTEM_PROMPT,
+            label=random.choice(self.dataset.get_labels()),
         )
