@@ -137,23 +137,79 @@ class DatasetGenerator:
         self.llm.set_temperature(tmp_llm_temperature)
         logger.info("Dataset description generated")
 
-    def _generate_entry(self, keyword: str):
+    def _generate_entry(
+        self, keyword: str, user_prompt: str, system_prompt: str, **kwargs
+    ):
         """
-        Generate an entry for the dataset. Must be implemented by subclasses.
+        Generate an entry for the dataset. Specific to each dataset type.
 
         Args:
             keyword (str): The keyword for which to generate the entry.
-        """
-        raise NotImplementedError("Subclasses must implement _generate_entry")
+            user_prompt (str): The user prompt for the entry.
+            system_prompt (str): The system prompt for the entry.
+            **kwargs: Additional keyword arguments to be formatted into the prompts (if any).
 
-    async def _agenerate_entry(self, keyword: str):
+        Returns:
+            dict: The generated raw dataset entry.
+
+        Raises:
+            ValidationError: If the generated entry does not match the data model.
         """
-        Generate an entry for the dataset asynchronously. Must be implemented by subclasses.
+        messages = self._create_messages(
+            system_prompt=system_prompt,
+            user_prompt=user_prompt,
+            keyword=keyword,
+            topic=self.dataset.get_topic(),
+            language=self.dataset.get_language(),
+            additional_description=self.dataset.get_additional_description(),
+            **kwargs,
+        )
+        response = self.llm.generate(messages)
+        try:
+            response = convert_json_entry(response)
+            entry = EntryDataset(**response)
+            logger.debug(f"Raw dataset entry: {entry}")
+        except ValidationError as e:
+            logger.error(f"Validation error for keyword {keyword}: {e}")
+            return None
+        return entry.model_dump()
+
+    async def _agenerate_entry(
+        self, keyword: str, user_prompt: str, system_prompt: str, **kwargs
+    ):
+        """
+        Generate an entry for the dataset asynchronously. Generate an entry for the dataset. Specific to each dataset type.
 
         Args:
             keyword (str): The keyword for which to generate the entry.
+            user_prompt (str): The user prompt for the entry.
+            system_prompt (str): The system prompt for the entry.
+            **kwargs: Additional keyword arguments to be formatted into the prompts (if any).
+
+        Returns:
+            dict: The generated raw dataset entry.
+
+        Raises:
+            ValidationError: If the generated entry does not match the data model.
         """
-        raise NotImplementedError("Subclasses must implement _generate_aentry")
+        messages = self._create_messages(
+            system_prompt=system_prompt,
+            user_prompt=user_prompt,
+            keyword=keyword,
+            topic=self.dataset.get_topic(),
+            language=self.dataset.get_language(),
+            additional_description=self.dataset.get_additional_description(),
+            **kwargs,
+        )
+        response = await self.llm.agenerate(messages)
+        try:
+            response = convert_json_entry(response)
+            entry = EntryDataset(**response)
+            logger.debug(f"Raw dataset entry: {entry}")
+        except ValidationError as e:
+            logger.error(f"Validation error for keyword {keyword}: {e}")
+            return None
+        return entry.model_dump()
 
     def _set_dataset_type(self):
         """Set the dataset type. Must be implemented by subclasses."""
@@ -245,67 +301,27 @@ class RawDatasetGenerator(DatasetGenerator):
         """Set the dataset type to 'Raw Dataset'."""
         self.dataset.set_dataset_type("Raw Dataset")
 
-    def _generate_entry(self, keyword: str) -> dict:
+    def _generate_entry(self, keyword: str):
         """
         Generate a raw dataset entry for the given keyword.
 
         Args:
             keyword (str): The keyword for which to generate the entry.
-
-        Returns:
-            dict: The generated raw dataset entry.
-
-        Raises:
-            ValidationError: If the generated entry does not match the data model.
         """
-        messages = self._create_messages(
-            ENTRY_RAW_DATASET_SYSTEM_PROMPT,
-            ENTRY_RAW_DATASET_USER_PROMPT,
-            keyword=keyword,
-            topic=self.dataset.get_topic(),
-            language=self.dataset.get_language(),
-            additional_description=self.dataset.get_additional_description(),
+        return super()._generate_entry(
+            keyword, ENTRY_RAW_DATASET_USER_PROMPT, ENTRY_RAW_DATASET_SYSTEM_PROMPT
         )
-        response = self.llm.generate(messages)
-        try:
-            response = convert_json_entry(response)
-            entry = EntryDataset(**response)
-            logger.debug(f"Raw dataset entry: {entry}")
-        except ValidationError as e:
-            logger.error(f"Validation error for keyword {keyword}: {e}")
-            return None
-        return entry.model_dump()
 
-    async def _agenerate_entry(self, keyword: str) -> dict:
+    def _agenerate_entry(self, keyword: str):
         """
         Generate a raw dataset entry for the given keyword asynchronously.
 
         Args:
             keyword (str): The keyword for which to generate the entry.
-
-        Returns:
-            dict: The generated raw dataset entry.
-
-        Raises:
-            ValidationError: If the generated entry does not match the data model.
         """
-        messages = self._create_messages(
-            ENTRY_RAW_DATASET_SYSTEM_PROMPT,
-            ENTRY_RAW_DATASET_USER_PROMPT,
-            keyword=keyword,
-            topic=self.dataset.get_topic(),
-            language=self.dataset.get_language(),
-            additional_description=self.dataset.get_additional_description(),
+        return super()._agenerate_entry(
+            keyword, ENTRY_RAW_DATASET_USER_PROMPT, ENTRY_RAW_DATASET_SYSTEM_PROMPT
         )
-        response = await self.llm.agenerate(messages)
-        try:
-            response = convert_json_entry(response)
-            entry = EntryDataset(**response)
-            logger.debug(f"Raw dataset entry: {entry}")
-        except ValidationError as e:
-            logger.error(f"Validation error for keyword {keyword}: {e}")
-            return None
-        return entry.model_dump()
 
 
 class InstructionDatasetGenerator(DatasetGenerator):
@@ -315,67 +331,27 @@ class InstructionDatasetGenerator(DatasetGenerator):
         """Set the dataset type to 'Instruction Dataset'."""
         self.dataset.set_dataset_type("Instruction Dataset")
 
-    def _generate_entry(self, keyword: str) -> dict:
+    def _generate_entry(self, keyword: str):
         """
         Generate an instruction dataset entry for the given keyword.
 
         Args:
             keyword (str): The keyword for which to generate the entry.
-
-        Returns:
-            dict: The generated instruction dataset entry.
-
-        Raises:
-            ValidationError: If the generated entry does not match the data model.
         """
-        messages = self._create_messages(
-            ENTRY_INSTRUCT_SYSTEM_PROMPT,
-            ENTRY_INSTRUCT_USER_PROMPT,
-            keyword=keyword,
-            topic=self.dataset.get_topic(),
-            language=self.dataset.get_language(),
-            additional_description=self.dataset.get_additional_description(),
+        return super()._generate_entry(
+            keyword, ENTRY_INSTRUCT_USER_PROMPT, ENTRY_INSTRUCT_SYSTEM_PROMPT
         )
-        response = self.llm.generate(messages)
-        try:
-            response = convert_json_entry(response)
-            entry = EntryDataset(**response)
-            logger.debug(f"Instruction dataset entry: {entry}")
-        except ValidationError as e:
-            logger.error(f"Validation error for keyword {keyword}: {e}")
-            return None
-        return entry.model_dump()
 
-    async def _agenerate_entry(self, keyword: str) -> dict:
+    def _agenerate_entry(self, keyword: str):
         """
         Generate an instruction dataset entry for the given keyword asynchronously.
 
         Args:
             keyword (str): The keyword for which to generate the entry.
-
-        Returns:
-            dict: The generated instruction dataset entry.
-
-        Raises:
-            ValidationError: If the generated entry does not match the data model.
         """
-        messages = self._create_messages(
-            ENTRY_INSTRUCT_SYSTEM_PROMPT,
-            ENTRY_INSTRUCT_USER_PROMPT,
-            keyword=keyword,
-            topic=self.dataset.get_topic(),
-            language=self.dataset.get_language(),
-            additional_description=self.dataset.get_additional_description(),
+        return super()._agenerate_entry(
+            keyword, ENTRY_INSTRUCT_USER_PROMPT, ENTRY_INSTRUCT_SYSTEM_PROMPT
         )
-        response = await self.llm.agenerate(messages)
-        try:
-            response = convert_json_entry(response)
-            entry = EntryDataset(**response)
-            logger.debug(f"Instruction dataset entry: {entry}")
-        except ValidationError as e:
-            logger.error(f"Validation error for keyword {keyword}: {e}")
-            return None
-        return entry.model_dump()
 
 
 class PreferenceDatasetGenerator(DatasetGenerator):
@@ -385,67 +361,27 @@ class PreferenceDatasetGenerator(DatasetGenerator):
         """Set the dataset type to 'Preference Dataset'."""
         self.dataset.set_dataset_type("Preference Dataset")
 
-    def _generate_entry(self, keyword: str) -> dict:
+    def _generate_entry(self, keyword: str):
         """
         Generate a preference dataset entry for the given keyword.
 
         Args:
             keyword (str): The keyword for which to generate the entry.
-
-        Returns:
-            dict: The generated preference dataset entry.
-
-        Raises:
-            ValidationError: If the generated entry does not match the data model.
         """
-        messages = self._create_messages(
-            ENTRY_PREFERENCE_SYSTEM_PROMPT,
-            ENTRY_PREFERENCE_USER_PROMPT,
-            keyword=keyword,
-            topic=self.dataset.get_topic(),
-            language=self.dataset.get_language(),
-            additional_description=self.dataset.get_additional_description(),
+        return super()._generate_entry(
+            keyword, ENTRY_PREFERENCE_USER_PROMPT, ENTRY_PREFERENCE_SYSTEM_PROMPT
         )
-        response = self.llm.generate(messages)
-        try:
-            response = convert_json_entry(response)
-            entry = EntryDataset(**response)
-            logger.debug(f"Preference dataset entry: {entry}")
-        except ValidationError as e:
-            logger.error(f"Validation error for keyword {keyword}: {e}")
-            return None
-        return entry.model_dump()
 
-    async def _agenerate_entry(self, keyword: str) -> dict:
+    def _agenerate_entry(self, keyword: str):
         """
         Generate a preference dataset entry for the given keyword asynchronously.
 
         Args:
             keyword (str): The keyword for which to generate the entry.
-
-        Returns:
-            dict: The generated preference dataset entry.
-
-        Raises:
-            ValidationError: If the generated entry does not match the data model.
         """
-        messages = self._create_messages(
-            ENTRY_PREFERENCE_SYSTEM_PROMPT,
-            ENTRY_PREFERENCE_USER_PROMPT,
-            keyword=keyword,
-            topic=self.dataset.get_topic(),
-            language=self.dataset.get_language(),
-            additional_description=self.dataset.get_additional_description(),
+        return super()._agenerate_entry(
+            keyword, ENTRY_PREFERENCE_USER_PROMPT, ENTRY_PREFERENCE_SYSTEM_PROMPT
         )
-        response = await self.llm.agenerate(messages)
-        try:
-            response = convert_json_entry(response)
-            entry = EntryDataset(**response)
-            logger.debug(f"Preference dataset entry: {entry}")
-        except ValidationError as e:
-            logger.error(f"Validation error for keyword {keyword}: {e}")
-            return None
-        return entry.model_dump()
 
 
 class SummarizationDatasetGenerator(DatasetGenerator):
@@ -455,67 +391,27 @@ class SummarizationDatasetGenerator(DatasetGenerator):
         """Set the dataset type to 'Summarization Dataset'."""
         self.dataset.set_dataset_type("Summarization Dataset")
 
-    def _generate_entry(self, keyword: str) -> dict:
+    def _generate_entry(self, keyword: str):
         """
         Generate a summarization dataset entry for the given keyword.
 
         Args:
             keyword (str): The keyword for which to generate the entry.
-
-        Returns:
-            dict: The generated summarization dataset entry.
-
-        Raises:
-            ValidationError: If the generated entry does not match the data model.
         """
-        messages = self._create_messages(
-            ENTRY_SUMMARIZATION_SYSTEM_PROMPT,
-            ENTRY_SUMMARIZATION_USER_PROMPT,
-            keyword=keyword,
-            topic=self.dataset.get_topic(),
-            language=self.dataset.get_language(),
-            additional_description=self.dataset.get_additional_description(),
+        return super()._generate_entry(
+            keyword, ENTRY_SUMMARIZATION_USER_PROMPT, ENTRY_SUMMARIZATION_SYSTEM_PROMPT
         )
-        response = self.llm.generate(messages)
-        try:
-            response = convert_json_entry(response)
-            entry = EntryDataset(**response)
-            logger.debug(f"Summarization dataset entry: {entry}")
-        except ValidationError as e:
-            logger.error(f"Validation error for keyword {keyword}: {e}")
-            return None
-        return entry.model_dump()
 
-    async def _agenerate_entry(self, keyword: str) -> dict:
+    def _agenerate_entry(self, keyword: str):
         """
         Generate a summarization dataset entry for the given keyword asynchronously.
 
         Args:
             keyword (str): The keyword for which to generate the entry.
-
-        Returns:
-            dict: The generated summarization dataset entry.
-
-        Raises:
-            ValidationError: If the generated entry does not match the data model.
         """
-        messages = self._create_messages(
-            ENTRY_SUMMARIZATION_SYSTEM_PROMPT,
-            ENTRY_SUMMARIZATION_USER_PROMPT,
-            keyword=keyword,
-            topic=self.dataset.get_topic(),
-            language=self.dataset.get_language(),
-            additional_description=self.dataset.get_additional_description(),
+        return super()._agenerate_entry(
+            keyword, ENTRY_SUMMARIZATION_USER_PROMPT, ENTRY_SUMMARIZATION_SYSTEM_PROMPT
         )
-        response = await self.llm.agenerate(messages)
-        try:
-            response = convert_json_entry(response)
-            entry = EntryDataset(**response)
-            logger.debug(f"Summarization dataset entry: {entry}")
-        except ValidationError as e:
-            logger.error(f"Validation error for keyword {keyword}: {e}")
-            return None
-        return entry.model_dump()
 
 
 class SentimentAnalysisDatasetGenerator(DatasetGenerator):
@@ -525,66 +421,30 @@ class SentimentAnalysisDatasetGenerator(DatasetGenerator):
         """Set the dataset type to 'Sentiment Analysis Dataset'."""
         self.dataset.set_dataset_type("Sentiment Analysis Dataset")
 
-    def _generate_entry(self, keyword: str) -> dict:
+    def _generate_entry(self, keyword: str):
         """
         Generate a sentiment analysis dataset entry for the given keyword.
 
         Args:
             keyword (str): The keyword for which to generate the entry.
-
-        Returns:
-            dict: The generated sentiment analysis dataset entry.
-
-        Raises:
-            ValidationError: If the generated entry does not match the data model.
         """
-        messages = self._create_messages(
-            ENTRY_SENTIMENT_SYSTEM_PROMPT,
+        return super()._generate_entry(
+            keyword,
             ENTRY_SENTIMENT_USER_PROMPT,
-            keyword=keyword,
-            topic=self.dataset.get_topic(),
-            language=self.dataset.get_language(),
+            ENTRY_SENTIMENT_SYSTEM_PROMPT,
             sentiment=random.choice(["positive", "negative", "neutral"]),
-            additional_description=self.dataset.get_additional_description(),
         )
-        response = self.llm.generate(messages)
-        try:
-            response = convert_json_entry(response)
-            entry = EntryDataset(**response)
-            logger.debug(f"Sentiment analysis dataset entry: {entry}")
-        except ValidationError as e:
-            logger.error(f"Validation error for keyword {keyword}: {e}")
-            return None
-        return entry.model_dump()
 
-    async def _agenerate_entry(self, keyword: str) -> dict:
+    def _agenerate_entry(self, keyword: str):
         """
         Generate a sentiment analysis dataset entry for the given keyword asynchronously.
 
         Args:
             keyword (str): The keyword for which to generate the entry.
-
-        Returns:
-            dict: The generated sentiment analysis dataset entry.
-
-        Raises:
-            ValidationError: If the generated entry does not match the data model.
         """
-        messages = self._create_messages(
-            ENTRY_SENTIMENT_SYSTEM_PROMPT,
+        return super()._agenerate_entry(
+            keyword,
             ENTRY_SENTIMENT_USER_PROMPT,
-            keyword=keyword,
-            topic=self.dataset.get_topic(),
-            language=self.dataset.get_language(),
-            additional_description=self.dataset.get_additional_description(),
+            ENTRY_SENTIMENT_SYSTEM_PROMPT,
             sentiment=random.choice(["positive", "negative", "neutral"]),
         )
-        response = await self.llm.agenerate(messages)
-        try:
-            response = convert_json_entry(response)
-            entry = EntryDataset(**response)
-            logger.debug(f"Sentiment analysis dataset entry: {entry}")
-        except ValidationError as e:
-            logger.error(f"Validation error for keyword {keyword}: {e}")
-            return None
-        return entry.model_dump()
