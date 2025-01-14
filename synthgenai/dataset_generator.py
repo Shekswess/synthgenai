@@ -264,6 +264,7 @@ class RawDatasetGenerator(DatasetGenerator):
             keyword=keyword,
             topic=self.dataset.get_topic(),
             language=self.dataset.get_language(),
+            additional_description=self.dataset.get_additional_description(),
         )
         response = self.llm.generate(messages)
         try:
@@ -294,6 +295,7 @@ class RawDatasetGenerator(DatasetGenerator):
             keyword=keyword,
             topic=self.dataset.get_topic(),
             language=self.dataset.get_language(),
+            additional_description=self.dataset.get_additional_description(),
         )
         response = await self.llm.agenerate(messages)
         try:
@@ -332,6 +334,7 @@ class InstructionDatasetGenerator(DatasetGenerator):
             keyword=keyword,
             topic=self.dataset.get_topic(),
             language=self.dataset.get_language(),
+            additional_description=self.dataset.get_additional_description(),
         )
         response = self.llm.generate(messages)
         try:
@@ -362,6 +365,7 @@ class InstructionDatasetGenerator(DatasetGenerator):
             keyword=keyword,
             topic=self.dataset.get_topic(),
             language=self.dataset.get_language(),
+            additional_description=self.dataset.get_additional_description(),
         )
         response = await self.llm.agenerate(messages)
         try:
@@ -400,6 +404,7 @@ class PreferenceDatasetGenerator(DatasetGenerator):
             keyword=keyword,
             topic=self.dataset.get_topic(),
             language=self.dataset.get_language(),
+            additional_description=self.dataset.get_additional_description(),
         )
         response = self.llm.generate(messages)
         try:
@@ -430,6 +435,7 @@ class PreferenceDatasetGenerator(DatasetGenerator):
             keyword=keyword,
             topic=self.dataset.get_topic(),
             language=self.dataset.get_language(),
+            additional_description=self.dataset.get_additional_description(),
         )
         response = await self.llm.agenerate(messages)
         try:
@@ -468,6 +474,7 @@ class SummarizationDatasetGenerator(DatasetGenerator):
             keyword=keyword,
             topic=self.dataset.get_topic(),
             language=self.dataset.get_language(),
+            additional_description=self.dataset.get_additional_description(),
         )
         response = self.llm.generate(messages)
         try:
@@ -498,6 +505,7 @@ class SummarizationDatasetGenerator(DatasetGenerator):
             keyword=keyword,
             topic=self.dataset.get_topic(),
             language=self.dataset.get_language(),
+            additional_description=self.dataset.get_additional_description(),
         )
         response = await self.llm.agenerate(messages)
         try:
@@ -537,6 +545,7 @@ class SentimentAnalysisDatasetGenerator(DatasetGenerator):
             topic=self.dataset.get_topic(),
             language=self.dataset.get_language(),
             sentiment=random.choice(["positive", "negative", "neutral"]),
+            additional_description=self.dataset.get_additional_description(),
         )
         response = self.llm.generate(messages)
         try:
@@ -567,6 +576,7 @@ class SentimentAnalysisDatasetGenerator(DatasetGenerator):
             keyword=keyword,
             topic=self.dataset.get_topic(),
             language=self.dataset.get_language(),
+            additional_description=self.dataset.get_additional_description(),
             sentiment=random.choice(["positive", "negative", "neutral"]),
         )
         response = await self.llm.agenerate(messages)
