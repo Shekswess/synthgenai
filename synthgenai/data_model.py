@@ -120,8 +120,8 @@ class GeneratedPreferenceText(BaseModel):
     """Pydantic model for the generated text in the Preference dataset."""
 
     prompt: list[PreferencePrompt]
-    chosen: PreferenceChosen
-    rejected: PreferenceRejected
+    chosen: list[PreferenceChosen]
+    rejected: list[PreferenceRejected]
 
 
 class GeneratedSummaryText(BaseModel):
