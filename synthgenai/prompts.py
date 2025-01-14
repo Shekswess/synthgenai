@@ -83,14 +83,14 @@ The expected output format is:
     "keyword": "keyword",
     "topic": "topic",
     "language": "language",
-    "generated_text":
+    "generated_entry":
     {
         "text": "generated text"
     }
 }
 ```
 
-Remember, the generated entry would be used as a entry for a raw synthetic dataset which will be used for training or finetuning LLMs.
+Remember, the generated entry would be used as an entry for a raw synthetic dataset which will be used for training or finetuning LLMs.
 Remember, the generated entry should be unique and relevant to the given information.
 Remember, the generated entry must be generated on the language that is provided.
 Remember, the generated entry must be in the valid JSON format without any other text before and after the JSON object.
@@ -139,7 +139,7 @@ The expected output format is:
     "keyword": "keyword",
     "topic": "topic",
     "language": "language",
-    "generated_text":
+    "generated_entry":
     {
         "messages": [
             {
@@ -208,27 +208,17 @@ The expected output format is:
     "keyword": "keyword",
     "topic": "topic",
     "language": "language",
-    "generated_text":
+    "generated_entry":
     {
-        "messages": [
-            {
-                "role": "system",
-                "content": "generated system(instruction) prompt"
-            },
-            {
-                "role": "user",
-                "content": "generated user prompt"
-            },
-            {
-                "role": "assistant",
-                "content": "chosen assistant response",
-                "option": "chosen"
-            },
-            {
-                "role": "assistant",
-                "content": "rejected assistant response",
-                "option": "rejected"
-            }
+        "prompt": [
+            {'role': 'system', 'content': 'generated system(instruction) prompt'},
+            {'role': 'user', 'content': 'generated user prompt'}
+        ],
+        "chosen": [
+            {'role': 'assistant', 'content': 'generated chosen assistant response'}
+        ],
+        "rejected": [
+            {'role': 'assistant', 'content': 'generated rejected assistant response'}
         ]
     }
 }
@@ -283,7 +273,7 @@ The expected output format is:
     "keyword": "keyword",
     "topic": "topic",
     "language": "language",
-    "generated_summary_text":
+    "generated_entry":
     {
         "text": "generated text",
         "summary": "generated summary"
@@ -341,10 +331,10 @@ The expected output format is:
     "keyword": "keyword",
     "topic": "topic",
     "language": "language",
-    "generated_sentiment_analysis":
+    "generated_entry":
     {
-        "text": "generated text",
-        "sentiment": "generated sentiment (which can be positive, negative, neutral)"
+        "prompt": "generated text",
+        "label": "generated sentiment (which can be positive, negative, neutral)"
     }
 }
 ```

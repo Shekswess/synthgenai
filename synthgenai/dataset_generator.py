@@ -9,12 +9,8 @@ from pydantic import ValidationError
 
 from .data_model import (
     DatasetGeneratorConfig,
-    EntryInstructDataset,
+    EntryDataset,
     EntryKeywords,
-    EntryPreferenceDataset,
-    EntryRawDataset,
-    EntrySentimentAnalysisDataset,
-    EntrySummarizationDataset,
 )
 from .dataset import Dataset
 from .llm import LLM
@@ -268,12 +264,11 @@ class RawDatasetGenerator(DatasetGenerator):
             keyword=keyword,
             topic=self.dataset.get_topic(),
             language=self.dataset.get_language(),
-            additional_description=self.dataset.get_additional_description(),
         )
         response = self.llm.generate(messages)
         try:
             response = convert_json_entry(response)
-            entry = EntryRawDataset(**response)
+            entry = EntryDataset(**response)
             logger.debug(f"Raw dataset entry: {entry}")
         except ValidationError as e:
             logger.error(f"Validation error for keyword {keyword}: {e}")
@@ -299,12 +294,11 @@ class RawDatasetGenerator(DatasetGenerator):
             keyword=keyword,
             topic=self.dataset.get_topic(),
             language=self.dataset.get_language(),
-            additional_description=self.dataset.get_additional_description(),
         )
         response = await self.llm.agenerate(messages)
         try:
             response = convert_json_entry(response)
-            entry = EntryRawDataset(**response)
+            entry = EntryDataset(**response)
             logger.debug(f"Raw dataset entry: {entry}")
         except ValidationError as e:
             logger.error(f"Validation error for keyword {keyword}: {e}")
@@ -338,12 +332,11 @@ class InstructionDatasetGenerator(DatasetGenerator):
             keyword=keyword,
             topic=self.dataset.get_topic(),
             language=self.dataset.get_language(),
-            additional_description=self.dataset.get_additional_description(),
         )
         response = self.llm.generate(messages)
         try:
             response = convert_json_entry(response)
-            entry = EntryInstructDataset(**response)
+            entry = EntryDataset(**response)
             logger.debug(f"Instruction dataset entry: {entry}")
         except ValidationError as e:
             logger.error(f"Validation error for keyword {keyword}: {e}")
@@ -369,12 +362,11 @@ class InstructionDatasetGenerator(DatasetGenerator):
             keyword=keyword,
             topic=self.dataset.get_topic(),
             language=self.dataset.get_language(),
-            additional_description=self.dataset.get_additional_description(),
         )
         response = await self.llm.agenerate(messages)
         try:
             response = convert_json_entry(response)
-            entry = EntryInstructDataset(**response)
+            entry = EntryDataset(**response)
             logger.debug(f"Instruction dataset entry: {entry}")
         except ValidationError as e:
             logger.error(f"Validation error for keyword {keyword}: {e}")
@@ -408,12 +400,11 @@ class PreferenceDatasetGenerator(DatasetGenerator):
             keyword=keyword,
             topic=self.dataset.get_topic(),
             language=self.dataset.get_language(),
-            additional_description=self.dataset.get_additional_description(),
         )
         response = self.llm.generate(messages)
         try:
             response = convert_json_entry(response)
-            entry = EntryPreferenceDataset(**response)
+            entry = EntryDataset(**response)
             logger.debug(f"Preference dataset entry: {entry}")
         except ValidationError as e:
             logger.error(f"Validation error for keyword {keyword}: {e}")
@@ -439,12 +430,11 @@ class PreferenceDatasetGenerator(DatasetGenerator):
             keyword=keyword,
             topic=self.dataset.get_topic(),
             language=self.dataset.get_language(),
-            additional_description=self.dataset.get_additional_description(),
         )
         response = await self.llm.agenerate(messages)
         try:
             response = convert_json_entry(response)
-            entry = EntryPreferenceDataset(**response)
+            entry = EntryDataset(**response)
             logger.debug(f"Preference dataset entry: {entry}")
         except ValidationError as e:
             logger.error(f"Validation error for keyword {keyword}: {e}")
@@ -478,12 +468,11 @@ class SummarizationDatasetGenerator(DatasetGenerator):
             keyword=keyword,
             topic=self.dataset.get_topic(),
             language=self.dataset.get_language(),
-            additional_description=self.dataset.get_additional_description(),
         )
         response = self.llm.generate(messages)
         try:
             response = convert_json_entry(response)
-            entry = EntrySummarizationDataset(**response)
+            entry = EntryDataset(**response)
             logger.debug(f"Summarization dataset entry: {entry}")
         except ValidationError as e:
             logger.error(f"Validation error for keyword {keyword}: {e}")
@@ -509,12 +498,11 @@ class SummarizationDatasetGenerator(DatasetGenerator):
             keyword=keyword,
             topic=self.dataset.get_topic(),
             language=self.dataset.get_language(),
-            additional_description=self.dataset.get_additional_description(),
         )
         response = await self.llm.agenerate(messages)
         try:
             response = convert_json_entry(response)
-            entry = EntrySummarizationDataset(**response)
+            entry = EntryDataset(**response)
             logger.debug(f"Summarization dataset entry: {entry}")
         except ValidationError as e:
             logger.error(f"Validation error for keyword {keyword}: {e}")
@@ -549,12 +537,11 @@ class SentimentAnalysisDatasetGenerator(DatasetGenerator):
             topic=self.dataset.get_topic(),
             language=self.dataset.get_language(),
             sentiment=random.choice(["positive", "negative", "neutral"]),
-            additional_description=self.dataset.get_additional_description(),
         )
         response = self.llm.generate(messages)
         try:
             response = convert_json_entry(response)
-            entry = EntrySentimentAnalysisDataset(**response)
+            entry = EntryDataset(**response)
             logger.debug(f"Sentiment analysis dataset entry: {entry}")
         except ValidationError as e:
             logger.error(f"Validation error for keyword {keyword}: {e}")
@@ -581,12 +568,11 @@ class SentimentAnalysisDatasetGenerator(DatasetGenerator):
             topic=self.dataset.get_topic(),
             language=self.dataset.get_language(),
             sentiment=random.choice(["positive", "negative", "neutral"]),
-            additional_description=self.dataset.get_additional_description(),
         )
         response = await self.llm.agenerate(messages)
         try:
             response = convert_json_entry(response)
-            entry = EntrySentimentAnalysisDataset(**response)
+            entry = EntryDataset(**response)
             logger.debug(f"Sentiment analysis dataset entry: {entry}")
         except ValidationError as e:
             logger.error(f"Validation error for keyword {keyword}: {e}")
