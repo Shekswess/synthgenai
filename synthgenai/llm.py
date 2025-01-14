@@ -25,6 +25,9 @@ ALLOWED_PREFIXES = [
     "huggingface/",
     "ollama/",
     "hosted_vllm/",
+    "azure/",
+    "azure_ai/",
+    "vertex_ai/",
 ]
 
 
@@ -74,6 +77,13 @@ class LLM:
             "claude": "ANTHROPIC_API_KEY",
             "gpt": "OPENAI_API_KEY",
             "huggingface": "HUGGINGFACE_API_KEY",
+            "azure": ["AZURE_API_KEY", "AZURE_API_BASE", "AZURE_API_VERSION"],
+            "azure_ai": ["AZURE_AI_API_KEY", "AZURE_AI_API_BASE"],
+            "vertex_ai": [
+                "GOOGLE_APPLICATION_CREDENTIALS",
+                "VERTEXAI_LOCATION",
+                "VERTEXAI_PROJECT",
+            ],
         }
 
         for key, env_vars in api_key_checks.items():
@@ -101,6 +111,29 @@ class LLM:
                             ):
                                 logger.info(
                                     "AWS_REGION and AWS_PROFILE are set, using them for bedrock model"
+                                )
+                            else:
+                                for var in missing_vars:
+                                    logger.error(f"{var} is not set")
+                                raise ValueError(f"{', '.join(missing_vars)} are not set")
+                        elif key == "azure":
+                            if all(
+                                os.environ.get(var)
+                                for var in [
+                                    "AZURE_API_KEY",
+                                    "AZURE_API_BASE",
+                                    "AZURE_API_VERSION",
+                                ]
+                            ):
+                                logger.info(
+                                    "AZURE_API_KEY, AZURE_API_BASE, and AZURE_API_VERSION are set"
+                                )
+                            elif all(
+                                os.environ.get(var)
+                                for var in ["AZURE_AD_TOKEN", "AZURE_API_TYPE"]
+                            ):
+                                logger.info(
+                                    "AZURE_AD_TOKEN and AZURE_API_TYPE are set, using them for azure model"
                                 )
                             else:
                                 for var in missing_vars:
@@ -187,11 +220,15 @@ class LLM:
             bool: True if the response format is supported, False otherwise
         """
         custom_llm_provider = None
-        if not self.model.startswith("ollama") and not self.model.startswith("hosted_vllm"):
+        if not self.model.startswith("ollama") and not self.model.startswith(
+            "hosted_vllm"
+        ):
             custom_llm_provider = self.model.split("/")[0]
         if "response_format" in get_supported_openai_params(
             model=self.model, custom_llm_provider=custom_llm_provider
-        ) and supports_response_schema(model=self.model, custom_llm_provider=custom_llm_provider):
+        ) and supports_response_schema(
+            model=self.model, custom_llm_provider=custom_llm_provider
+        ):
             logger.info(f"JSON format is supported by the LLM model: {self.model}")
             return True
         else:
