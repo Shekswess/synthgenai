@@ -495,9 +495,10 @@ language:
 size_category:
 - size_of_the_dataset (depends on the number of entries in the dataset, allowed values: [<1K, 1K-10K, 10K-100K, 100K-1M, 1M-10M, 10M-100M, 100M-1B, 1B-10B, 10B-100B, 100B-1T, >1T])
 task_categories:
-- text-generation (if the dataset type is Raw Dataset or Sentiment Analysis Dataset)
+- text-generation (if the dataset type is Raw Dataset)
 - question-answering (if the dataset type is Instruction Dataset or Preference Dataset)
 - summarization (if the dataset type is Summarization Dataset)
+- text-classification (if the dataset type is Text Classification Dataset or Sentiment Analysis Dataset)
 license:
 - apache-2.0
 tags:
@@ -525,7 +526,7 @@ Remember, the generated description should be informative, detailed but at the s
 Remember, the generated description must be generated always on English.
 Remember, the generated description must be structured by using the Valid Markdown rules, to look clean and easy to read
 Remember, try to use bullet points(list items) to make the description more structured and easy to read.
-Remember, there are only two allowed values for the `task_categories`: text-generation (if the dataset type is Raw Dataset) and question-answering (if the dataset type is Instruction Dataset or Preference Dataset).
+Remember, there are only four allowed values for the `task_categories`: text-generation, question-answering, summarization, text-classification
 """
 
 MARKDOWN_DESCRIPTION_USER_PROMPT = """
