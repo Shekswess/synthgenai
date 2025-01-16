@@ -1,0 +1,23 @@
+name: Deploy Documentation
+
+on:
+    push:
+        branches:
+        - main
+
+jobs:
+    build_n_release:
+        name: Deploy Documentation
+        runs-on: ubuntu-latest
+
+        steps:
+        - uses: actions/checkout@v4
+
+        - name: Install uv
+          uses: astral-sh/setup-uv@v3
+
+        - name: Set up Python
+          run: uv python install
+        
+        - name: Deploy Documentation
+          run: uv run mkdocs gh-deploy

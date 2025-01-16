@@ -1,6 +1,6 @@
 # SynthGenAI-Package for Generating Synthetic Datasets using LLMs
 
-![header_logo_image](./assets/logo_header.png)
+![header_logo_image](./docs/assets/logo_header.png)
 
 SynthGenAI is a package for generating Synthetic Datasets. The idea is to have a tool which is simple to use and can generate datasets on different topics by utilizing LLMs from different API providers. The package is designed to be modular and can be easily extended to include some different API providers for LLMs and new features.
 
@@ -14,20 +14,12 @@ Interest in synthetic data generation has surged recently, driven by the growing
 ## Tools used for building SynthGenAI 🧰
 
 The package is built using Python and the following libraries:
+
 - [uv](https://docs.astral.sh/uv/), An extremely fast Python package and project manager, written in Rust.
 - [litellm](https://docs.litellm.ai/docs/), A Python SDK for accessing LLMs from different API providers with standardized OpenAI Format.
 - [langfuse](https://langfuse.com/), LLMOps platform for observability, tracebility and monitoring of LLMs.
 - [pydantic](https://pydantic-docs.helpmanual.io/), Data validation and settings management using Python type annotations.
 - [huggingface-hub](https://huggingface.co/) & [datasets](https://huggingface.co/docs/datasets/), A Python library for saving generated datasets on Hugging Face Hub.
-
-## Requirements 📋
-
-To use the package, you need to have the following requirements installed:
-- [Python 3.10+](https://www.python.org/downloads/)
-- [uv](https://docs.astral.sh/uv/) for building the package directly from the source code
-- [Ollama](https://ollama.com/) running on your local machine if you want to use Ollama as an API provider (optional)
-- [Langfuse](https://langfuse.com/) running on your local machine or in the cloud if you want to use Langfuse for tracebility (optional)
-- [Hugging Face Hub](https://huggingface.co/) account if you want to save the generated datasets on Hugging Face Hub with generated token (optional)
 
 ## Installation 🛠️
 
@@ -37,18 +29,28 @@ To install the package, you can use the following command:
 pip install synthgenai
 ```
 
-or you can install the package directly from the source code using the following command:
+or you can install the package directly from the source code using the following commands:
 
 ```bash
+git clone https://github.com/Shekswess/synthgenai.git
 uv build
 pip install ./dist/synthgenai-{version}-py3-none-any.whl
 ```
 
+### Requirements 📋
+
+To use the package, you need to have the following requirements installed:
+
+- [Python 3.10+](https://www.python.org/downloads/)
+- [uv](https://docs.astral.sh/uv/) for building the package directly from the source code
+- [Ollama](https://ollama.com/) running on your local machine if you want to use Ollama as an API provider (optional)
+- [Langfuse](https://langfuse.com/) running on your local machine or in the cloud if you want to use Langfuse for tracebility (optional)
+- [Hugging Face Hub](https://huggingface.co/) account if you want to save the generated datasets on Hugging Face Hub with generated token (optional)
+
 ## Usage 👨‍💻
 
-### Quick Start 🏃
-
 The available API providers for LLMs are:
+
 - **Groq**
 - **Mistral AI**
 - **Gemini**
@@ -59,10 +61,13 @@ The available API providers for LLMs are:
 - **Ollama**
 - **vLLM**
 - **SageMaker**
+- **Azure**
+- **Vertex AI**
 
 For observing the generated datasets, you can use **Langfuse** for tracebility and monitoring of the LLMs.
 
 To use the LLMs from different API providers, to observe the generated datasets, and to save the generated datasets on Hugging Face Hub, you need to set the following environment variables:
+
 ```
 # API keys for different LLM providers
 GROQ_API_KEY=
@@ -74,6 +79,14 @@ AWS_REGION=
 AWS_PROFILE=
 ANTHROPIC_API_KEY=
 OPENAI_API_KEY=
+AZURE_API_KEY
+AZURE_API_BASE
+AZURE_API_VERSION
+AZURE_AD_TOKEN
+AZURE_API_TYPE
+GOOGLE_APPLICATION_CREDENTIALS
+VERTEXAI_LOCATION
+VERTEXAI_PROJECT
 HUGGINGFACE_API_KEY=
 
 # Langfuse API keys
@@ -86,20 +99,23 @@ HF_TOKEN=
 ```
 
 Currently there are three types of datasets that can be generated using SynthGenAI:
+
 - **Raw Datasets**
 - **Instruction Datasets**
 - **Preference Datasets**
 - **Sentiment Analysis Datasets**
 - **Summarization Datasets**
+- **Text Classification Datasets**
 
 The datasets can be generated:
+
 - **Synchronously** - each dataset entry is generated one by one
 - **Asynchronously** - batch of dataset entries is generated at once
 
 > [!NOTE]
 > Asynchronous generation is faster than synchronous generation, but some of LLM providers can have limitations on the number of tokens that can be generated at once.
 
-#### Raw Datasets 🟢
+#### Raw Datasets 🥩
 
 To generate a raw dataset, you can use the following code:
 
@@ -128,7 +144,7 @@ os.environ["HF_TOKEN"] = ""
 
 # Creating the LLMConfig
 llm_config = LLMConfig(
-    model="model_provider/model_name", # Check liteLLM docs for more info 
+    model="model_provider/model_name", # Check liteLLM docs for more info
     temperature=0.5,
     top_p=0.9,
     max_tokens=2048,
@@ -162,7 +178,7 @@ raw_dataset = raw_dataset_generator.generate_dataset()
 hf_repo_name = "organization_or_user_name/dataset_name" # optional
 
 # Saving the dataset to the locally and to the Hugging Face repository(optional)
-dataset.save_dataset(
+raw_dataset.save_dataset(
     hf_repo_name=hf_repo_name,
 )
 ```
@@ -171,13 +187,12 @@ Example of generated entry for the raw dataset:
 
 ```json
 {
-    "keyword": "keyword",
-    "topic": "topic",
-    "language": "language",
-    "generated_text":
-    {
-        "text": "generated text"
-    }
+  "keyword": "keyword",
+  "topic": "topic",
+  "language": "language",
+  "generated_entry": {
+    "text": "generated text"
+  }
 }
 ```
 
@@ -210,7 +225,7 @@ os.environ["HF_TOKEN"] = ""
 
 # Creating the LLMConfig
 llm_config = LLMConfig(
-    model="model_provider/model_name", # Check liteLLM docs for more info 
+    model="model_provider/model_name", # Check liteLLM docs for more info
     temperature=0.5,
     top_p=0.9,
     max_tokens=2048,
@@ -244,7 +259,7 @@ instruction_dataset = instruction_dataset_generator.generate_dataset()
 hf_repo_name = "organization_or_user_name/dataset_name" # optional
 
 # Saving the dataset to the locally and to the Hugging Face repository(optional)
-dataset.save_dataset(
+instruction_dataset.save_dataset(
     hf_repo_name=hf_repo_name,
 )
 ```
@@ -253,26 +268,25 @@ Example of generated entry for the instruction dataset:
 
 ```json
 {
-    "keyword": "keyword",
-    "topic": "topic",
-    "language": "language",
-    "generated_text":
-    {
-        "messages": [
-            {
-                "role": "system",
-                "content": "generated system (instruction) prompt"
-            },
-            {
-                "role": "user",
-                "content": "generated user prompt"
-            },
-            {
-                "role": "assistant",
-                "content": "generated assistant prompt"
-            }
-        ]
-    }
+  "keyword": "keyword",
+  "topic": "topic",
+  "language": "language",
+  "generated_entry": {
+    "messages": [
+      {
+        "role": "system",
+        "content": "generated system(instruction) prompt"
+      },
+      {
+        "role": "user",
+        "content": "generated user prompt"
+      },
+      {
+        "role": "assistant",
+        "content": "generated assistant prompt"
+      }
+    ]
+  }
 }
 ```
 
@@ -305,7 +319,7 @@ os.environ["HF_TOKEN"] = ""
 
 # Creating the LLMConfig
 llm_config = LLMConfig(
-    model="model_provider/model_name", # Check liteLLM docs for more info 
+    model="model_provider/model_name", # Check liteLLM docs for more info
     temperature=0.5,
     top_p=0.9,
     max_tokens=2048,
@@ -339,7 +353,7 @@ preference_dataset = preference_dataset_generator.generate_dataset()
 hf_repo_name = "organization_or_user_name/dataset_name" # optional
 
 # Saving the dataset to the locally and to the Hugging Face repository(optional)
-dataset.save_dataset(
+preference_dataset.save_dataset(
     hf_repo_name=hf_repo_name,
 )
 ```
@@ -348,34 +362,24 @@ Example of generated entry for the preference dataset:
 
 ```json
 {
-    "keyword": "keyword",
-    "topic": "topic",
-    "language": "language",
-    "generated_text":
-    {
-        "messages": [
-            {
-                "role": "system",
-                "content": "generated system (instruction) prompt",
-                "option": null
-            },
-            {
-                "role": "user",
-                "content": "generated user prompt",
-                "option": null
-            },
-            {
-                "role": "assistant",
-                "content": "chosen assistant response",
-                "option": "chosen"
-            },
-            {
-                "role": "assistant",
-                "content": "rejected assistant response",
-                "option": "rejected"
-            }
-        ]
-    }
+  "keyword": "keyword",
+  "topic": "topic",
+  "language": "language",
+  "generated_entry": {
+    "prompt": [
+      { "role": "system", "content": "generated system(instruction) prompt" },
+      { "role": "user", "content": "generated user prompt" }
+    ],
+    "chosen": [
+      { "role": "assistant", "content": "generated chosen assistant response" }
+    ],
+    "rejected": [
+      {
+        "role": "assistant",
+        "content": "generated rejected assistant response"
+      }
+    ]
+  }
 }
 ```
 
@@ -408,7 +412,7 @@ os.environ["HF_TOKEN"] = ""
 
 # Creating the LLMConfig
 llm_config = LLMConfig(
-    model="model_provider/model_name", # Check liteLLM docs for more info 
+    model="model_provider/model_name", # Check liteLLM docs for more info
     temperature=0.5,
     top_p=0.9,
     max_tokens=2048,
@@ -442,7 +446,7 @@ sentiment_analysis_dataset = sentiment_analysis_dataset_generator.generate_datas
 hf_repo_name = "organization_or_user_name/dataset_name" # optional
 
 # Saving the dataset to the locally and to the Hugging Face repository(optional)
-dataset.save_dataset(
+sentiment_analysis_dataset.save_dataset(
     hf_repo_name=hf_repo_name,
 )
 ```
@@ -451,14 +455,95 @@ Example of generated entry for the sentiment analysis dataset:
 
 ```json
 {
-    "keyword": "keyword",
-    "topic": "topic",
-    "language": "language",
-    "generated_sentiment_analysis":
-    {
-        "text": "generated text",
-        "sentiment": "positive|negative|neutral"
-    }
+  "keyword": "keyword",
+  "topic": "topic",
+  "language": "language",
+  "generated_entry": {
+    "prompt": "generated text",
+    "label": "generated sentiment (which can be positive, negative, neutral)"
+  }
+}
+```
+
+#### Text Classification Datasets 🔠
+
+To generate a text classification dataset, you can use the following code:
+
+```python
+# For asynchronous dataset generation
+# import asyncio
+import os
+
+from synthgenai import (
+    DatasetConfig,
+    DatasetGeneratorConfig,
+    LLMConfig,
+    TextClassificationDatasetGenerator,
+)
+
+# Setting the API keys
+os.environ["LLM_API_KEY"] = ""
+
+# Optional for Langfuse Tracebility
+os.environ["LANGFUSE_SECRET_KEY"] = ""
+os.environ["LANGFUSE_PUBLIC_KEY"] = ""
+os.environ["LANGFUSE_HOST"] = ""
+
+# Optional for Hugging Face Hub upload
+os.environ["HF_TOKEN"] = ""
+
+# Creating the LLMConfig
+llm_config = LLMConfig(
+    model="model_provider/model_name", # Check liteLLM docs for more info
+    temperature=0.5,
+    top_p=0.9,
+    max_tokens=2048,
+)
+
+# Creating the DatasetConfig
+dataset_config = DatasetConfig(
+    topic="topic_name",
+    domains=["domain1", "domain2"],
+    language="English",
+    additional_description="Additional description",
+    num_entries=1000
+)
+
+# Creating the DatasetGeneratorConfig
+dataset_generator_config = DatasetGeneratorConfig(
+    llm_config=llm_config,
+    dataset_config=dataset_config,
+)
+
+# Creating the TextClassificationDatasetGenerator
+text_classification_dataset_generator = TextClassificationDatasetGenerator(dataset_generator_config)
+
+# Generating the dataset
+text_classification_dataset = text_classification_dataset_generator.generate_dataset()
+
+# Generating the dataset asynchronously
+# text_classification_dataset = asyncio.run(text_classification_dataset_generator.agenerate_dataset())
+
+# Name of the Hugging Face repository where the dataset will be saved
+hf_repo_name = "organization_or_user_name/dataset_name" # optional
+
+# Saving the dataset to the locally and to the Hugging Face repository(optional)
+text_classification_dataset.save_dataset(
+    hf_repo_name=hf_repo_name,
+)
+```
+
+Example of generated entry for the text classification dataset:
+
+```json
+{
+  "keyword": "keyword",
+  "topic": "topic",
+  "language": "language",
+  "generated_entry": {
+    "prompt": "generated text",
+    "label": "generated sentiment (which will be from a list of labels, created from the model)"
+  }
 }
 ```
 
@@ -491,7 +576,7 @@ os.environ["HF_TOKEN"] = ""
 
 # Creating the LLMConfig
 llm_config = LLMConfig(
-    model="model_provider/model_name", # Check liteLLM docs for more info 
+    model="model_provider/model_name", # Check liteLLM docs for more info
     temperature=0.5,
     top_p=0.9,
     max_tokens=2048,
@@ -525,7 +610,7 @@ summarization_dataset = summarization_dataset_generator.generate_dataset()
 hf_repo_name = "organization_or_user_name/dataset_name" # optional
 
 # Saving the dataset to the locally and to the Hugging Face repository(optional)
-dataset.save_dataset(
+summarization_dataset.save_dataset(
     hf_repo_name=hf_repo_name,
 )
 ```
@@ -534,14 +619,13 @@ Example of generated entry for the summarization dataset:
 
 ```json
 {
-    "keyword": "keyword",
-    "topic": "topic",
-    "language": "language",
-    "generated_text":
-    {
-        "text": "generated text",
-        "summary": "generated summary"
-    }
+  "keyword": "keyword",
+  "topic": "topic",
+  "language": "language",
+  "generated_entry": {
+    "text": "generated text",
+    "summary": "generated summary"
+  }
 }
 ```
 
@@ -567,18 +651,13 @@ Examples of generated synthetic datasets can be found on the [SynthGenAI Dataset
 - [x] [Hugging Face](https://huggingface.co/) - more info about Hugging Face models that can be used, can be found [here](https://docs.litellm.ai/docs/providers/hugging-face)
 - [x] [Ollama](https://ollama.com/) - more info about Ollama models that can be used, can be found [here](https://docs.litellm.ai/docs/providers/ollama)
 - [x] [vLLM](https://vllm.ai/) - more info about vLLM models that can be used, can be found [here](https://docs.litellm.ai/docs/providers/vllm)
-- [x] [SageMaker](https://aws.amazon.com/sagemaker/) - more info about SageMaker models that can be used, can be found [here](https://docs.litellm.ai/docs/providers/aws_sagemaker) 
-- [ ] [Azure](https://azure.microsoft.com/en-us/services/machine-learning/) - needs to be added
-- [ ] [Vertex AI](https://cloud.google.com/vertex-ai) - needs to be added
+- [x] [SageMaker](https://aws.amazon.com/sagemaker/) - more info about SageMaker models that can be used, can be found [here](https://docs.litellm.ai/docs/providers/aws_sagemaker)
+- [x] [Azure](https://azure.microsoft.com/en-us/services/machine-learning/) - more info about Azure and Azure AI models that can be used, can be found [here](https://docs.litellm.ai/docs/providers/azure) & [here](https://docs.litellm.ai/docs/providers/azure_ai)
+- [x] [Vertex AI](https://cloud.google.com/vertex-ai) - more info about Vertex AI models that can be used, can be found [here](https://docs.litellm.ai/docs/providers/vertex)
 
 ## Next Steps 🚀
 
-- [ ] Code refactoring, removing redundant code and improving the code quality
-- [ ] Add more API providers for LLMs (Azure, Vertex AI, etc.)
-- [ ] Add different types of datasets (e.g. Classification, Translation, etc.)
-- [ ] Add multi-modality support for generating image datasets
 - [ ] Add CLI or TUI or UI for generating datasets
-- [ ] Create a documentation website for the package
 
 ## Contributing 🤝
 
@@ -600,13 +679,18 @@ This project is licensed under the MIT License - see the LICENSE.md file for det
 │   └── logo_header.png
 ├── examples
 │   ├── anthropic_instruction_dataset_example.py
+│   ├── azure_ai_preference_dataset_example.py
+│   ├── azure_summarization_dataset_example.py
 │   ├── bedrock_raw_dataset_example.py
 │   ├── gemini_langfuse_raw_dataset_example.py
 │   ├── groq_preference_dataset_example.py
 │   ├── huggingface_instruction_dataset_example.py
 │   ├── mistral_preference_dataset_example.py
 │   ├── ollama_preference_dataset_example.py
-│   └── openai_raw_dataset_example.py
+│   ├── openai_raw_dataset_example.py
+│   ├── sagemaker_summarization_dataset_example.py
+│   ├── vertex_ai_text_classification_dataset_example.py
+│   └── vllm_sentiment_analysis_dataset_example.py
 ├── synthgenai
 │   ├── data_model.py
 │   ├── dataset_generator.py

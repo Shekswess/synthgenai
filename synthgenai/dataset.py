@@ -34,6 +34,7 @@ class Dataset:
         self.num_keywords = dataset_config.num_entries
         self.type = None
         self.keywords = []
+        self.labels = []
         self.data = []
         self.description = None
 
@@ -162,6 +163,24 @@ class Dataset:
             list[dict]: The data for the dataset.
         """
         return self.data
+
+    def set_labels(self, labels: list[str]) -> None:
+        """
+        Set the labels for the dataset.
+
+        Args:
+            labels (list[str]): The labels for the dataset.
+        """
+        self.labels = labels
+
+    def get_labels(self) -> list[str]:
+        """
+        Get the labels for the dataset.
+
+        Returns:
+            list[str]: The labels for the dataset.
+        """
+        return self.labels
 
     def _prepare_local_save(self, dataset_path: str) -> str:
         """

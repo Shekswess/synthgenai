@@ -1,7 +1,7 @@
 """Pydantic models for the SynthGenAI package."""
 
 from enum import Enum
-from typing import Literal
+from typing import Literal, Union
 
 from pydantic import BaseModel, Field, AnyUrl
 
@@ -14,6 +14,7 @@ class DatasetType(str, Enum):
     PREFERENCE = "Preference Dataset"
     SUMMARIZATION = "Summarization Dataset"
     SENTIMENT_ANALYSIS = "Sentiment Analysis Dataset"
+    TEXT_CLASSIFICATION = "Text Classification Dataset"
 
 
 class LLMConfig(BaseModel):
@@ -22,11 +23,11 @@ class LLMConfig(BaseModel):
 
     Attributes:
         model (str): The model name of the LLM.
-        temperature (float): The temperature value from 0.0 to 1.0.
-        top_p (float): The top_p value from 0.0 to 1.0.
+        temperature (float): The temperature value from 0.0 to 1.0, controlling the randomness of the generated text.
+        top_p (float): The top_p value from 0.0 to 1.0, controlling the nucleus sampling.
         max_tokens (int): The maximum number of tokens to generate completions from 1000 to max value.
-        api_base (AnyUrl): The API base URL.
-        api_key (str): The API key.
+        api_base (AnyUrl): The API base URL for the LLM service.
+        api_key (str): The API key for authenticating with the LLM service.
     """
 
     model: str = Field(..., min_length=1)
@@ -43,10 +44,10 @@ class DatasetConfig(BaseModel):
 
     Attributes:
         topic (str): The topic of the dataset.
-        domains (list[str]): The domains of the dataset.
-        language (str): The language of the dataset.
-        additional_description (str): The additional description of the dataset.
-        num_entries (int): The number of entries to generate.
+        domains (list[str]): The domains of the dataset, representing different areas or categories.
+        language (str): The language of the dataset, default is "English".
+        additional_description (str): The additional description of the dataset, providing more context or details.
+        num_entries (int): The number of entries to generate, must be greater than 1.
     """
 
     topic: str = Field(..., min_length=1)
@@ -57,7 +58,13 @@ class DatasetConfig(BaseModel):
 
 
 class DatasetGeneratorConfig(BaseModel):
-    """Pydantic model for the dataset generator configuration."""
+    """
+    Pydantic model for the dataset generator configuration.
+
+    Attributes:
+        dataset_config (DatasetConfig): The configuration for the dataset.
+        llm_config (LLMConfig): The configuration for the LLM.
+    """
 
     dataset_config: DatasetConfig
     llm_config: LLMConfig
@@ -76,19 +83,16 @@ class EntryKeywords(BaseModel):
     keywords: list[str]
 
 
+class EntryLabels(BaseModel):
+    """Pydantic model for the labels in the generated text."""
+
+    labels: list[str]
+
+
 class GeneratedText(BaseModel):
     """Pydantic model for the generated text."""
 
     text: str
-
-
-class EntryRawDataset(BaseModel):
-    """Pydantic model for the Raw dataset."""
-
-    keyword: str
-    topic: str
-    language: str
-    generated_text: GeneratedText
 
 
 class InstructMessage(BaseModel):
@@ -98,42 +102,39 @@ class InstructMessage(BaseModel):
     content: str
 
 
-class InstructGeneratedText(BaseModel):
+class GeneratedInstructText(BaseModel):
     """Pydantic model for the generated text in the Instruct dataset."""
 
     messages: list[InstructMessage]
 
 
-class EntryInstructDataset(BaseModel):
-    """Pydantic model for the Instruct dataset."""
+class PreferencePrompt(BaseModel):
+    """Pydantic model for the prompt in the Preference dataset."""
 
-    keyword: str
-    topic: str
-    language: str
-    generated_text: InstructGeneratedText
-
-
-class PreferenceMessage(BaseModel):
-    """Pydantic model for a message in the Preference dataset."""
-
-    role: Literal["user", "system", "assistant"]
+    role: Literal["system", "user"]
     content: str
-    option: Literal["chosen", "rejected"] = None
 
 
-class PreferenceGeneratedText(BaseModel):
+class PreferenceChosen(BaseModel):
+    """Pydantic model for the chosen text in the Preference dataset."""
+
+    role: Literal["assistant"]
+    content: str
+
+
+class PreferenceRejected(BaseModel):
+    """Pydantic model for the rejected text in the Preference dataset."""
+
+    role: Literal["assistant"]
+    content: str
+
+
+class GeneratedPreferenceText(BaseModel):
     """Pydantic model for the generated text in the Preference dataset."""
 
-    messages: list[PreferenceMessage]
-
-
-class EntryPreferenceDataset(BaseModel):
-    """Pydantic model for the Preference dataset."""
-
-    keyword: str
-    topic: str
-    language: str
-    generated_text: PreferenceGeneratedText
+    prompt: list[PreferencePrompt]
+    chosen: list[PreferenceChosen]
+    rejected: list[PreferenceRejected]
 
 
 class GeneratedSummaryText(BaseModel):
@@ -143,26 +144,31 @@ class GeneratedSummaryText(BaseModel):
     summary: str
 
 
-class EntrySummarizationDataset(BaseModel):
-    """Pydantic model for the Summarization dataset."""
-
-    keyword: str
-    topic: str
-    language: str
-    generated_summary_text: GeneratedSummaryText
-
-
 class GeneratedSentimentAnalysis(BaseModel):
     """Pydantic model for the generated sentiment analysis."""
 
-    text: str
-    sentiment: Literal["positive", "negative", "neutral"]
+    prompt: str
+    label: Literal["positive", "negative", "neutral"]
 
 
-class EntrySentimentAnalysisDataset(BaseModel):
-    """Pydantic model for the Sentiment Analysis dataset."""
+class GeneratedTextClassification(BaseModel):
+    """Pydantic model for the generated text classification."""
+
+    prompt: str
+    label: str
+
+
+class EntryDataset(BaseModel):
+    """Pydantic model for the dataset entry."""
 
     keyword: str
     topic: str
     language: str
-    generated_sentiment_analysis: GeneratedSentimentAnalysis
+    generated_entry: Union[
+        GeneratedText,
+        GeneratedInstructText,
+        GeneratedPreferenceText,
+        GeneratedSummaryText,
+        GeneratedSentimentAnalysis,
+        GeneratedTextClassification,
+    ]

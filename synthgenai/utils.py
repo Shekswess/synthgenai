@@ -6,7 +6,7 @@ import yaml
 from loguru import logger
 
 
-def convert_json_keywords(response) -> dict:
+def convert_json_keywords_labels(response) -> dict:
     """
     Convert a JSON string response to a dictionary.
 

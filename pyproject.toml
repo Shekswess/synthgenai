@@ -1,6 +1,6 @@
 [project]
 name = "synthgenai"
-version = "0.2.2"
+version = "0.3.0"
 description = "SynthGenAI - Package for generating Synthetic Datasets."
 readme = "README.md"
 requires-python = ">=3.10"
@@ -12,10 +12,13 @@ dependencies = [
     "langfuse>=2.57.0",
     "litellm>=1.55.2",
     "loguru>=0.7.3",
+    "mkdocs>=1.6.1",
+    "mkdocs-material>=9.5.49",
     "pre-commit>=4.0.1",
     "pydantic>=2.10.3",
     "ruff>=0.8.3",
 ]
+license = {file = "LICENCE.txt"}
 
 [build-system]
 requires = ["hatchling"]
