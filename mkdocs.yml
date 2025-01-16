@@ -1,5 +1,6 @@
 site_name: SynthGenAI
 site_author: Bojan Jakimovski - Shekswess
+site_url: https://shekswess.github.io/synthgenai/
 site_description: >-
   SynthGenAI - Package for generating Synthetic Datasets.
 
@@ -112,19 +113,19 @@ markdown_extensions:
 
 nav:
   - Home: index.md
-  - Installation: installation.md
-  - LLM Providers: llm_providers.md
+  - Installation: installation/index.md
+  - LLM Providers: llm_providers/index.md
   - Configuration:
-      - LLM Configuration: ./configurations/llm_configuration.md
-      - Dataset Configuration: ./configurations/dataset_configuration.md
-      - Dataset Generator Configuration: ./configurations/dataset_generator_configuration.md
+      - LLM Configuration: configurations/index.md
+      - Dataset Configuration: configurations/dataset_configuration.md
+      - Dataset Generator Configuration: configurations/dataset_generator_configuration.md
   - Dataset Types:
-      - Overview: ./datasets/dataset_types.md
-      - Raw Datasets: ./datasets/raw_datasets.md
-      - Instruction Datasets: ./datasets/instruction_datasets.md
-      - Preference Datasets: ./datasets/preference_datasets.md
-      - Sentiment Analysis Datasets: ./datasets/sentiment_analysis_datasets.md
-      - Text Classification Datasets: ./datasets/text_classification_datasets.md
-      - Summarization Datasets: ./datasets/summarization_datasets.md
-  - Examples: examples.md
-  - Contributing: contributing.md
+      - Overview: datasets/index.md
+      - Raw Datasets: datasets/raw_datasets.md
+      - Instruction Datasets: datasets/instruction_datasets.md
+      - Preference Datasets: datasets/preference_datasets.md
+      - Sentiment Analysis Datasets: datasets/sentiment_analysis_datasets.md
+      - Text Classification Datasets: datasets/text_classification_datasets.md
+      - Summarization Datasets: datasets/summarization_datasets.md
+  - Examples: examples/index.md
+  - Contributing: contributing/index.md
