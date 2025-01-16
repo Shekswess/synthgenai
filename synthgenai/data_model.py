@@ -23,11 +23,11 @@ class LLMConfig(BaseModel):
 
     Attributes:
         model (str): The model name of the LLM.
-        temperature (float): The temperature value from 0.0 to 1.0.
-        top_p (float): The top_p value from 0.0 to 1.0.
+        temperature (float): The temperature value from 0.0 to 1.0, controlling the randomness of the generated text.
+        top_p (float): The top_p value from 0.0 to 1.0, controlling the nucleus sampling.
         max_tokens (int): The maximum number of tokens to generate completions from 1000 to max value.
-        api_base (AnyUrl): The API base URL.
-        api_key (str): The API key.
+        api_base (AnyUrl): The API base URL for the LLM service.
+        api_key (str): The API key for authenticating with the LLM service.
     """
 
     model: str = Field(..., min_length=1)
@@ -44,10 +44,10 @@ class DatasetConfig(BaseModel):
 
     Attributes:
         topic (str): The topic of the dataset.
-        domains (list[str]): The domains of the dataset.
-        language (str): The language of the dataset.
-        additional_description (str): The additional description of the dataset.
-        num_entries (int): The number of entries to generate.
+        domains (list[str]): The domains of the dataset, representing different areas or categories.
+        language (str): The language of the dataset, default is "English".
+        additional_description (str): The additional description of the dataset, providing more context or details.
+        num_entries (int): The number of entries to generate, must be greater than 1.
     """
 
     topic: str = Field(..., min_length=1)
@@ -58,7 +58,13 @@ class DatasetConfig(BaseModel):
 
 
 class DatasetGeneratorConfig(BaseModel):
-    """Pydantic model for the dataset generator configuration."""
+    """
+    Pydantic model for the dataset generator configuration.
+
+    Attributes:
+        dataset_config (DatasetConfig): The configuration for the dataset.
+        llm_config (LLMConfig): The configuration for the LLM.
+    """
 
     dataset_config: DatasetConfig
     llm_config: LLMConfig
