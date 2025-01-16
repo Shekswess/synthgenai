@@ -1,0 +1,60 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 200">
+  <!-- Background gradient -->
+  <defs>
+    <linearGradient id="bgGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#1a1a1a"/>
+      <stop offset="100%" style="stop-color:#2d3436"/>
+    </linearGradient>
+    
+    <!-- Glow filter -->
+    <filter id="glow">
+      <feGaussianBlur stdDeviation="2" result="coloredBlur"/>
+      <feMerge>
+        <feMergeNode in="coloredBlur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+
+  <!-- Dark background -->
+  <rect width="400" height="200" fill="url(#bgGradient)"/>
+  
+  <!-- Grid pattern -->
+  <path d="M0 40 H400 M0 80 H400 M0 120 H400 M0 160 H400" 
+        stroke="#ffffff20" 
+        stroke-width="0.5"/>
+  <path d="M80 0 V200 M160 0 V200 M240 0 V200 M320 0 V200" 
+        stroke="#ffffff20" 
+        stroke-width="0.5"/>
+  
+  <!-- Abstract data visualization elements -->
+  <path d="M50 150 Q125 50 200 100 T350 75" 
+        stroke="#00ff88" 
+        stroke-width="2" 
+        fill="none" 
+        filter="url(#glow)"/>
+  
+  <path d="M50 100 Q125 150 200 75 T350 125" 
+        stroke="#0088ff" 
+        stroke-width="2" 
+        fill="none" 
+        filter="url(#glow)"/>
+  
+  <!-- Scattered data points -->
+  <circle cx="80" cy="120" r="3" fill="#00ff88" filter="url(#glow)"/>
+  <circle cx="150" cy="80" r="3" fill="#0088ff" filter="url(#glow)"/>
+  <circle cx="220" cy="130" r="3" fill="#00ff88" filter="url(#glow)"/>
+  <circle cx="290" cy="70" r="3" fill="#0088ff" filter="url(#glow)"/>
+  <circle cx="330" cy="110" r="3" fill="#00ff88" filter="url(#glow)"/>
+  
+  
+  <!-- Decorative brackets -->
+  <path d="M140 40 H160 V160 H140" 
+        stroke="#ffffff80" 
+        stroke-width="2" 
+        fill="none"/>
+  <path d="M260 40 H240 V160 H260" 
+        stroke="#ffffff80" 
+        stroke-width="2" 
+        fill="none"/>
+</svg>
