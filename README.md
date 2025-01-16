@@ -1,6 +1,6 @@
 # SynthGenAI-Package for Generating Synthetic Datasets using LLMs
 
-![header_logo_image](./assets/logo_header.png)
+![header_logo_image](./docs/assets/logo_header.png)
 
 SynthGenAI is a package for generating Synthetic Datasets. The idea is to have a tool which is simple to use and can generate datasets on different topics by utilizing LLMs from different API providers. The package is designed to be modular and can be easily extended to include some different API providers for LLMs and new features.
 
@@ -21,7 +21,23 @@ The package is built using Python and the following libraries:
 - [pydantic](https://pydantic-docs.helpmanual.io/), Data validation and settings management using Python type annotations.
 - [huggingface-hub](https://huggingface.co/) & [datasets](https://huggingface.co/docs/datasets/), A Python library for saving generated datasets on Hugging Face Hub.
 
-## Requirements 📋
+## Installation 🛠️
+
+To install the package, you can use the following command:
+
+```bash
+pip install synthgenai
+```
+
+or you can install the package directly from the source code using the following commands:
+
+```bash
+git clone https://github.com/Shekswess/synthgenai.git
+uv build
+pip install ./dist/synthgenai-{version}-py3-none-any.whl
+```
+
+### Requirements 📋
 
 To use the package, you need to have the following requirements installed:
 
@@ -31,24 +47,7 @@ To use the package, you need to have the following requirements installed:
 - [Langfuse](https://langfuse.com/) running on your local machine or in the cloud if you want to use Langfuse for tracebility (optional)
 - [Hugging Face Hub](https://huggingface.co/) account if you want to save the generated datasets on Hugging Face Hub with generated token (optional)
 
-## Installation 🛠️
-
-To install the package, you can use the following command:
-
-```bash
-pip install synthgenai
-```
-
-or you can install the package directly from the source code using the following command:
-
-```bash
-uv build
-pip install ./dist/synthgenai-{version}-py3-none-any.whl
-```
-
 ## Usage 👨‍💻
-
-### Quick Start 🏃
 
 The available API providers for LLMs are:
 
@@ -116,7 +115,7 @@ The datasets can be generated:
 > [!NOTE]
 > Asynchronous generation is faster than synchronous generation, but some of LLM providers can have limitations on the number of tokens that can be generated at once.
 
-#### Raw Datasets 🟢
+#### Raw Datasets 🥩
 
 To generate a raw dataset, you can use the following code:
 
@@ -659,7 +658,6 @@ Examples of generated synthetic datasets can be found on the [SynthGenAI Dataset
 ## Next Steps 🚀
 
 - [ ] Add CLI or TUI or UI for generating datasets
-- [ ] Create a documentation website for the package
 
 ## Contributing 🤝
 
