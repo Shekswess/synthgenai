@@ -16,9 +16,6 @@ jobs:
         - name: Install uv
           uses: astral-sh/setup-uv@v3
 
-        - name: Git Config bot
-          run: git config user.name 'github-actions[bot]' && git config user.email 'github-actions[bot]@users.noreply.github.com'
-
         - name: Set up Python
           run: uv python install
 
@@ -26,4 +23,6 @@ jobs:
           run: uv run mkdocs build
         
         - name: Deploy Documentation
-          run: uv run mkdocs gh-deploy
+          env:
+            GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
+          run: uv run mkdocs gh-deploy --force
