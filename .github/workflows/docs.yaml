@@ -1,23 +1,27 @@
-name: Documentation
-
+name: Deploy Documentation
 on:
-  push:
-    branches:
-      - main
-    paths:
-      - "**.md"
-      - "mkdocs.yml"
-  workflow_dispatch:
-  
+    push:
+        branches:
+        - main
 jobs:
-  docs:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-        with:
-          fetch-depth: 0
-      - uses: actions/setup-python@v2
-      - run: pip install --upgrade pip && pip install mkdocs mkdocs-material
-      - run: git config user.name 'github-actions[bot]' && git config user.email 'github-actions[bot]@users.noreply.github.com'
-      - name: Publish docs
-        run: mkdocs gh-deploy
+    build_n_release:
+        name: Deploy Documentation
+        runs-on: ubuntu-latest
+        steps:
+        - uses: actions/checkout@v4
+        - name: Install uv
+          uses: astral-sh/setup-uv@v3
+
+        - name: Git Config bot
+          run: git config user.name 'github-actions[bot]' && git config user.email 'github-actions[bot]@users.noreply.github.com'
+
+        - name: Set up Python
+          run: uv python install
+
+        - name: Build Documentation
+          run: uv run mkdocs build
+
+        - name: Deploy Documentation
+          env:
+            GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
+          run: uv run mkdocs gh-deploy
