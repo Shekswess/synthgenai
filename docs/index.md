@@ -1,7 +1,7 @@
 # SynthGenAI Documentation 📚
 
 <center>
-    <img src="./assets/logo_header.png" alt="MLOps Coding Course Banner" style="height: 300px" />
+    <img src="./assets/logo_header.png" alt="Banner logo" style="height: 300px" />
     <br />
     *Making Synthetic Data Easy*
 </center>
@@ -21,10 +21,10 @@ Interest in synthetic data generation has surged recently, driven by the growing
 The package is built using Python and the following libraries:
 
 - [**uv**](https://docs.astral.sh/uv/)
-- [**litellm**](https://docs.litellm.ai/docs/)
-- [**langfuse**](https://langfuse.com/)
-- [**pydantic**](https://pydantic-docs.helpmanual.io/)
-- [**huggingface-hub**](https://huggingface.co/) & [**datasets**](https://huggingface.co/docs/datasets/)
+- [**LiteLLM**](https://docs.litellm.ai/docs/)
+- [**Langfuse**](https://langfuse.com/)
+- [**Pydantic**](https://pydantic-docs.helpmanual.io/)
+- [**Huggingface Hub**](https://huggingface.co/) & [**Datasets**](https://huggingface.co/docs/datasets/)
 
 ## Contributing 🤝
 
