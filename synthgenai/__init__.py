@@ -6,6 +6,6 @@ from .dataset_generator import (
     PreferenceDatasetGenerator,
     SummarizationDatasetGenerator,
     SentimentAnalysisDatasetGenerator,
-    TextClassificationDatasetGenerator
+    TextClassificationDatasetGenerator,
 )
 from .data_model import DatasetGeneratorConfig, LLMConfig, DatasetConfig

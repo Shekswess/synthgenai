@@ -16,10 +16,47 @@ Interest in synthetic data generation has surged recently, driven by the growing
 The package is built using Python and the following libraries:
 
 - [uv](https://docs.astral.sh/uv/), An extremely fast Python package and project manager, written in Rust.
-- [litellm](https://docs.litellm.ai/docs/), A Python SDK for accessing LLMs from different API providers with standardized OpenAI Format.
-- [langfuse](https://langfuse.com/), LLMOps platform for observability, tracebility and monitoring of LLMs.
-- [pydantic](https://pydantic-docs.helpmanual.io/), Data validation and settings management using Python type annotations.
-- [huggingface-hub](https://huggingface.co/) & [datasets](https://huggingface.co/docs/datasets/), A Python library for saving generated datasets on Hugging Face Hub.
+- [LiteLLM](https://docs.litellm.ai/docs/), A Python SDK for accessing LLMs from different API providers with standardized OpenAI Format.
+- [Langfuse](https://langfuse.com/), LLMOps platform for observability, tracebility and monitoring of LLMs.
+- [Pydantic](https://pydantic-docs.helpmanual.io/), Data validation and settings management using Python type annotations.
+- [Huggingface Hub](https://huggingface.co/) & [Datasets](https://huggingface.co/docs/datasets/), A Python library for saving generated datasets on Hugging Face Hub.
+- [Gradio](https://gradio.app/), A Python library for creating UIs for machine learning models.
+
+## Quick Start 🚀
+
+To quickly start using the SynthGenAI, you need to have the package installed. You can install it using the following command:
+
+```bash
+pip install synthgenai
+```
+
+After installation, simply run the following command in your terminal:
+
+```bash
+synthgenai
+```
+
+This will launch the Gradio UI for generating synthetic datasets.
+
+![ui_example](./docs/assets/ui.png)
+
+To create datasets, you need to set up the following fields in the UI:
+
+- **LLM Model**: The LLM model to use (e.g., model_provider/model_name).
+- **Temperature**: The temperature for the LLM.
+- **Top P**: The top_p value for the LLM.
+- **Max Tokens**: The maximum number of tokens for the LLM.
+- **API Base**: The API base URL (optional).
+- **API Key**: The API key (optional).
+- **Dataset Type**: The type of dataset to generate (e.g., Raw, Instruction, Preference, Sentiment Analysis, Summarization, Text Classification).
+- **Topic**: The topic of the dataset.
+- **Domains**: The domains for the dataset (comma-separated).
+- **Language**: The language of the dataset.
+- **Additional Description**: Additional description for the dataset (optional).
+- **Number of Entries**: The number of entries in the dataset.
+- **Hugging Face Token**: The Hugging Face token.
+- **Hugging Face Repo Name**: The Hugging Face repository name.
+- **LLM Environment Variables**: Comma-separated environment variables for the LLM (e.g., KEY1=VALUE1, KEY2=VALUE2).
 
 ## Installation 🛠️
 
@@ -46,6 +83,7 @@ To use the package, you need to have the following requirements installed:
 - [Ollama](https://ollama.com/) running on your local machine if you want to use Ollama as an API provider (optional)
 - [Langfuse](https://langfuse.com/) running on your local machine or in the cloud if you want to use Langfuse for tracebility (optional)
 - [Hugging Face Hub](https://huggingface.co/) account if you want to save the generated datasets on Hugging Face Hub with generated token (optional)
+- [Gradio](https://gradio.app/) for using the SynthGenAI UI (optional)
 
 ## Usage 👨‍💻
 
@@ -98,7 +136,7 @@ LANGFUSE_HOST=
 HF_TOKEN=
 ```
 
-Currently there are three types of datasets that can be generated using SynthGenAI:
+Currently there are six types of datasets that can be generated using SynthGenAI:
 
 - **Raw Datasets**
 - **Instruction Datasets**
@@ -655,10 +693,6 @@ Examples of generated synthetic datasets can be found on the [SynthGenAI Dataset
 - [x] [Azure](https://azure.microsoft.com/en-us/services/machine-learning/) - more info about Azure and Azure AI models that can be used, can be found [here](https://docs.litellm.ai/docs/providers/azure) & [here](https://docs.litellm.ai/docs/providers/azure_ai)
 - [x] [Vertex AI](https://cloud.google.com/vertex-ai) - more info about Vertex AI models that can be used, can be found [here](https://docs.litellm.ai/docs/providers/vertex)
 
-## Next Steps 🚀
-
-- [ ] Add CLI or TUI or UI for generating datasets
-
 ## Contributing 🤝
 
 If you want to contribute to this project and make it better, your help is very welcome. Create a pull request with your changes and I will review it. If you have any questions, open an issue.
@@ -674,9 +708,37 @@ This project is licensed under the MIT License - see the LICENSE.md file for det
 ├── .github
 │   └── workflows
 │       ├── build_n_release.yml
+│       ├── docs.yml
 │       └── tests.yml
-├── assets
-│   └── logo_header.png
+├── docs
+│   ├── assets
+│   │   ├── favicon.png
+│   │   ├── logo_header.png
+│   │   ├── logo.svg
+│   │   └── ui.png
+│   ├── configurations
+│   │   ├── dataset_configuration.md
+│   │   ├── dataset_generator_configuration.md
+│   │   └── index.md
+│   ├── contributing
+│   │   └── index.md
+│   ├── datasets
+│   │   ├── index.md
+│   │   ├── instruction_dataset.md
+│   │   ├── preference_dataset.md
+│   │   ├── raw_dataset.md
+│   │   ├── sentiment_analysis_dataset.md
+│   │   ├── summarization_dataset.md
+│   │   └── text_classification_dataset.md
+│   ├── examples
+│   │   └── index.md
+│   ├── installation
+│   │   └── index.md
+│   ├── llm_providers
+│   │   └── index.md
+│   ├── ui
+│   │   └── index.md
+│   └── index.md
 ├── examples
 │   ├── anthropic_instruction_dataset_example.py
 │   ├── azure_ai_preference_dataset_example.py
@@ -698,13 +760,15 @@ This project is licensed under the MIT License - see the LICENSE.md file for det
 │   ├── __init__.py
 │   ├── llm.py
 │   ├── prompts.py
+│   ├── ui.py
 │   └── utils.py
 ├── tests
 │   ├── test_dataset.py
 │   └── test_llm.py
 ├── .gitignore
 ├── .python-version
-├── LICENSE
+├── LICENSE.txt
+├── mkdocs.yml
 ├── pyproject.toml
 ├── README.md
 └── uv.lock
