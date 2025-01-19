@@ -2,62 +2,66 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
     <url>
          <loc>https://shekswess.github.io/synthgenai/</loc>
-         <lastmod>2025-01-16</lastmod>
+         <lastmod>2025-01-19</lastmod>
     </url>
     <url>
          <loc>https://shekswess.github.io/synthgenai/configurations/</loc>
-         <lastmod>2025-01-16</lastmod>
+         <lastmod>2025-01-19</lastmod>
     </url>
     <url>
          <loc>https://shekswess.github.io/synthgenai/configurations/dataset_configuration/</loc>
-         <lastmod>2025-01-16</lastmod>
+         <lastmod>2025-01-19</lastmod>
     </url>
     <url>
          <loc>https://shekswess.github.io/synthgenai/configurations/dataset_generator_configuration/</loc>
-         <lastmod>2025-01-16</lastmod>
+         <lastmod>2025-01-19</lastmod>
     </url>
     <url>
          <loc>https://shekswess.github.io/synthgenai/contributing/</loc>
-         <lastmod>2025-01-16</lastmod>
+         <lastmod>2025-01-19</lastmod>
     </url>
     <url>
          <loc>https://shekswess.github.io/synthgenai/datasets/</loc>
-         <lastmod>2025-01-16</lastmod>
+         <lastmod>2025-01-19</lastmod>
     </url>
     <url>
          <loc>https://shekswess.github.io/synthgenai/datasets/instruction_datasets/</loc>
-         <lastmod>2025-01-16</lastmod>
+         <lastmod>2025-01-19</lastmod>
     </url>
     <url>
          <loc>https://shekswess.github.io/synthgenai/datasets/preference_datasets/</loc>
-         <lastmod>2025-01-16</lastmod>
+         <lastmod>2025-01-19</lastmod>
     </url>
     <url>
          <loc>https://shekswess.github.io/synthgenai/datasets/raw_datasets/</loc>
-         <lastmod>2025-01-16</lastmod>
+         <lastmod>2025-01-19</lastmod>
     </url>
     <url>
          <loc>https://shekswess.github.io/synthgenai/datasets/sentiment_analysis_datasets/</loc>
-         <lastmod>2025-01-16</lastmod>
+         <lastmod>2025-01-19</lastmod>
     </url>
     <url>
          <loc>https://shekswess.github.io/synthgenai/datasets/summarization_datasets/</loc>
-         <lastmod>2025-01-16</lastmod>
+         <lastmod>2025-01-19</lastmod>
     </url>
     <url>
          <loc>https://shekswess.github.io/synthgenai/datasets/text_classification_datasets/</loc>
-         <lastmod>2025-01-16</lastmod>
+         <lastmod>2025-01-19</lastmod>
     </url>
     <url>
          <loc>https://shekswess.github.io/synthgenai/examples/</loc>
-         <lastmod>2025-01-16</lastmod>
+         <lastmod>2025-01-19</lastmod>
     </url>
     <url>
          <loc>https://shekswess.github.io/synthgenai/installation/</loc>
-         <lastmod>2025-01-16</lastmod>
+         <lastmod>2025-01-19</lastmod>
     </url>
     <url>
          <loc>https://shekswess.github.io/synthgenai/llm_providers/</loc>
-         <lastmod>2025-01-16</lastmod>
+         <lastmod>2025-01-19</lastmod>
+    </url>
+    <url>
+         <loc>https://shekswess.github.io/synthgenai/ui/</loc>
+         <lastmod>2025-01-19</lastmod>
     </url>
 </urlset>
