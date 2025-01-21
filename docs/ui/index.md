@@ -12,7 +12,7 @@ After installation, simply run the following command in your terminal:
 synthgenai
 ```
 
-This will launch the Gradio UI for generating synthetic datasets.
+This will launch the Gradio UI for generating synthetic datasets. You can also try the Gradio UI deployed on HuggingFace spaces [here](https://huggingface.co/spaces/Shekswess/SynthGenAI-UI).
 
 <center>
     <img src="../assets/ui.png" alt="UI look"/>
