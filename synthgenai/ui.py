@@ -107,9 +107,20 @@ def generate_synthetic_dataset(
     else:
         return "Invalid dataset type"
 
-    dataset = asyncio.run(generator.agenerate_dataset())
-    dataset.save_dataset(hf_repo_name=hf_repo_name)
-    return "Dataset generated and saved successfully."
+    async def generate():
+        dataset = await generator.agenerate_dataset()
+        dataset.save_dataset(hf_repo_name=hf_repo_name)
+        return "Dataset generated and saved successfully."
+
+    try:
+        return asyncio.run(generate())
+    except RuntimeError as e:
+        if str(e) == "Event loop is closed":
+            loop = asyncio.new_event_loop()
+            asyncio.set_event_loop(loop)
+            return loop.run_until_complete(generate())
+        else:
+            raise
 
 
 def ui_main():
@@ -118,21 +129,48 @@ def ui_main():
     """
     with gr.Blocks(
         title="SynthGenAI Dataset Generator",
-        css="footer {visibility: hidden}",
+        css="""
+            .gradio-container .gr-block {
+                margin-bottom: 10px;
+                margin-left: 5px;
+                margin-right: 5px;
+                text-align: center;
+            }
+        """,
         theme="ParityError/Interstellar",
     ) as demo:
-        gr.Markdown(
+        gr.HTML(
             """
             <div style="text-align: center;">
-                <img src="https://raw.githubusercontent.com/Shekswess/synthgenai/refs/heads/main/docs/assets/logo_header.png" alt="Header Image" style="display: block; margin-left: auto; margin-right: auto; width: 50%;"/>
+                <img src="https://raw.githubusercontent.com/Shekswess/synthgenai/refs/heads/main/docs/assets/logo_header.png" alt="Header Image" style="width: 50%; margin: 0 auto;" />
                 <h1>SynthGenAI Dataset Generator</h1>
+                <h2>Overview 🧐</h2>
+                <p>SynthGenAI is designed to be modular and can be easily extended to include different API providers for LLMs and new features.</p>
+                <h2>Why SynthGenAI? 🤔</h2>
+                <p>Interest in synthetic data generation has surged recently, driven by the growing recognition of data as a critical asset in AI development. Synthetic data generation addresses challenges by allowing us to create diverse and useful datasets using current pre-trained Large Language Models (LLMs).</p>
+                <h2>LLM Providers 🤖</h2>
+                <p>For more information on which LLMs are allowed and how they can be used, please refer to the <a href="https://shekswess.github.io/synthgenai/llm_providers/">documentation</a>.</p>
+                
+                <a href="https://github.com/Shekswess/synthgenai/tree/main">GitHub Repository</a> | <a href="https://shekswess.github.io/synthgenai/">Documentation</a>
+                
             </div>
             """
         )
 
         with gr.Row():
             llm_model = gr.Textbox(
-                label="LLM Model", placeholder="model_provider/model_name"
+                label="LLM Model",
+                placeholder="model_provider/model_name",
+                value="huggingface/mistralai/Mistral-7B-Instruct-v0.3",
+            )
+            llm_env_vars = gr.Textbox(
+                label="LLM Environment Variables",
+                placeholder="Comma-separated environment variables (e.g., KEY1=VALUE1, KEY2=VALUE2)",
+                value="HUGGINGFACE_API_KEY=hf_1234566789912345677889, OPENAI_API_KEY=sk-1234566789912345677889",
+            )
+            api_base = gr.Textbox(label="API Base", placeholder="API Base - Optional")
+            api_key = gr.Textbox(
+                label="API Key", placeholder="Your API Key - Optional", type="password"
             )
             temperature = gr.Slider(
                 label="Temperature", minimum=0.0, maximum=1.0, step=0.1, value=0.5
@@ -141,10 +179,6 @@ def ui_main():
                 label="Top P", minimum=0.0, maximum=1.0, step=0.1, value=0.9
             )
             max_tokens = gr.Number(label="Max Tokens", value=2048)
-            api_base = gr.Textbox(label="API Base", placeholder="API Base - Optional")
-            api_key = gr.Textbox(
-                label="API Key", placeholder="Your API Key - Optional", type="password"
-            )
 
         with gr.Row():
             dataset_type = gr.Dropdown(
@@ -158,34 +192,28 @@ def ui_main():
                     "Text Classification",
                 ],
             )
-            topic = gr.Textbox(label="Topic", placeholder="Dataset topic")
-            domains = gr.Textbox(label="Domains", placeholder="Comma-separated domains")
+            topic = gr.Textbox(label="Topic", placeholder="Dataset topic", value="Artificial Intelligence")
+            domains = gr.Textbox(label="Domains", placeholder="Comma-separated domains", value="Machine Learning, Deep Learning")
             language = gr.Textbox(
                 label="Language", placeholder="Language", value="English"
             )
             additional_description = gr.Textbox(
                 label="Additional Description",
                 placeholder="Additional description",
-                value="",
+                value="This dataset must be more focused on healthcare implementations of AI, Machine Learning, and Deep Learning.",
             )
-            num_entries = gr.Number(label="Number of Entries", value=1000)
+            num_entries = gr.Number(label="Number of Entries To Generated", value=1000)
 
         with gr.Row():
             hf_token = gr.Textbox(
-                label="Hugging Face Token",
+                label="Hugging Face Token to Save Dataset",
                 placeholder="Your HF Token",
                 type="password",
-                value=None,
             )
             hf_repo_name = gr.Textbox(
                 label="Hugging Face Repo Name",
                 placeholder="organization_or_user_name/dataset_name",
-                value=None,
-            )
-            llm_env_vars = gr.Textbox(
-                label="LLM Environment Variables",
-                placeholder="Comma-separated environment variables (e.g., KEY1=VALUE1, KEY2=VALUE2)",
-                value=None,
+                value="Shekswess/synthgenai-dataset",
             )
 
         generate_button = gr.Button("Generate Dataset")
