@@ -17,6 +17,8 @@
 | SageMaker    | [sagemaker_summarization_dataset_example.py](https://github.com/Shekswess/synthgenai/blob/main/examples/sagemaker_summarization_dataset_example.py) |
 | Vertex AI    | [vertex_ai_text_classification_dataset_example.py](https://github.com/Shekswess/synthgenai/blob/main/examples/vertex_ai_text_classification_dataset_example.py) |
 | vLLM         | [vllm_sentiment_analysis_dataset_example.py](https://github.com/Shekswess/synthgenai/blob/main/examples/vllm_sentiment_analysis_dataset_example.py) |
+| xAI          | [xai_raw_dataset_example.py](https://github.com/Shekswess/synthgenai/blob/main/examples/xai_raw_dataset_example.py) |
+| DeepSeek     | [deepseek_instruction_dataset_example.py]https://github.com/Shekswess/synthgenai/blob/main/examples/deepseek_instruction_dataset_example.py) |
 
 ## Examples by Dataset Types 📚
 

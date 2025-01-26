@@ -117,15 +117,17 @@ AWS_REGION=
 AWS_PROFILE=
 ANTHROPIC_API_KEY=
 OPENAI_API_KEY=
-AZURE_API_KEY
-AZURE_API_BASE
-AZURE_API_VERSION
-AZURE_AD_TOKEN
-AZURE_API_TYPE
-GOOGLE_APPLICATION_CREDENTIALS
-VERTEXAI_LOCATION
-VERTEXAI_PROJECT
+AZURE_API_KEY=
+AZURE_API_BASE=
+AZURE_API_VERSION=
+AZURE_AD_TOKEN=
+AZURE_API_TYPE=
+GOOGLE_APPLICATION_CREDENTIALS=
+VERTEXAI_LOCATION=
+VERTEXAI_PROJECT=
 HUGGINGFACE_API_KEY=
+DEEPSEEK_API_KEY=
+XAI_API_KEY=
 
 # Langfuse API keys
 LANGFUSE_PUBLIC_KEY=
@@ -692,6 +694,8 @@ Examples of generated synthetic datasets can be found on the [SynthGenAI Dataset
 - [x] [SageMaker](https://aws.amazon.com/sagemaker/) - more info about SageMaker models that can be used, can be found [here](https://docs.litellm.ai/docs/providers/aws_sagemaker)
 - [x] [Azure](https://azure.microsoft.com/en-us/services/machine-learning/) - more info about Azure and Azure AI models that can be used, can be found [here](https://docs.litellm.ai/docs/providers/azure) & [here](https://docs.litellm.ai/docs/providers/azure_ai)
 - [x] [Vertex AI](https://cloud.google.com/vertex-ai) - more info about Vertex AI models that can be used, can be found [here](https://docs.litellm.ai/docs/providers/vertex)
+- [x] [DeepSeek](https://www.deepseek.com/) - more info about DeepSeek models that can be used, can be found [here](https://docs.litellm.ai/docs/providers/deepseek)
+- [x] [xAI](https://x.ai/) - more info about xAI models that can be used, can be found [here](https://docs.litellm.ai/docs/providers/xai)
 
 ## Contributing 🤝
 
@@ -744,6 +748,7 @@ This project is licensed under the MIT License - see the LICENSE.md file for det
 │   ├── azure_ai_preference_dataset_example.py
 │   ├── azure_summarization_dataset_example.py
 │   ├── bedrock_raw_dataset_example.py
+│   ├── deepseek_instruction_dataset_example.py
 │   ├── gemini_langfuse_raw_dataset_example.py
 │   ├── groq_preference_dataset_example.py
 │   ├── huggingface_instruction_dataset_example.py
@@ -752,7 +757,8 @@ This project is licensed under the MIT License - see the LICENSE.md file for det
 │   ├── openai_raw_dataset_example.py
 │   ├── sagemaker_summarization_dataset_example.py
 │   ├── vertex_ai_text_classification_dataset_example.py
-│   └── vllm_sentiment_analysis_dataset_example.py
+│   ├── vllm_sentiment_analysis_dataset_example.py
+│   └── xai_raw_dataset_example.py
 ├── synthgenai
 │   ├── data_model.py
 │   ├── dataset_generator.py
