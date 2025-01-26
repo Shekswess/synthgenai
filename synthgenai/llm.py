@@ -28,6 +28,8 @@ ALLOWED_PREFIXES = [
     "azure/",
     "azure_ai/",
     "vertex_ai/",
+    "deepseek/",
+    "xai/"
 ]
 
 
@@ -84,6 +86,8 @@ class LLM:
                 "VERTEXAI_LOCATION",
                 "VERTEXAI_PROJECT",
             ],
+            "deepseek": "DEEPSEEK_API_KEY",
+            "xai": "XAI_API_KEY",
         }
 
         for key, env_vars in api_key_checks.items():
