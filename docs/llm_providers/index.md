@@ -14,5 +14,5 @@ The available API providers for LLMs are:
 - [**SageMaker**](https://aws.amazon.com/sagemaker/) - more info about SageMaker models that can be used and how they can be used, can be found [here](https://docs.litellm.ai/docs/providers/aws_sagemaker)
 - [**Azure**](https://azure.microsoft.com/en-us/services/machine-learning/) - more info about Azure and Azure AI models that can be used and how they can be used, can be found [here](https://docs.litellm.ai/docs/providers/azure) & [here](https://docs.litellm.ai/docs/providers/azure_ai)
 - [**Vertex AI**](https://cloud.google.com/vertex-ai) - more info about Vertex AI models that can be used and how they can be used, can be found [here](https://docs.litellm.ai/docs/providers/vertex)
-
-
+- [**DeepSeek**](https://www.deepseek.com/) - more info about DeepSeek models that can be used, can be found [here](https://docs.litellm.ai/docs/providers/deepseek)
+- [**xAI**](https://x.ai/) - more info about xAI models that can be used, can be found [here](https://docs.litellm.ai/docs/providers/xai)
