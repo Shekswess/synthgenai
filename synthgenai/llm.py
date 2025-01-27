@@ -29,7 +29,7 @@ ALLOWED_PREFIXES = [
     "azure_ai/",
     "vertex_ai/",
     "deepseek/",
-    "xai/"
+    "xai/",
 ]
 
 
@@ -60,7 +60,9 @@ class LLM:
         self._check_vllm()
         self._check_ollama()
 
-        logger.info(f"Initialized LLM model for synthetic dataset creation: {self.model}")
+        logger.info(
+            f"Initialized LLM model for synthetic dataset creation: {self.model}"
+        )
 
     def _check_allowed_models(self) -> None:
         """Check if the model is allowed"""
@@ -119,7 +121,9 @@ class LLM:
                             else:
                                 for var in missing_vars:
                                     logger.error(f"{var} is not set")
-                                raise ValueError(f"{', '.join(missing_vars)} are not set")
+                                raise ValueError(
+                                    f"{', '.join(missing_vars)} are not set"
+                                )
                         elif key == "azure":
                             if all(
                                 os.environ.get(var)
@@ -142,7 +146,9 @@ class LLM:
                             else:
                                 for var in missing_vars:
                                     logger.error(f"{var} is not set")
-                                raise ValueError(f"{', '.join(missing_vars)} are not set")
+                                raise ValueError(
+                                    f"{', '.join(missing_vars)} are not set"
+                                )
                         else:
                             for var in missing_vars:
                                 logger.error(f"{var} is not set")
@@ -224,6 +230,17 @@ class LLM:
             bool: True if the response format is supported, False otherwise
         """
         custom_llm_provider = None
+        if self.model.startswith("gpt") or self.model.startswith("claude"):
+            if "response_format" in get_supported_openai_params(
+                model=self.model, custom_llm_provider=custom_llm_provider
+            ):
+                logger.info(f"JSON format is supported by the LLM model: {self.model}")
+                return True
+            else:
+                logger.warning(
+                    f"JSON format is not supported by the LLM model: {self.model}"
+                )
+                return False
         if not self.model.startswith("ollama") and not self.model.startswith(
             "hosted_vllm"
         ):
@@ -236,7 +253,9 @@ class LLM:
             logger.info(f"JSON format is supported by the LLM model: {self.model}")
             return True
         else:
-            logger.warning(f"JSON format is not supported by the LLM model: {self.model}")
+            logger.warning(
+                f"JSON format is not supported by the LLM model: {self.model}"
+            )
             return False
 
     def generate(self, messages: list[InputMessage]) -> str:
