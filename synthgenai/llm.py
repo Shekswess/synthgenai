@@ -232,6 +232,9 @@ class LLM:
         custom_llm_provider = None
         if self.model.startswith("gpt") or self.model.startswith("claude"):
             if "response_format" in get_supported_openai_params(
+                model=self.model,
+                custom_llm_provider=custom_llm_provider,
+            ) and supports_response_schema(
                 model=self.model, custom_llm_provider=custom_llm_provider
             ):
                 logger.info(f"JSON format is supported by the LLM model: {self.model}")
