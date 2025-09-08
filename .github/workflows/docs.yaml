@@ -8,7 +8,7 @@ on:
       - "**.md"
       - "mkdocs.yml"
   workflow_dispatch:
-  
+
 jobs:
   docs:
     runs-on: ubuntu-latest

@@ -18,7 +18,7 @@ jobs:
 
         - name: Set up Python
           run: uv python install
-        
+
         - name: Build the package
           run: uv build
 
