@@ -1,8 +1,9 @@
 default_language_version:
-    python: python3.12
+    python: python3.10
+
 repos:
   - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v4.5.0
+    rev: v5.0.0
     hooks:
       - id: check-ast
       - id: check-byte-order-marker
@@ -20,26 +21,25 @@ repos:
       - id: mixed-line-ending
       - id: requirements-txt-fixer
 
-  - repo: https://github.com/pre-commit/mirrors-mypy
-    rev: v1.8.0
-    hooks:
-      - id: mypy
-        args: [--strict, --ignore-missing-imports]
-        additional_dependencies:
-        - "pydantic>=1.10.4"
-
   - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: v0.4.4
+    rev: v0.11.13
     hooks:
-      - id: ruff
-        args: [ --fix ]
+      - id: ruff-check
+        args: [ --fix, --config=pyproject.toml]
       - id: ruff-format
 
+  - repo: local
+    hooks:
+      - id: ty
+        name: ty check
+        entry: uvx ty check .
+        language: python
+
   - repo: https://github.com/asottile/pyupgrade
-    rev: v3.15.0
+    rev: v3.20.0
     hooks:
       - id: pyupgrade
-        args: [--py36-plus]
+        args: [--py38-plus]
 
   - repo: https://github.com/Yelp/detect-secrets
     rev: v1.4.0
