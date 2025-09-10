@@ -3,6 +3,7 @@
 import os
 import random
 import re
+from typing import Dict, List
 
 from datasets import Dataset as HFDataset
 from huggingface_hub import DatasetCard, create_repo, repo_exists, upload_file
@@ -37,12 +38,12 @@ class Dataset(BaseDataset):
         """
         return self.topic
 
-    def get_domains(self) -> list[str]:
+    def get_domains(self) -> List[str]:
         """
         Get the domains of the dataset.
 
         Returns:
-            list[str]: The domains of the dataset.
+            List[str]: The domains of the dataset.
         """
         return self.domains
 
@@ -118,57 +119,57 @@ class Dataset(BaseDataset):
         """
         return self.description
 
-    def set_keywords(self, keywords: list[str]):
+    def set_keywords(self, keywords: List[str]):
         """
         Set the keywords for the dataset.
 
         Args:
-            keywords (list[str]): The keywords for the dataset.
+            keywords (List[str]): The keywords for the dataset.
         """
         self.keywords = keywords
 
-    def get_keywords(self) -> list[str]:
+    def get_keywords(self) -> List[str]:
         """
         Get the keywords for the dataset.
 
         Returns:
-            list[str]: The keywords for the dataset.
+            List[str]: The keywords for the dataset.
         """
         return self.keywords
 
-    def set_data(self, data: list[dict]) -> None:
+    def set_data(self, data: List[Dict]) -> None:
         """
         Set the data for the dataset.
 
         Args:
-            data (list[dict]): The data for the dataset.
+            data (List[Dict]): The data for the dataset.
         """
         self.data = data
 
-    def get_data(self) -> list[dict]:
+    def get_data(self) -> List[Dict]:
         """
         Get the data for the dataset.
 
         Returns:
-            list[dict]: The data for the dataset.
+            List[Dict]: The data for the dataset.
         """
         return self.data
 
-    def set_labels(self, labels: list[str]) -> None:
+    def set_labels(self, labels: List[str]) -> None:
         """
         Set the labels for the dataset.
 
         Args:
-            labels (list[str]): The labels for the dataset.
+            labels (List[str]): The labels for the dataset.
         """
         self.labels = labels
 
-    def get_labels(self) -> list[str]:
+    def get_labels(self) -> List[str]:
         """
         Get the labels for the dataset.
 
         Returns:
-            list[str]: The labels for the dataset.
+            List[str]: The labels for the dataset.
         """
         return self.labels
 
@@ -235,9 +236,7 @@ class Dataset(BaseDataset):
 
             markdown_description = TextUtils.convert_markdown(self.description)
             content = YamlUtils.extract_content(markdown_description)
-            FileUtils.save_markdown(
-                content, os.path.join(dataset_path, "README.md")
-            )
+            FileUtils.save_markdown(content, os.path.join(dataset_path, "README.md"))
             logger.info("README.md file created")
 
             if hf_repo_name is not None:
@@ -251,31 +250,23 @@ class Dataset(BaseDataset):
                 hf_token = self._get_hf_token(hf_token)
                 if not repo_exists(repo_id=hf_repo_name):
                     create_repo(
-                        repo_id=hf_repo_name,
-                        token=hf_token,
-                        repo_type="dataset"
+                        repo_id=hf_repo_name, token=hf_token, repo_type="dataset"
                     )
-                    logger.info(
-                        f"Created new Hugging Face repo: {hf_repo_name}"
-                    )
+                    logger.info(f"Created new Hugging Face repo: {hf_repo_name}")
 
                 hf_dataset.push_to_hub(
                     repo_id=hf_repo_name,
                     token=hf_token,
                     commit_message="Add dataset",
                 )
-                logger.info(
-                    f"Dataset pushed to Hugging Face Hub: {hf_repo_name}"
-                )
+                logger.info(f"Dataset pushed to Hugging Face Hub: {hf_repo_name}")
 
                 card = DatasetCard.load(repo_id_or_path=hf_repo_name)
                 card_metadata = YamlUtils.merge_metadata(
                     card.content, markdown_description
                 )
                 readme = card_metadata + "\n" + content
-                FileUtils.save_markdown(
-                    readme, os.path.join(dataset_path, "README.md")
-                )
+                FileUtils.save_markdown(readme, os.path.join(dataset_path, "README.md"))
                 upload_file(
                     repo_id=hf_repo_name,
                     token=hf_token,
@@ -284,9 +275,7 @@ class Dataset(BaseDataset):
                     path_in_repo="README.md",
                     repo_type="dataset",
                 )
-                logger.info(
-                    f"README.md uploaded to Hugging Face Hub: {hf_repo_name}"
-                )
+                logger.info(f"README.md uploaded to Hugging Face Hub: {hf_repo_name}")
 
         except Exception as e:
             logger.error(f"Failed to save dataset: {e}")
@@ -305,7 +294,7 @@ class Dataset(BaseDataset):
         """
         Validate the generated dataset data.
         This method should be overridden by specific dataset implementations.
-        
+
         Returns:
             bool: True if data is valid, False otherwise.
         """

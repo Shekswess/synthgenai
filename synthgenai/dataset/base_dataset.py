@@ -1,6 +1,7 @@
 """Base Dataset Module"""
 
 from abc import ABC, abstractmethod
+from typing import Dict, List
 
 from synthgenai.schemas.config import DatasetConfig
 from synthgenai.schemas.enums import DatasetType
@@ -38,12 +39,12 @@ class BaseDataset(ABC):
         pass
 
     @abstractmethod
-    def get_domains(self) -> list[str]:
+    def get_domains(self) -> List[str]:
         """
         Get the domains of the dataset.
 
         Returns:
-            list[str]: The domains of the dataset.
+            List[str]: The domains of the dataset.
         """
         pass
 
@@ -128,62 +129,62 @@ class BaseDataset(ABC):
         pass
 
     @abstractmethod
-    def set_keywords(self, keywords: list[str]):
+    def set_keywords(self, keywords: List[str]):
         """
         Set the keywords for the dataset.
 
         Args:
-            keywords (list[str]): The keywords for the dataset.
+            keywords (List[str]): The keywords for the dataset.
         """
         pass
 
     @abstractmethod
-    def get_keywords(self) -> list[str]:
+    def get_keywords(self) -> List[str]:
         """
         Get the keywords for the dataset.
 
         Returns:
-            list[str]: The keywords for the dataset.
+            List[str]: The keywords for the dataset.
         """
         pass
 
     @abstractmethod
-    def set_data(self, data: list[dict]) -> None:
+    def set_data(self, data: List[Dict]) -> None:
         """
         Set the data for the dataset.
 
         Args:
-            data (list[dict]): The data for the dataset.
+            data (List[dict]): The data for the dataset.
         """
         pass
 
     @abstractmethod
-    def get_data(self) -> list[dict]:
+    def get_data(self) -> List[Dict]:
         """
         Get the data for the dataset.
 
         Returns:
-            list[dict]: The data for the dataset.
+            List[Dict]: The data for the dataset.
         """
         pass
 
     @abstractmethod
-    def set_labels(self, labels: list[str]) -> None:
+    def set_labels(self, labels: List[str]) -> None:
         """
         Set the labels for the dataset.
 
         Args:
-            labels (list[str]): The labels for the dataset.
+            labels (List[str]): The labels for the dataset.
         """
         pass
 
     @abstractmethod
-    def get_labels(self) -> list[str]:
+    def get_labels(self) -> List[str]:
         """
         Get the labels for the dataset.
 
         Returns:
-            list[str]: The labels for the dataset.
+            List[str]: The labels for the dataset.
         """
         pass
 
