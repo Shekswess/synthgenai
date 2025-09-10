@@ -1,0 +1,9 @@
+<user>
+
+Generate a list of {{ num_labels }} labels based on the following information:
+  - Topic: {{ topic }}
+  - Language: {{ language }}
+  - Domains: {{ domains }}
+  - Additional description: {{ additional_description }}
+
+</user>
