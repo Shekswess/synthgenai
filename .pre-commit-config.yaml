@@ -12,7 +12,7 @@ repos:
       - id: check-executables-have-shebangs
       - id: check-json
       - id: check-yaml
-        exclude: .*_template\.yaml
+        exclude: ^(.*_template\.yaml|mkdocs\.yml)$
       - id: check-toml
       - id: debug-statements
       - id: detect-private-key
@@ -46,13 +46,13 @@ repos:
     hooks:
       - id: detect-secrets
         name: "detect-secrets"
-        args: ["--exclude-files", '.*\.ipynb$']
+        args: ["--exclude-files", '.*\.ipynb$|^docs/']
       - id: detect-secrets
         name: "detect-secrets-jupyter"
         args:
           [
             "--exclude-files",
-            ".*[^i][^p][^y][^n][^b]$",
+            ".*[^i][^p][^y][^n][^b]$|^docs/",
             "--exclude-lines",
             '"(hash|id|authorship_tag|image/\w+)":.*',
           ]
