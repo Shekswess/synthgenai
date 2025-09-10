@@ -2,4 +2,4 @@
 
 from synthgenai.llm.llm import LLM
 
-__all__ = ["BaseLLM", "LLM"]
+__all__ = ["LLM"]

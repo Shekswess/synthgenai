@@ -1,7 +1,7 @@
 """Base LLM abstract class module"""
 
 from abc import ABC, abstractmethod
-from typing import Union
+from typing import Dict, List, Union
 
 from pydantic import BaseModel
 
@@ -73,7 +73,7 @@ class BaseLLM(ABC):
 
     @abstractmethod
     def set_response_format(
-        self, response_format: Union[dict, BaseModel]
+        self, response_format: Union[Dict, BaseModel]
     ) -> None:
         """
         Set the response format for the LLM
@@ -95,7 +95,7 @@ class BaseLLM(ABC):
         pass
 
     @abstractmethod
-    def generate(self, messages: list[InputMessage]) -> str:
+    def generate(self, messages: List[InputMessage]) -> str:
         """
         Generate completions using the LLM API
 
@@ -109,7 +109,7 @@ class BaseLLM(ABC):
         pass
 
     @abstractmethod
-    async def agenerate(self, messages: list[InputMessage]) -> str:
+    async def agenerate(self, messages: List[InputMessage]) -> str:
         """
         Generate completions using the LLM API asynchronously.
 

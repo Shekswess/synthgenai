@@ -1,7 +1,7 @@
 """LLM module"""
 
 import os
-from typing import Union
+from typing import Dict, List, Union
 
 import litellm
 from litellm import (
@@ -89,7 +89,7 @@ class LLM(BaseLLM):
 
         for key, env_vars in api_key_checks.items():
             if self.model.startswith(key):
-                if isinstance(env_vars, list):
+                if isinstance(env_vars, List):
                     missing_vars = [
                         var for var in env_vars if os.environ.get(var) is None
                     ]
@@ -212,9 +212,7 @@ class LLM(BaseLLM):
         """
         return self.model
 
-    def set_response_format(
-        self, response_format: Union[dict, BaseModel]
-    ) -> None:
+    def set_response_format(self, response_format: Union[Dict, BaseModel]) -> None:
         """
         Set the response format for the LLM
 
@@ -263,7 +261,7 @@ class LLM(BaseLLM):
             )
             return False
 
-    def generate(self, messages: list[InputMessage]) -> str:
+    def generate(self, messages: List[InputMessage]) -> str:
         """
         Generate completions using the LLM API
 
@@ -292,7 +290,7 @@ class LLM(BaseLLM):
             logger.error(f"Failed to generate completions: {e}")
             raise
 
-    async def agenerate(self, messages: list[InputMessage]) -> str:
+    async def agenerate(self, messages: List[InputMessage]) -> str:
         """
         Generate completions using the LLM API asynchronously.
 
