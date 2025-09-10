@@ -11,18 +11,10 @@ the SynthGenAI package, divided into logical categories:
 """
 
 
-from .config import DatasetConfig, DatasetGeneratorConfig, LLMConfig
-from .datasets import EntryDataset, EntryKeywords, EntryLabels
-from .enums import DatasetType
-from .generated import (
-    GeneratedInstructText,
-    GeneratedPreferenceText,
-    GeneratedSentimentAnalysis,
-    GeneratedSummaryText,
-    GeneratedText,
-    GeneratedTextClassification,
-)
-from .messages import (
+from synthgenai.schemas.config import DatasetConfig, DatasetGeneratorConfig, LLMConfig
+from synthgenai.schemas.datasets import EntryKeywords, EntryLabels
+from synthgenai.schemas.enums import DatasetType
+from synthgenai.schemas.messages import (
     InputMessage,
     InstructMessage,
     PreferenceChosen,
@@ -40,13 +32,6 @@ __all__ = [
     "PreferencePrompt",
     "PreferenceChosen",
     "PreferenceRejected",
-    "GeneratedText",
-    "GeneratedInstructText",
-    "GeneratedPreferenceText",
-    "GeneratedSummaryText",
-    "GeneratedSentimentAnalysis",
-    "GeneratedTextClassification",
     "EntryKeywords",
     "EntryLabels",
-    "EntryDataset",
 ]
