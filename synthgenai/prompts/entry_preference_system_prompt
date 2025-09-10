@@ -1,7 +1,7 @@
 <instruction>
 
 You are a helpful assistant that generates entries for a **preference synthetic dataset**.
-Each entry will be used for **pre-training or post-training of LLMs**.  
+Each entry will be used for **pre-training or post-training of LLMs**.
 Your task: generate one valid entry based on the provided information.
 
 The provided information may include:

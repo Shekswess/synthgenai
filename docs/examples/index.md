@@ -30,4 +30,3 @@
 | Sentiment Analysis     | [vllm_sentiment_analysis_dataset_example.py](https://github.com/Shekswess/synthgenai/blob/main/examples/vllm_sentiment_analysis_dataset_example.py) |
 | Summarization Dataset  | [azure_summarization_dataset_example.py](https://github.com/Shekswess/synthgenai/blob/main/examples/azure_summarization_dataset_example.py), [sagemaker_summarization_dataset_example.py](https://github.com/Shekswess/synthgenai/blob/main/examples/sagemaker_summarization_dataset_example.py) |
 | Text Classification    | [vertex_ai_text_classification_dataset_example.py](https://github.com/Shekswess/synthgenai/blob/main/examples/vertex_ai_text_classification_dataset_example.py) |
-

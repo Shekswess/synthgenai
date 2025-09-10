@@ -24,9 +24,7 @@ class BaseLLM(ABC):
         self.top_p = llm_config.top_p
         self.max_tokens = llm_config.max_tokens
         self.api_base = (
-            str(llm_config.api_base)
-            if llm_config.api_base is not None
-            else None
+            str(llm_config.api_base) if llm_config.api_base is not None else None
         )
         self.api_key = llm_config.api_key
         self.response_format = None
@@ -72,9 +70,7 @@ class BaseLLM(ABC):
         pass
 
     @abstractmethod
-    def set_response_format(
-        self, response_format: Union[Dict, BaseModel]
-    ) -> None:
+    def set_response_format(self, response_format: Union[Dict, BaseModel]) -> None:
         """
         Set the response format for the LLM
 

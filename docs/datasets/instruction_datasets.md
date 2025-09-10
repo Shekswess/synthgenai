@@ -1,6 +1,6 @@
 # Instruction Datasets 💬
 
-To generate an Instruction dataset, you need to use the `InstructionDatasetGenerator` class. 
+To generate an Instruction dataset, you need to use the `InstructionDatasetGenerator` class.
 
 ```python
 from synthgenai import InstructionDatasetGenerator

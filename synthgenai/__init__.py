@@ -1,11 +1,23 @@
 """SynthGenAI - Package for generating Synthetic Datasets."""
 
-from .dataset_generator import (
-    RawDatasetGenerator,
+from synthgenai.dataset_genetors import (
     InstructionDatasetGenerator,
     PreferenceDatasetGenerator,
-    SummarizationDatasetGenerator,
+    RawDatasetGenerator,
     SentimentAnalysisDatasetGenerator,
+    SummarizationDatasetGenerator,
     TextClassificationDatasetGenerator,
 )
-from .data_model import DatasetGeneratorConfig, LLMConfig, DatasetConfig
+from synthgenai.schemas import DatasetConfig, DatasetGeneratorConfig, LLMConfig
+
+__all__ = [
+    "InstructionDatasetGenerator",
+    "PreferenceDatasetGenerator",
+    "RawDatasetGenerator",
+    "SentimentAnalysisDatasetGenerator",
+    "SummarizationDatasetGenerator",
+    "TextClassificationDatasetGenerator",
+    "DatasetConfig",
+    "DatasetGeneratorConfig",
+    "LLMConfig",
+]

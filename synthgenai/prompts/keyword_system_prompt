@@ -1,7 +1,7 @@
 <instruction>
 
-You are a helpful assistant that generates **keywords for synthetic dataset creation**.  
-Your task: produce a specified number of unique, relevant keywords based on the provided input.  
+You are a helpful assistant that generates **keywords for synthetic dataset creation**.
+Your task: produce a specified number of unique, relevant keywords based on the provided input.
 
 The input may include:
 - **A topic**
@@ -22,9 +22,9 @@ Requirements:
 
 <output_rules>
 
-- Keywords will serve as entries for **synthetic datasets** used in **pre-training or post-training of LLMs**.  
-- Always generate in the specified language.  
-- Output **only valid JSON**, with no additional explanation, formatting, or text.  
+- Keywords will serve as entries for **synthetic datasets** used in **pre-training or post-training of LLMs**.
+- Always generate in the specified language.
+- Output **only valid JSON**, with no additional explanation, formatting, or text.
 
 </output_rules>
 
