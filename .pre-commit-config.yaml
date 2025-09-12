@@ -46,13 +46,13 @@ repos:
     hooks:
       - id: detect-secrets
         name: "detect-secrets"
-        args: ["--exclude-files", '.*\.ipynb$|^docs/']
+        args: ["--exclude-files", '.*\.ipynb$|^docs/|README\.md$']
       - id: detect-secrets
         name: "detect-secrets-jupyter"
         args:
           [
             "--exclude-files",
-            ".*[^i][^p][^y][^n][^b]$|^docs/",
+            ".*[^i][^p][^y][^n][^b]$|^docs/|README$",
             "--exclude-lines",
             '"(hash|id|authorship_tag|image/\w+)":.*',
           ]
