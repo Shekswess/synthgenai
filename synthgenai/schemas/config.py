@@ -40,7 +40,7 @@ class DatasetConfig(BaseModel):
     domains: list[str] = Field(..., min_items=1)
     language: str = Field("English", min_length=1)
     additional_description: str = Field("", max_length=1000)
-    num_entries: int = Field(1000, gt=1)
+    num_entries: int = Field(1000, gt=10)
 
 
 class DatasetGeneratorConfig(BaseModel):
