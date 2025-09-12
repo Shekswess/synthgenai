@@ -4,22 +4,26 @@ version = "2.0.0"
 description = "SynthGenAI - Package for generating Synthetic Datasets."
 readme = "README.md"
 requires-python = ">=3.10"
-authors = [{name = "Bojan Jakimovski - Shekswess", email = "jakimovski_bojan@outlook.com"}]
-dependencies = [
-    "boto3==1.35.82",
-    "datasets==3.2.0",
-    "huggingface-hub==0.26.5",
-    "jinja2==3.1.4",
-    "langfuse==2.57.0",
-    "litellm==1.55.2",
-    "loguru==0.7.3",
-    "pydantic==2.10.3",
-    "typer>=0.17.4",
+authors = [
+    { name = "Bojan Jakimovski - Shekswess", email = "jakimovski_bojan@outlook.com" },
 ]
-license = {file = "LICENCE.txt"}
+dependencies = [
+    "boto3==1.40.28",
+    "datasets==4.0.0",
+    "huggingface-hub==0.34.4",
+    "jinja2==3.1.4",
+    "langfuse==3.3.4",
+    "litellm==1.77.0",
+    "loguru==0.7.3",
+    "pydantic==2.11.7",
+    "python-dotenv>=1.1.1",
+    "tqdm==4.67.1",
+    "typer==0.17.4",
+]
+license = { file = "LICENCE.txt" }
 
-[project.gui-scripts]
-synthgenai = "synthgenai.ui:ui_main"
+[project.scripts]
+synthgenai = "synthgenai.cli:app"
 
 [build-system]
 requires = ["hatchling"]
@@ -104,12 +108,12 @@ dev = [
     "pytest-mock==3.14.1",
     "ruff==0.12.12",
     "ty==0.0.1a8",
-    "ipykernel==6.29.5"
+    "ipykernel==6.29.5",
 ]
 docs = [
-    "mkdocs>=1.6.1",
-    "mkdocs-git-committers-plugin-2>=2.5.0",
-    "mkdocs-git-revision-date-localized-plugin>=1.4.7",
-    "mkdocs-material>=9.5.49",
-    "mkdocs-minify-plugin>=0.8.0",
+    "mkdocs==1.6.1",
+    "mkdocs-git-committers-plugin-2==2.5.0",
+    "mkdocs-git-revision-date-localized-plugin==1.4.7",
+    "mkdocs-material==9.5.49",
+    "mkdocs-minify-plugin==0.8.0",
 ]
