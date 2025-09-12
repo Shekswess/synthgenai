@@ -205,28 +205,3 @@ class BaseDataset(ABC):
             hf_token (str | None): The Hugging Face token for authentication.
         """
         pass
-
-    @abstractmethod
-    def generate_dataset(self) -> None:
-        """
-        Abstract method to generate dataset data.
-        This method must be implemented by all concrete dataset classes.
-
-        Raises:
-            NotImplementedError: If not implemented by subclass.
-        """
-        pass
-
-    @abstractmethod
-    def validate_data(self) -> bool:
-        """
-        Abstract method to validate the generated dataset data.
-        This method must be implemented by all concrete dataset classes.
-
-        Returns:
-            bool: True if data is valid, False otherwise.
-
-        Raises:
-            NotImplementedError: If not implemented by subclass.
-        """
-        pass

@@ -6,13 +6,20 @@ import re
 from typing import Dict, List
 
 from datasets import Dataset as HFDataset
-from huggingface_hub import DatasetCard, create_repo, repo_exists, upload_file
+from huggingface_hub import (
+    DatasetCard,
+    create_repo,
+    repo_exists,
+    upload_file,
+)
+from huggingface_hub.utils import HfHubHTTPError, RepositoryNotFoundError
 from loguru import logger
 
 from synthgenai.dataset.base_dataset import BaseDataset
 from synthgenai.schemas.config import DatasetConfig
 from synthgenai.schemas.enums import DatasetType
 from synthgenai.utils.file_utils import FileUtils
+from synthgenai.utils.progress_utils import ProgressManager
 from synthgenai.utils.text_utils import TextUtils
 from synthgenai.utils.yaml_utils import YamlUtils
 
@@ -201,16 +208,134 @@ class Dataset(BaseDataset):
 
         Returns:
             str: The Hugging Face token.
+
+        Raises:
+            ValueError: If HF_TOKEN is not provided and not found in
+                environment variables.
         """
+        logger.info("Retrieving Hugging Face token...")
         if hf_token is None:
             hf_token = os.environ.get("HF_TOKEN")
             if hf_token is None:
-                logger.error("HF_TOKEN is not set")
-                raise ValueError("HF_TOKEN is not set")
+                error_msg = (
+                    "HF_TOKEN is not set. Please provide it via --hf-token "
+                    "parameter or set the HF_TOKEN environment variable. "
+                    "Get your token at: https://huggingface.co/settings/tokens"
+                )
+                logger.error(error_msg)
+                raise ValueError(error_msg)
         else:
             os.environ["HF_TOKEN"] = hf_token
-        logger.info("Hugging Face token retrieved")
+        logger.info("Hugging Face token retrieved successfully")
         return hf_token
+
+    def _upload_to_huggingface(
+        self,
+        hf_repo_name: str,
+        hf_token: str | None,
+        hf_dataset: HFDataset,
+        dataset_path: str,
+        markdown_description: str,
+        content: str,
+    ):
+        """
+        Upload dataset to Hugging Face Hub with proper error handling.
+
+        Args:
+            hf_repo_name: Repository name in format 'org/repo'
+            hf_token: HuggingFace token
+            hf_dataset: The dataset to upload
+            dataset_path: Local path where dataset is saved
+            markdown_description: Markdown description
+            content: README content
+        """
+        try:
+            # Validate repository name format
+            if not re.match(r"^[^/]+/[^/]+$", hf_repo_name):
+                error_msg = (
+                    "hf_repo_name must be in the format "
+                    "'organization_or_account/name_of_the_dataset'"
+                )
+                logger.error(error_msg)
+                raise ValueError(error_msg)
+
+            # Get HF token
+            hf_token = self._get_hf_token(hf_token)
+
+            # Check if repository exists and create if needed
+            logger.info(f"Checking if repository {hf_repo_name} exists...")
+            try:
+                exists = repo_exists(repo_id=hf_repo_name, token=hf_token)
+                if not exists:
+                    logger.info(
+                        f"Repository {hf_repo_name} does not exist, creating..."
+                    )
+                    create_repo(
+                        repo_id=hf_repo_name,
+                        token=hf_token,
+                        repo_type="dataset",
+                        exist_ok=True,
+                    )
+                    logger.info(f"Created new Hugging Face repository: {hf_repo_name}")
+                else:
+                    logger.info(f"Repository {hf_repo_name} already exists")
+            except Exception as e:
+                logger.error(f"Error checking/creating repository: {str(e)}")
+                raise
+
+            # Upload dataset
+            logger.info("Uploading dataset to Hugging Face Hub...")
+            try:
+                hf_dataset.push_to_hub(
+                    repo_id=hf_repo_name,
+                    token=hf_token,
+                    commit_message="Add dataset",
+                )
+                logger.info(f"Dataset uploaded successfully to {hf_repo_name}")
+            except Exception as e:
+                logger.error(f"Failed to upload dataset: {str(e)}")
+                raise
+
+            # Update README with metadata
+            logger.info("Updating README with dataset metadata...")
+            try:
+                # Load existing dataset card or create new one
+                try:
+                    card = DatasetCard.load(
+                        repo_id_or_path=hf_repo_name, token=hf_token
+                    )
+                    logger.info("Loaded existing dataset card")
+                except (RepositoryNotFoundError, HfHubHTTPError):
+                    logger.info("No existing dataset card found, creating new one")
+                    card = DatasetCard("")
+
+                card_metadata = YamlUtils.merge_metadata(
+                    card.content, markdown_description
+                )
+                readme = card_metadata + "\n" + content
+
+                # Save updated README locally first
+                FileUtils.save_markdown(readme, os.path.join(dataset_path, "README.md"))
+
+                # Upload README
+                upload_file(
+                    repo_id=hf_repo_name,
+                    token=hf_token,
+                    commit_message="Update README with dataset metadata",
+                    path_or_fileobj=os.path.join(dataset_path, "README.md"),
+                    path_in_repo="README.md",
+                    repo_type="dataset",
+                )
+                logger.info(f"README.md uploaded successfully to {hf_repo_name}")
+            except Exception as e:
+                logger.error(f"Failed to update README: {str(e)}")
+                # Don't raise here - dataset upload was successful,
+                # README update is less critical
+                logger.warning("Dataset upload completed but README update failed")
+
+        except Exception as e:
+            logger.error(f"Failed to upload to Hugging Face Hub: {str(e)}")
+            raise
 
     def save_dataset(
         self,
@@ -228,78 +353,73 @@ class Dataset(BaseDataset):
             hf_token (str | None): The Hugging Face token for authentication.
         """
         try:
-            dataset_path = self._prepare_local_save(dataset_path)
-            random.shuffle(self.data)
-            hf_dataset = HFDataset.from_list(self.data)
-            hf_dataset.save_to_disk(os.path.join(dataset_path, "data"))
-            logger.info(f"Dataset saved locally at {dataset_path}")
+            # Create progress bar for dataset saving process
+            total_steps = 4 if hf_repo_name is None else 5
+            with ProgressManager.create_progress_bar(
+                total=total_steps, desc="Saving dataset", unit="steps"
+            ) as pbar:
+                # Step 1: Prepare local save path
+                pbar.set_description("Preparing local save path")
+                logger.info("Preparing local save path...")
+                dataset_path = self._prepare_local_save(dataset_path)
+                pbar.update(1)
 
-            markdown_description = TextUtils.convert_markdown(self.description)
-            content = YamlUtils.extract_content(markdown_description)
-            FileUtils.save_markdown(content, os.path.join(dataset_path, "README.md"))
-            logger.info("README.md file created")
+                # Step 2: Shuffle and create HF dataset
+                pbar.set_description("Creating HuggingFace dataset")
+                logger.info(
+                    "Shuffling dataset and creating Hugging Face dataset object..."
+                )
+                random.shuffle(self.data)
+                hf_dataset = HFDataset.from_list(self.data)
+                logger.info(
+                    f"Created Hugging Face dataset with {len(self.data)} entries"
+                )
+                pbar.update(1)
 
-            if hf_repo_name is not None:
-                if not re.match(r"^[^/]+/[^/]+$", hf_repo_name):
-                    error_msg = (
-                        "hf_repo_name must be in the format "
-                        "'organization_or_account/name_of_the_dataset'"
+                # Step 3: Save dataset locally
+                pbar.set_description("Saving to local disk")
+                logger.info("Saving dataset to local disk...")
+                hf_dataset.save_to_disk(os.path.join(dataset_path, "data"))
+                logger.info(f"Dataset saved locally at {dataset_path}")
+                pbar.update(1)
+
+                # Step 4: Create README
+                pbar.set_description("Creating README.md")
+                logger.info("Creating README.md file...")
+                markdown_description = TextUtils.convert_markdown(self.description)
+                content = YamlUtils.extract_content(markdown_description)
+                FileUtils.save_markdown(
+                    content, os.path.join(dataset_path, "README.md")
+                )
+                logger.info("README.md file created successfully")
+                pbar.update(1)
+
+                # Step 5: Upload to Hugging Face Hub (if requested)
+                if hf_repo_name is not None:
+                    pbar.set_description("Uploading to HuggingFace Hub")
+                    logger.info(
+                        f"Starting Hugging Face Hub upload to {hf_repo_name}..."
                     )
-                    logger.error(error_msg)
-                    raise ValueError(error_msg)
-                hf_token = self._get_hf_token(hf_token)
-                if not repo_exists(repo_id=hf_repo_name):
-                    create_repo(
-                        repo_id=hf_repo_name, token=hf_token, repo_type="dataset"
+                    self._upload_to_huggingface(
+                        hf_repo_name,
+                        hf_token,
+                        hf_dataset,
+                        dataset_path,
+                        markdown_description,
+                        content,
                     )
-                    logger.info(f"Created new Hugging Face repo: {hf_repo_name}")
+                    pbar.update(1)
+                else:
+                    logger.info(
+                        "Skipping Hugging Face Hub upload (no repository specified)"
+                    )
 
-                hf_dataset.push_to_hub(
-                    repo_id=hf_repo_name,
-                    token=hf_token,
-                    commit_message="Add dataset",
-                )
-                logger.info(f"Dataset pushed to Hugging Face Hub: {hf_repo_name}")
+            ProgressManager.log_progress_complete(
+                "Dataset saving", total_steps, total_steps
+            )
 
-                card = DatasetCard.load(repo_id_or_path=hf_repo_name)
-                card_metadata = YamlUtils.merge_metadata(
-                    card.content, markdown_description
-                )
-                readme = card_metadata + "\n" + content
-                FileUtils.save_markdown(readme, os.path.join(dataset_path, "README.md"))
-                upload_file(
-                    repo_id=hf_repo_name,
-                    token=hf_token,
-                    commit_message="Add README",
-                    path_or_fileobj=os.path.join(dataset_path, "README.md"),
-                    path_in_repo="README.md",
-                    repo_type="dataset",
-                )
-                logger.info(f"README.md uploaded to Hugging Face Hub: {hf_repo_name}")
+            logger.info("Dataset save completed successfully!")
 
         except Exception as e:
-            logger.error(f"Failed to save dataset: {e}")
+            logger.error(f"Failed to save dataset: {str(e)}")
             raise
-
-    def generate_dataset(self) -> None:
-        """
-        Generate dataset data.
-        This method should be overridden by specific dataset implementations.
-        """
-        raise NotImplementedError(
-            "generate_dataset method must be implemented by subclasses"
-        )
-
-    def validate_data(self) -> bool:
-        """
-        Validate the generated dataset data.
-        This method should be overridden by specific dataset implementations.
-
-        Returns:
-            bool: True if data is valid, False otherwise.
-        """
-        if not self.data:
-            return False
-        if not isinstance(self.data, list):
-            return False
-        return True
