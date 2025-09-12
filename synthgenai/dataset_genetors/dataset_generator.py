@@ -162,7 +162,7 @@ class DatasetGenerator:
             ProgressManager.log_progress_complete(
                 "Keyword generation", len(keywords.keywords), num_keywords
             )
-            
+
             # Reset response format after keyword generation
             if self.llm.check_response_format():
                 self.llm.set_response_format(None)
@@ -244,7 +244,7 @@ class DatasetGenerator:
         ProgressManager.log_progress_complete(
             "Label generation", len(labels.labels), num_labels
         )
-        
+
         # Reset response format after label generation
         if self.llm.check_response_format():
             self.llm.set_response_format(None)

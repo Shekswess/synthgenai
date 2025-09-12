@@ -177,115 +177,115 @@ This project is licensed under the MIT License - see the LICENSE.md file for det
 │   ├── workflows/                                                # GitHub Actions workflows
 │   │   ├── build_n_publish.yaml                                  # Build and publish workflow
 │   │   ├── docs.yaml                                             # Documentation deployment workflow
-│   │   └── uv-ci.yaml                                            # CI workflow using uv (pre-commit + unit tests)
-│   └── depandabot.yml                                            # Dependabot configuration file
-├── docs
-│   ├── assets
-│   │   ├── favicon.png
-│   │   ├── logo_header.png
-│   │   └── logo.svg
-│   ├── configurations
-│   │   ├── dataset_configuration.md
-│   │   ├── dataset_generator_configuration.md
-│   │   ├── index.md
-│   │   └── llm_configuration.md
-│   ├── contributing
-│   │   └── index.md
-│   ├── datasets
-│   │   ├── index.md
-│   │   ├── instruction_datasets.md
-│   │   ├── preference_datasets.md
-│   │   ├── raw_datasets.md
-│   │   ├── sentiment_analysis_datasets.md
-│   │   ├── summarization_datasets.md
-│   │   └── text_classification_datasets.md
-│   ├── examples
-│   │   └── index.md
-│   ├── index.md
-│   ├── installation
-│   │   └── index.md
-│   ├── llm_providers
-│   │   └── index.md
-│   ├── quick_start
-│   │   └── index.md
-│   └── stylesheets
-├── examples
-│   ├── anthropic_instruction_dataset_example.py
-│   ├── azure_ai_preference_dataset_example.py
-│   ├── azure_summarization_dataset_example.py
-│   ├── bedrock_raw_dataset_example.py
-│   ├── deepseek_instruction_dataset_example.py
-│   ├── gemini_langfuse_raw_dataset_example.py
-│   ├── groq_preference_dataset_example.py
-│   ├── huggingface_instruction_dataset_example.py
-│   ├── mistral_preference_dataset_example.py
-│   ├── ollama_preference_dataset_example.py
-│   ├── openai_raw_dataset_example.py
-│   ├── openrouter_raw_dataset_example.py
-│   ├── sagemaker_summarization_dataset_example.py
-│   ├── vertex_ai_text_classification_dataset_example.py
-│   ├── vllm_sentiment_analysis_dataset_example.py
-│   └── xai_raw_dataset_example.py
-├── synthgenai
-│   ├── dataset
-│   │   ├── __init__.py
-│   │   ├── base_dataset.py
-│   │   └── dataset.py
-│   ├── dataset_genetors
-│   │   ├── __init__.py
-│   │   ├── classification_dataset_generator.py
-│   │   ├── dataset_generator.py
-│   │   ├── instruction_dataset_generator.py
-│   │   ├── preference_dataset_generator.py
-│   │   ├── raw_dataset_generator.py
-│   │   ├── sentiment_dataset_generator.py
-│   │   └── summarization_dataset_generator.py
-│   ├── llm
-│   │   ├── __init__.py
-│   │   ├── base_llm.py
-│   │   └── llm.py
-│   ├── prompts
-│   │   ├── description_system_prompt
-│   │   ├── description_user_prompt
-│   │   ├── entry_classification_system_prompt
-│   │   ├── entry_instruction_system_prompt
-│   │   ├── entry_preference_system_prompt
-│   │   ├── entry_raw_system_prompt
-│   │   ├── entry_sentiment_system_prompt
-│   │   ├── entry_summarization_system_prompt
-│   │   ├── entry_user_prompt
-│   │   ├── keyword_system_prompt
-│   │   ├── keyword_user_prompt
-│   │   ├── labels_system_prompt
-│   │   └── labels_user_prompt
-│   ├── schemas
-│   │   ├── __init__.py
-│   │   ├── config.py
-│   │   ├── datasets.py
-│   │   ├── enums.py
-│   │   └── messages.py
-│   ├── utils
-│   |   ├── file_utils.py
-│   |   ├── __init__.py
-│   |   ├── json_utils.py
-│   |   ├── progress_utils.py
-│   |   ├── prompt_utils.py
-│   |   ├── text_utils.py
-│   |   └── yaml_utils.py
-│   ├── __init__.py
-│   └── cli.py
-├── tests
-│   ├── __init__.py
-│   ├── conftest.py
-│   ├── test_dataset_generator.py
-│   ├── test_dataset.py
-│   └── test_llm.py
-├── .gitignore
-├── .pre-commit-config.yaml
-├── .python-version
-├── LICENCE.txt
-├── mkdocs.yml
-├── pyproject.toml
-├── README.md
-└── uv.lock
+│   │   └── uv-ci.yaml                                            # UV package manager CI workflow
+│   └── depandabot.yml                                            # Dependabot configuration for automatic dependency updates
+├── docs                                                          # MkDocs documentation source files
+│   ├── assets                                                    # Static assets for documentation
+│   │   ├── favicon.png                                           # Website favicon
+│   │   ├── logo_header.png                                       # Header logo image
+│   │   └── logo.svg                                              # SVG logo for the project
+│   ├── configurations                                            # Configuration documentation
+│   │   ├── dataset_configuration.md                              # Dataset configuration guide
+│   │   ├── dataset_generator_configuration.md                    # Dataset generator configuration guide
+│   │   ├── index.md                                              # Configuration section index
+│   │   └── llm_configuration.md                                  # LLM configuration guide
+│   ├── contributing                                              # Contribution guidelines
+│   │   └── index.md                                              # How to contribute to the project
+│   ├── datasets                                                  # Dataset type documentation
+│   │   ├── index.md                                              # Dataset types overview
+│   │   ├── instruction_datasets.md                               # Instruction datasets documentation
+│   │   ├── preference_datasets.md                                # Preference datasets documentation
+│   │   ├── raw_datasets.md                                       # Raw datasets documentation
+│   │   ├── sentiment_analysis_datasets.md                        # Sentiment analysis datasets documentation
+│   │   ├── summarization_datasets.md                             # Summarization datasets documentation
+│   │   └── text_classification_datasets.md                       # Text classification datasets documentation
+│   ├── examples                                                  # Examples documentation
+│   │   └── index.md                                              # Code examples and usage patterns
+│   ├── index.md                                                  # Main documentation homepage
+│   ├── installation                                              # Installation documentation
+│   │   └── index.md                                              # Installation guide and requirements
+│   ├── llm_providers                                             # LLM provider documentation
+│   │   └── index.md                                              # Supported LLM providers guide
+│   ├── quick_start                                               # Quick start guide
+│   │   └── index.md                                              # Getting started tutorial
+│   └── stylesheets                                               # Custom CSS styles for documentation
+├── examples                                                      # Python example scripts demonstrating usage
+│   ├── anthropic_instruction_dataset_example.py                  # Anthropic API instruction dataset example
+│   ├── azure_ai_preference_dataset_example.py                    # Azure AI preference dataset example
+│   ├── azure_summarization_dataset_example.py                    # Azure summarization dataset example
+│   ├── bedrock_raw_dataset_example.py                            # AWS Bedrock raw dataset example
+│   ├── deepseek_instruction_dataset_example.py                   # DeepSeek instruction dataset example
+│   ├── gemini_langfuse_raw_dataset_example.py                    # Gemini with Langfuse raw dataset example
+│   ├── groq_preference_dataset_example.py                        # Groq preference dataset example
+│   ├── huggingface_instruction_dataset_example.py                # Hugging Face instruction dataset example
+│   ├── mistral_preference_dataset_example.py                     # Mistral AI preference dataset example
+│   ├── ollama_preference_dataset_example.py                      # Ollama preference dataset example
+│   ├── openai_raw_dataset_example.py                             # OpenAI raw dataset example
+│   ├── openrouter_raw_dataset_example.py                         # OpenRouter raw dataset example
+│   ├── sagemaker_summarization_dataset_example.py                # AWS SageMaker summarization dataset example
+│   ├── vertex_ai_text_classification_dataset_example.py          # Google Vertex AI text classification example
+│   ├── vllm_sentiment_analysis_dataset_example.py                # vLLM sentiment analysis dataset example
+│   └── xai_raw_dataset_example.py                                # xAI raw dataset example
+├── synthgenai                                                    # Main package source code
+│   ├── dataset                                                   # Dataset handling modules
+│   │   ├── __init__.py                                           # Dataset package initializer
+│   │   ├── base_dataset.py                                       # Base dataset class and common functionality
+│   │   └── dataset.py                                            # Main dataset implementation
+│   ├── dataset_genetors                                          # Dataset generation modules
+│   │   ├── __init__.py                                           # Dataset generators package initializer
+│   │   ├── classification_dataset_generator.py                   # Text classification dataset generator
+│   │   ├── dataset_generator.py                                  # Base dataset generator class
+│   │   ├── instruction_dataset_generator.py                      # Instruction-following dataset generator
+│   │   ├── preference_dataset_generator.py                       # Preference dataset generator (RLHF)
+│   │   ├── raw_dataset_generator.py                              # Raw text dataset generator
+│   │   ├── sentiment_dataset_generator.py                        # Sentiment analysis dataset generator
+│   │   └── summarization_dataset_generator.py                    # Text summarization dataset generator
+│   ├── llm                                                       # LLM interaction modules
+│   │   ├── __init__.py                                           # LLM package initializer
+│   │   ├── base_llm.py                                           # Base LLM class and common functionality
+│   │   └── llm.py                                                # Main LLM implementation with LiteLLM integration
+│   ├── prompts                                                   # Prompt templates for different dataset types
+│   │   ├── description_system_prompt                             # System prompt for generating descriptions
+│   │   ├── description_user_prompt                               # User prompt template for descriptions
+│   │   ├── entry_classification_system_prompt                    # System prompt for classification entries
+│   │   ├── entry_instruction_system_prompt                       # System prompt for instruction entries
+│   │   ├── entry_preference_system_prompt                        # System prompt for preference entries
+│   │   ├── entry_raw_system_prompt                               # System prompt for raw text entries
+│   │   ├── entry_sentiment_system_prompt                         # System prompt for sentiment entries
+│   │   ├── entry_summarization_system_prompt                     # System prompt for summarization entries
+│   │   ├── entry_user_prompt                                     # User prompt template for dataset entries
+│   │   ├── keyword_system_prompt                                 # System prompt for keyword generation
+│   │   ├── keyword_user_prompt                                   # User prompt template for keywords
+│   │   ├── labels_system_prompt                                  # System prompt for label generation
+│   │   └── labels_user_prompt                                    # User prompt template for labels
+│   ├── schemas                                                   # Pydantic data models and validation schemas
+│   │   ├── __init__.py                                           # Schemas package initializer
+│   │   ├── config.py                                             # Configuration data models
+│   │   ├── datasets.py                                           # Dataset-related data models
+│   │   ├── enums.py                                              # Enumeration definitions
+│   │   └── messages.py                                           # Message and response data models
+│   ├── utils                                                     # Utility functions and helpers
+│   |   ├── file_utils.py                                         # File I/O operations and utilities
+│   |   ├── __init__.py                                           # Utils package initializer
+│   |   ├── json_utils.py                                         # JSON processing utilities
+│   |   ├── progress_utils.py                                     # Progress tracking and display utilities
+│   |   ├── prompt_utils.py                                       # Prompt processing and formatting utilities
+│   |   ├── text_utils.py                                         # Text manipulation and processing utilities
+│   |   └── yaml_utils.py                                         # YAML processing utilities
+│   ├── __init__.py                                               # Main package initializer and version info
+│   └── cli.py                                                    # Command-line interface implementation
+├── tests                                                         # Test suite for the package
+│   ├── __init__.py                                               # Tests package initializer
+│   ├── conftest.py                                               # pytest configuration and fixtures
+│   ├── test_dataset_generator.py                                 # Tests for dataset generators
+│   ├── test_dataset.py                                           # Tests for dataset functionality
+│   └── test_llm.py                                               # Tests for LLM integration
+├── .gitignore                                                    # Git ignore rules for excluded files
+├── .pre-commit-config.yaml                                       # Pre-commit hooks configuration
+├── .python-version                                               # Python version specification for pyenv
+├── LICENCE.txt                                                   # MIT License file
+├── mkdocs.yml                                                    # MkDocs documentation configuration
+├── pyproject.toml                                                # Python project metadata and dependencies (PEP 518)
+├── README.md                                                     # Main project documentation and overview
+└── uv.lock                                                       # UV lockfile for reproducible dependency resolution
 ```
