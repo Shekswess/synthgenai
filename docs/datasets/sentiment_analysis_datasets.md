@@ -13,10 +13,8 @@ Example of generated entry for the sentiment analysis dataset:
   "keyword": "keyword",
   "topic": "topic",
   "language": "language",
-  "generated_entry": {
-    "prompt": "generated text",
-    "label": "generated sentiment (which can be positive, negative, neutral)"
-  }
+  "prompt": "generated text",
+  "label": "generated sentiment (which can be positive, negative, neutral)"
 }
 ```
 

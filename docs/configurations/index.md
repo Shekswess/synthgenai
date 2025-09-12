@@ -1,30 +1,60 @@
-# LLM Configuration 🤖
+# Configuration Types ⚙️
 
-To configure the LLMs for generating datasets, you need to create an `LLMConfig` object. This object contains the configuration for the LLM model, including the model name, temperature, top_p, and max_tokens.
+SynthGenAI uses three main configuration types to generate synthetic datasets. These configurations work together to define the dataset parameters, LLM settings, and overall generation process:
 
-## Example 📖
+- [**Dataset Configuration**](./dataset_configuration.md) - Configure dataset parameters like topic, domains, language, and number of entries
+- [**LLM Configuration**](./llm_configuration.md) - Configure the language model settings including model selection, temperature, and API credentials
+- [**Dataset Generator Configuration**](./dataset_generator_configuration.md) - Combine dataset and LLM configurations for the complete generation setup
 
-```python
-from synthgenai import LLMConfig
+## Configuration Overview 🔧
 
-# Creating the LLMConfig
-llm_config = LLMConfig(
-    model="model_provider/model_name", # Check LiteLLM docs for more info
-    temperature=0.5,
-    top_p=0.9,
-    max_tokens=2048,
-    api_base="https://api.example.com",
-    api_key="your_api_key"
-)
+### Dataset Configuration
+The `DatasetConfig` defines what kind of dataset you want to generate, including:
+
+- Topic and domains
+- Target language
+- Number of entries
+- Additional descriptions
+
+### LLM Configuration
+The `LLMConfig` specifies which language model to use and how, including:
+
+- Model provider and name
+- Generation parameters (temperature, top_p, max_tokens)
+- API credentials and endpoints
+
+### Dataset Generator Configuration
+The `DatasetGeneratorConfig` combines both configurations to create a complete setup for dataset generation across all supported dataset types.
+
+## Environment Variables 🔐
+
+SynthGenAI uses several environment variables to control behavior and configuration:
+
+### Logging Configuration
+
+- **`SYNTHGENAI_DETAILED_MODE`** - Controls logging verbosity
+  - `"true"` (default): Minimal logging output, recommended for production
+  - `"false"`: Detailed debug logging, useful for development and troubleshooting
+
+```bash
+# Enable detailed logging for debugging
+export SYNTHGENAI_DETAILED_MODE="false"
+
+# No logging (default)
+export SYNTHGENAI_DETAILED_MODE="true"
 ```
 
-## Parameters 🎛
+### API Configuration
 
-- `model` (str): The name of the model to use. This should be in the format `model_provider/model_name`. (Required)
-- `temperature` (float): The temperature to use for the model. This controls the randomness of the generated text. Must be between 0.0 and 1.0. (Optional, default: None)
-- `top_p` (float): The top_p value to use for the model. This controls the nucleus sampling. Must be between 0.0 and 1.0. (Optional, default: None)
-- `max_tokens` (int): The maximum number of tokens to generate. Must be greater than 1000. (Optional, default: None)
-- `api_base` (AnyUrl): The API base URL for the LLM service. (Optional, default: None)
-- `api_key` (str): The API key for authenticating with the LLM service. (Optional, default: None)
+Environment variables for different LLM providers are documented in the [LLM Configuration](./llm_configuration.md) section.
 
-For more information on the available models and their configurations, refer to the [LiteLLM documentation](https://docs.litellm.ai/docs/).
+## Usage Pattern 📋
+
+All dataset generators follow the same configuration pattern:
+
+1. Create a `DatasetConfig` with your dataset requirements
+2. Create an `LLMConfig` with your preferred language model settings
+3. Combine them into a `DatasetGeneratorConfig`
+4. Use this configuration with any dataset generator type
+
+This unified approach ensures consistency across all dataset types while providing the flexibility to customize both the dataset characteristics and the underlying language model behavior.

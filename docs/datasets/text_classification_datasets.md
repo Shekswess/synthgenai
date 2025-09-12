@@ -13,10 +13,8 @@ Example of generated entry for the text classification dataset:
   "keyword": "keyword",
   "topic": "topic",
   "language": "language",
-  "generated_entry": {
-    "prompt": "generated text",
-    "label": "generated sentiment (which will be from a list of labels, created from the model)"
-  }
+  "prompt": "generated text",
+  "label": "generated sentiment (which will be from a list of labels, created from the model)"
 }
 ```
 

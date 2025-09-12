@@ -13,22 +13,20 @@ Example of generated entry for the instruction dataset:
   "keyword": "keyword",
   "topic": "topic",
   "language": "language",
-  "generated_entry": {
-    "messages": [
-      {
-        "role": "system",
-        "content": "generated system(instruction) prompt"
-      },
-      {
-        "role": "user",
-        "content": "generated user prompt"
-      },
-      {
-        "role": "assistant",
-        "content": "generated assistant prompt"
-      }
-    ]
-  }
+  "messages": [
+    {
+      "role": "system",
+      "content": "generated system(instruction) prompt"
+    },
+    {
+      "role": "user",
+      "content": "generated user prompt"
+    },
+    {
+      "role": "assistant",
+      "content": "generated assistant prompt"
+    }
+  ]
 }
 ```
 
