@@ -53,8 +53,6 @@ size_category:
 - 10K-100K
 task_categories:
 - question-answering
-license:
-- apache-2.0
 tags:
 - finance
 - synthetic
