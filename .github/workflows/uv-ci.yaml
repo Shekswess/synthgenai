@@ -1,0 +1,25 @@
+name: "[uv]: .pre-commit & pytest"
+
+on:
+  pull_request:
+
+jobs:
+  uv-ci:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v6
+
+      - name: Set up Python
+        run: uv python install
+
+      - name: Install the project
+        run: uv sync --all-extras --dev
+
+      - name: Run pre-commit
+        run: uv run pre-commit run --all-files
+
+      - name: Run tests
+        run: uv run pytest tests/

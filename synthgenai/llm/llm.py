@@ -1,7 +1,7 @@
 """LLM module"""
 
 import os
-from typing import Union
+from typing import Dict, List, Union
 
 import litellm
 from litellm import (
@@ -11,8 +11,11 @@ from litellm import (
     supports_response_schema,
 )
 from loguru import logger
+from pydantic import BaseModel
 
-from .data_model import InputMessage, LLMConfig
+from synthgenai.llm.base_llm import BaseLLM
+from synthgenai.schemas.config import LLMConfig
+from synthgenai.schemas.messages import InputMessage
 
 ALLOWED_PREFIXES = [
     "groq/",
@@ -30,10 +33,11 @@ ALLOWED_PREFIXES = [
     "vertex_ai/",
     "deepseek/",
     "xai/",
+    "openrouter/",
 ]
 
 
-class LLM:
+class LLM(BaseLLM):
     """LLM Class"""
 
     def __init__(self, llm_config: LLMConfig):
@@ -43,15 +47,7 @@ class LLM:
         Args:
             llm_config (LLMConfig): The configuration for the LLM
         """
-        self.model = llm_config.model
-        self.temperature = llm_config.temperature
-        self.top_p = llm_config.top_p
-        self.max_tokens = llm_config.max_tokens
-        self.api_base = (
-            str(llm_config.api_base) if llm_config.api_base is not None else None
-        )
-        self.api_key = llm_config.api_key
-        self.response_format = None
+        super().__init__(llm_config)
 
         self._check_allowed_models()
         if self.api_key is None:
@@ -90,11 +86,12 @@ class LLM:
             ],
             "deepseek": "DEEPSEEK_API_KEY",
             "xai": "XAI_API_KEY",
+            "openrouter": "OPENROUTER_API_KEY",
         }
 
         for key, env_vars in api_key_checks.items():
             if self.model.startswith(key):
-                if isinstance(env_vars, list):
+                if isinstance(env_vars, List):
                     missing_vars = [
                         var for var in env_vars if os.environ.get(var) is None
                     ]
@@ -161,14 +158,18 @@ class LLM:
 
     def _check_langfuse_api_keys(self) -> None:
         """Check if the required API keys for Langfuse are set"""
-        if (
-            "LANGFUSE_PUBLIC_KEY" in os.environ
-            and "LANGFUSE_SECRET_KEY" in os.environ
-            and "LANGFUSE_HOST" in os.environ
-        ):
-            litellm.success_callback = ["langfuse"]
-            litellm.failure_callback = ["langfuse"]
-            logger.info("Langfuse API keys are set")
+        if "LANGFUSE_PUBLIC_KEY" in os.environ and "LANGFUSE_SECRET_KEY" in os.environ:
+            if "LANGFUSE_OTEL_HOST" in os.environ:
+                litellm.callbacks = ["langfuse_otel"]
+                logger.info("Langfuse OTEL API keys are set")
+            elif "LANGFUSE_HOST" in os.environ:
+                litellm.callbacks = ["langfuse"]
+                litellm.failure_callback = ["langfuse"]
+                logger.info("Langfuse API keys are set")
+            else:
+                logger.warning(
+                    "Langfuse API keys are set but LANGFUSE_HOST or LANGFUSE_OTEL_HOST is not set"
+                )
         else:
             logger.warning("Langfuse API keys are not set")
 
@@ -213,12 +214,15 @@ class LLM:
         """
         return self.model
 
-    def set_response_format(self, response_format: dict) -> None:
+    def set_response_format(
+        self, response_format: Union[Dict, BaseModel, type[BaseModel]]
+    ) -> None:
         """
         Set the response format for the LLM
 
         Args:
-            response_format (dict): The response format to set
+            response_format (Union[dict, BaseModel, type[BaseModel]]):
+                The response format to set
         """
         self.response_format = response_format
 
@@ -229,31 +233,21 @@ class LLM:
         Returns:
             bool: True if the response format is supported, False otherwise
         """
-        custom_llm_provider = None
         if self.model.startswith("gpt") or self.model.startswith("claude"):
-            if "response_format" in get_supported_openai_params(
-                model=self.model,
-                custom_llm_provider=custom_llm_provider,
-            ) and supports_response_schema(
-                model=self.model, custom_llm_provider=custom_llm_provider
-            ):
-                logger.info(f"JSON format is supported by the LLM model: {self.model}")
-                return True
-            else:
-                logger.warning(
-                    f"JSON format is not supported by the LLM model: {self.model}"
-                )
-                return False
-        if not self.model.startswith("ollama") and not self.model.startswith(
-            "hosted_vllm"
-        ):
+            custom_llm_provider = None
+        else:
             custom_llm_provider = self.model.split("/")[0]
-        if "response_format" in get_supported_openai_params(
+
+        supported_params = get_supported_openai_params(
             model=self.model, custom_llm_provider=custom_llm_provider
-        ) and supports_response_schema(
-            model=self.model, custom_llm_provider=custom_llm_provider
+        )
+        if (
+            supported_params is not None
+            and "response_format" in supported_params
+            and supports_response_schema(
+                model=self.model, custom_llm_provider=custom_llm_provider
+            )
         ):
-            logger.info(f"JSON format is supported by the LLM model: {self.model}")
             return True
         else:
             logger.warning(
@@ -261,17 +255,20 @@ class LLM:
             )
             return False
 
-    def generate(self, messages: list[InputMessage]) -> str:
+    def generate(self, messages: List[InputMessage]) -> str:
         """
         Generate completions using the LLM API
 
         Args:
-            messages (List[InputMessage]): List of messages to generate completions for using the LLM API
+            messages (List[InputMessage]): List of messages to generate
+                completions for using the LLM API
 
         Returns:
             str: The completion generated by the LLM API
         """
         try:
+            logger.info(f"Generating completion with model: {self.model}")
+            logger.debug(f"Messages: {messages}")
             response = completion(
                 model=self.model,
                 messages=messages,
@@ -281,24 +278,31 @@ class LLM:
                 max_tokens=self.max_tokens,
                 api_base=self.api_base,
                 api_key=self.api_key,
+                timeout=120,
             )
-            logger.info(f"Generated completions using LLM model: {self.model}")
-            return response.choices[0].message.content
+            logger.info(f"Successfully generated completion using model: {self.model}")
+            model_response = response.choices[0].message.content
+
+            return model_response
         except Exception as e:
-            logger.error(f"Failed to generate completions: {e}")
+            logger.error(f"Failed to generate completions with model {self.model}: {e}")
+            logger.error(f"Error type: {type(e).__name__}")
             raise
 
-    async def agenerate(self, messages: list[InputMessage]) -> str:
+    async def agenerate(self, messages: List[InputMessage]) -> str:
         """
         Generate completions using the LLM API asynchronously.
 
         Args:
-            messages (List[InputMessage]): List of messages to generate completions for using the LLM API
+            messages (List[InputMessage]): List of messages to generate
+                completions for using the LLM API
 
         Returns:
-            str: The completion generated by the LLM API
+            str: The completion generated by the LLM API.
         """
         try:
+            logger.info(f"Async generating completion with model: {self.model}")
+            logger.debug(f"Messages: {messages}")
             response = await acompletion(
                 model=self.model,
                 messages=messages,
@@ -308,9 +312,13 @@ class LLM:
                 max_tokens=self.max_tokens,
                 api_base=self.api_base,
                 api_key=self.api_key,
+                timeout=120,
             )
-            logger.info(f"Generated completions using LLM model: {self.model}")
-            return response.choices[0].message.content
+            model_response = response.choices[0].message.content
+            logger.info(f"Successfully generated async completion using: {self.model}")
+
+            return model_response
         except Exception as e:
-            logger.error(f"Failed to generate completions: {e}")
+            logger.error(f"Failed to generate async completions with {self.model}: {e}")
+            logger.error(f"Error type: {type(e).__name__}")
             raise

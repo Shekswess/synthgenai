@@ -1,28 +1,29 @@
 [project]
 name = "synthgenai"
-version = "1.1.1"
+version = "2.0.0"
 description = "SynthGenAI - Package for generating Synthetic Datasets."
 readme = "README.md"
 requires-python = ">=3.10"
-authors = [{name = "Bojan Jakimovski - Shekswess", email = "jakimovski_bojan@outlook.com"}]
-dependencies = [
-    "boto3>=1.35.82",
-    "datasets>=3.2.0",
-    "gradio>=5.12.0",
-    "huggingface-hub>=0.26.5",
-    "langfuse>=2.57.0",
-    "litellm>=1.55.2",
-    "loguru>=0.7.3",
-    "mkdocs>=1.6.1",
-    "mkdocs-material>=9.5.49",
-    "pre-commit>=4.0.1",
-    "pydantic>=2.10.3",
-    "ruff>=0.8.3",
+authors = [
+    { name = "Bojan Jakimovski - Shekswess", email = "jakimovski_bojan@outlook.com" },
 ]
-license = {file = "LICENCE.txt"}
+dependencies = [
+    "boto3==1.40.28",
+    "datasets==4.0.0",
+    "huggingface-hub==0.34.4",
+    "jinja2==3.1.4",
+    "langfuse==3.3.4",
+    "litellm==1.77.0",
+    "loguru==0.7.3",
+    "pydantic==2.11.7",
+    "python-dotenv>=1.1.1",
+    "tqdm==4.67.1",
+    "typer==0.17.4",
+]
+license = { file = "LICENCE.txt" }
 
-[project.gui-scripts]
-synthgenai = "synthgenai.ui:ui_main"
+[project.scripts]
+synthgenai = "synthgenai.cli:app"
 
 [build-system]
 requires = ["hatchling"]
@@ -57,29 +58,62 @@ exclude = [
     "site-packages",
     "venv",
 ]
-
-line-length = 90
+line-length = 88
 indent-width = 4
 
-target-version = "py312"
-
 [tool.ruff.lint]
-select = ["E4", "E7", "E9", "F"]
-ignore = ["C901", "E501"]
+select = ["I", "E", "F"]
+ignore = ["E501"]
 
 fixable = ["ALL"]
+unfixable = []
 
 dummy-variable-rgx = "^(_+|(_+[a-zA-Z0-9_]*[a-zA-Z0-9]+?))$"
 
+
+[tool.ruff.lint.pydocstyle]
+convention = "google"
+
 [tool.ruff.format]
 quote-style = "double"
-
 indent-style = "space"
-
 skip-magic-trailing-comma = false
-
 line-ending = "auto"
 
-docstring-code-format = true
+[tool.ty.rules]
+non-subscriptable = "warn"
+unused-ignore-comment = "warn"
+invalid-argument-type = "warn"
+invalid-parameter-default = "warn"
+unresolved-import = "ignore"
+invalid-assignment = "warn"
 
-docstring-code-line-length = "dynamic"
+[tool.pytest.ini_options]
+python_files = "test_*.py"
+python_classes = "Test*"
+python_functions = "test_*"
+testpaths = ["tests"]
+asyncio_mode = "auto"
+markers = [
+    "live: marks tests that make live API calls (deselect with '-m \"not live\"')",
+    "asyncio: marks tests that use asyncio",
+]
+
+
+[dependency-groups]
+dev = [
+    "pre-commit==4.3.0",
+    "pytest==8.4.2",
+    "pytest-asyncio==1.1.0",
+    "pytest-mock==3.14.1",
+    "ruff==0.12.12",
+    "ty==0.0.1a8",
+    "ipykernel==6.29.5",
+]
+docs = [
+    "mkdocs==1.6.1",
+    "mkdocs-git-committers-plugin-2==2.5.0",
+    "mkdocs-git-revision-date-localized-plugin==1.4.7",
+    "mkdocs-material==9.5.49",
+    "mkdocs-minify-plugin==0.8.0",
+]

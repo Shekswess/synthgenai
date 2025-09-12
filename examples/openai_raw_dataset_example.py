@@ -17,19 +17,21 @@ os.environ["HF_TOKEN"] = ""
 
 if __name__ == "__main__":
     # Defining the LLM used for generating the dataset and the settings of the LLM
-    llm_config = LLMConfig(model="gpt-4o-mini", temperature=0.5)
+    llm_config = LLMConfig(model="gpt-5", temperature=0.5)
 
     # Defining the dataset configuration, the topic of the dataset, the domains, the language, the additional description, and the number of entries
     dataset_config = DatasetConfig(
-        topic="Artificial Intelligence",
-        domains=["Machine Learning", "Deep Learning"],
+        topic="Medical Diagnosis",
+        domains=["Healthcare", "Medicine"],
         language="English",
-        additional_description="This dataset must be more focused on healthcare implementations of AI, Machine Learning, and Deep Learning.",
+        additional_description="This dataset must be more focused on medical diagnosis and healthcare applications.",
         num_entries=1000,
     )
 
     # Defining the dataset Hugging Face repository name
-    hf_repo_name = "{organization_or_account_name}/artificial-intelligence-in-healthcare"
+    hf_repo_name = (
+        "{organization_or_account_name}/artificial-intelligence-in-healthcare"
+    )
 
     # Defining the dataset generator configuration
     dataset_generator_config = DatasetGeneratorConfig(

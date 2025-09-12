@@ -13,21 +13,19 @@ Example of generated entry for the preference dataset:
   "keyword": "keyword",
   "topic": "topic",
   "language": "language",
-  "generated_entry": {
-    "prompt": [
-      { "role": "system", "content": "generated system(instruction) prompt" },
-      { "role": "user", "content": "generated user prompt" }
-    ],
-    "chosen": [
-      { "role": "assistant", "content": "generated chosen assistant response" }
-    ],
-    "rejected": [
-      {
-        "role": "assistant",
-        "content": "generated rejected assistant response"
-      }
-    ]
-  }
+  "prompt": [
+    { "role": "system", "content": "generated system(instruction) prompt" },
+    { "role": "user", "content": "generated user prompt" }
+  ],
+  "chosen": [
+    { "role": "assistant", "content": "generated chosen assistant response" }
+  ],
+  "rejected": [
+    {
+      "role": "assistant",
+      "content": "generated rejected assistant response"
+    }
+  ]
 }
 ```
 

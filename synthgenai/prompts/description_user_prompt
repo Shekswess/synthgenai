@@ -1,0 +1,13 @@
+<user>
+
+Generate a Markdown(.md) description based on the following information:
+
+- Topic: {{ topic }}
+- Language: {{ language }}
+- Domains: {{ domains }}
+- Additional description: {{ additional_description }}
+- Number of entries: {{ num_keywords }}
+- Dataset type: {{ dataset_type }}
+- Model: {{ model }}
+
+</user>

@@ -1,8 +1,9 @@
 default_language_version:
-    python: python3.12
+    python: python3.10
+
 repos:
   - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v4.5.0
+    rev: v5.0.0
     hooks:
       - id: check-ast
       - id: check-byte-order-marker
@@ -11,7 +12,7 @@ repos:
       - id: check-executables-have-shebangs
       - id: check-json
       - id: check-yaml
-        exclude: .*_template\.yaml
+        exclude: ^(.*_template\.yaml|mkdocs\.yml)$
       - id: check-toml
       - id: debug-statements
       - id: detect-private-key
@@ -20,39 +21,39 @@ repos:
       - id: mixed-line-ending
       - id: requirements-txt-fixer
 
-  - repo: https://github.com/pre-commit/mirrors-mypy
-    rev: v1.8.0
-    hooks:
-      - id: mypy
-        args: [--strict, --ignore-missing-imports]
-        additional_dependencies:
-        - "pydantic>=1.10.4"
-
   - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: v0.4.4
+    rev: v0.11.13
     hooks:
-      - id: ruff
-        args: [ --fix ]
+      - id: ruff-check
+        args: [ --fix, --config=pyproject.toml]
       - id: ruff-format
 
+  - repo: local
+    hooks:
+      - id: ty
+        name: ty check
+        entry: uv run ty check synthgenai examples
+        language: system
+        pass_filenames: false
+
   - repo: https://github.com/asottile/pyupgrade
-    rev: v3.15.0
+    rev: v3.20.0
     hooks:
       - id: pyupgrade
-        args: [--py36-plus]
+        args: [--py38-plus]
 
   - repo: https://github.com/Yelp/detect-secrets
     rev: v1.4.0
     hooks:
       - id: detect-secrets
         name: "detect-secrets"
-        args: ["--exclude-files", '.*\.ipynb$']
+        args: ["--exclude-files", '.*\.ipynb$|^docs/|README\.md$']
       - id: detect-secrets
         name: "detect-secrets-jupyter"
         args:
           [
             "--exclude-files",
-            ".*[^i][^p][^y][^n][^b]$",
+            ".*[^i][^p][^y][^n][^b]$|^docs/|README$",
             "--exclude-lines",
             '"(hash|id|authorship_tag|image/\w+)":.*',
           ]

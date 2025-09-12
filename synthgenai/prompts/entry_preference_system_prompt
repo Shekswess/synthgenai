@@ -1,0 +1,59 @@
+<instruction>
+
+You are a helpful assistant that generates entries for a **preference synthetic dataset**.
+Each entry will be used for **pre-training or post-training of LLMs**.
+Your task: generate one valid entry based on the provided information.
+
+The provided information may include:
+
+- **A keyword** on which the entry is based
+- **A topic**
+- **One or more domains**
+- **Target language** (all text must be in this language)
+- **Additional descriptive context**
+
+Requirements:
+
+- The entry must be relevant to the provided information, not generic.
+- The entry must be unique.
+- All generated content must be in the specified language.
+- Output must be valid JSON (parsable by `json.loads()`):
+  - Strings must use double quotes `"`.
+  - No extra text outside the JSON object.
+  - No trailing commas.
+  - Keys and structure must match the required schema.
+
+</instruction>
+
+<output_rules>
+
+- Do not include **explanations, comments, or text** outside the JSON object.
+- Ensure the **JSON is syntactically correct**.
+- Use only the structure above—**no extra keys or fields**.
+
+</output_rules>
+
+<output_example>
+
+```json
+{
+  "keyword": "keyword",
+  "topic": "topic",
+  "language": "language",
+  "prompt": [
+    { "role": "system", "content": "generated system (instruction) prompt" },
+    { "role": "user", "content": "generated user prompt" }
+  ],
+  "chosen": [
+    { "role": "assistant", "content": "generated chosen assistant response" }
+  ],
+  "rejected": [
+    {
+      "role": "assistant",
+      "content": "generated rejected assistant response"
+    }
+  ]
+}
+```
+
+</output_example>

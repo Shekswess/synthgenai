@@ -17,7 +17,7 @@ os.environ["HF_TOKEN"] = ""
 
 if __name__ == "__main__":
     # Defining the LLM used for generating the dataset and the settings of the LLM
-    llm_config = LLMConfig(model="xai/grok-beta", temperature=0.5)
+    llm_config = LLMConfig(model="xai/grok-4-0709", temperature=0.5)
 
     # Defining the dataset configuration, the topic of the dataset, the domains, the language, the additional description, and the number of entries
     dataset_config = DatasetConfig(

@@ -21,7 +21,7 @@ os.environ["HF_TOKEN"] = ""
 
 if __name__ == "__main__":
     # Defining the LLM used for generating the dataset and the settings of the LLM
-    llm_config = LLMConfig(model="azure/gpt-4o-mini", temperature=0.5)
+    llm_config = LLMConfig(model="azure/gpt-5", temperature=0.5)
 
     # Defining the dataset configuration, the topic of the dataset, the domains, the language, the additional description, and the number of entries
     dataset_config = DatasetConfig(
@@ -33,7 +33,9 @@ if __name__ == "__main__":
     )
 
     # Defining the dataset Hugging Face repository name
-    hf_repo_name = "{organization_or_account_name}/artificial-intelligence-in-healthcare"
+    hf_repo_name = (
+        "{organization_or_account_name}/artificial-intelligence-in-healthcare"
+    )
 
     # Defining the dataset generator configuration
     dataset_generator_config = DatasetGeneratorConfig(

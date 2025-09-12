@@ -13,10 +13,8 @@ Example of generated entry for the summarization dataset:
   "keyword": "keyword",
   "topic": "topic",
   "language": "language",
-  "generated_entry": {
-    "text": "generated text",
-    "summary": "generated summary"
-  }
+  "text": "generated text",
+  "summary": "generated summary"
 }
 ```
 

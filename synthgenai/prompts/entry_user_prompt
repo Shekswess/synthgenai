@@ -1,0 +1,15 @@
+<user>
+
+Please generate an entry for a {{ dataset_type }} dataset based on the following information:
+
+- Keyword: {{ keyword }}
+- Topic: {{ topic }}
+- Language: {{ language }}
+{% if dataset_type == "Text Classification Dataset" %}
+- Label: {{ label }}
+{% elif dataset_type == "Sentiment Analysis Dataset" %}
+- Sentiment: {{ sentiment }}
+{% endif %}
+- Additional description:  {{ additional_description }}
+
+</user>

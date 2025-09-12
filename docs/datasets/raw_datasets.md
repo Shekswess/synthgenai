@@ -13,9 +13,7 @@ Example of generated entry for the raw dataset:
   "keyword": "keyword",
   "topic": "topic",
   "language": "language",
-  "generated_entry": {
-    "text": "generated text"
-  }
+  "text": "generated text"
 }
 ```
 

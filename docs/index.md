@@ -14,7 +14,11 @@ SynthGenAI is designed to be modular and can be easily extended to include diffe
 
 ## Why SynthGenAI? 🤔
 
-Interest in synthetic data generation has surged recently, driven by the growing recognition of data as a critical asset in AI development. Synthetic data generation addresses challenges by allowing us to create diverse and useful datasets using current pre-trained Large Language Models (LLMs).
+Interest in synthetic data generation has surged recently, driven by the growing recognition of data as a critical asset in AI development. As [Ilya Sutskever](https://youtu.be/1yvBqasHLZs), one of the most important figures in AI, says: 'Data is the fossil fuel of AI.' The more quality data we have, the better our models can perform.
+
+However, access to data is often restricted due to privacy concerns, or it may be prohibitively expensive to collect. Additionally, the vast amount of high-quality data on the internet has already been extensively mined. Synthetic data generation addresses these challenges by allowing us to create diverse and useful datasets using current pre-trained Large Language Models (LLMs).
+
+Beyond LLMs, synthetic data also holds immense potential for pre-training and post-training of Small Language Models (SLMs), which are gaining popularity due to their efficiency and suitability for specific, resource-constrained applications. By leveraging synthetic data for both LLMs and SLMs, we can enhance performance across a wide range of use cases while balancing resource efficiency and model effectiveness. This approach enables us to harness the strengths of both synthetic and authentic datasets to achieve optimal outcomes.
 
 ## Tools used for building SynthGenAI 🧰
 
@@ -32,4 +36,4 @@ If you want to contribute to this project and make it better, your help is very 
 
 ## License 📝
 
-This project is licensed under the MIT License - see the LICENSE.txt file for details.
+This project is licensed under the MIT License.
