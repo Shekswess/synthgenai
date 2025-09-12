@@ -162,6 +162,10 @@ class DatasetGenerator:
             ProgressManager.log_progress_complete(
                 "Keyword generation", len(keywords.keywords), num_keywords
             )
+            
+            # Reset response format after keyword generation
+            if self.llm.check_response_format():
+                self.llm.set_response_format(None)
 
         except Exception as e:
             logger.error(f"Failed to generate keywords: {e}")
@@ -240,6 +244,10 @@ class DatasetGenerator:
         ProgressManager.log_progress_complete(
             "Label generation", len(labels.labels), num_labels
         )
+        
+        # Reset response format after label generation
+        if self.llm.check_response_format():
+            self.llm.set_response_format(None)
 
     def _generate_description(self):
         """Generate a description for the dataset."""
@@ -356,8 +364,10 @@ class DatasetGenerator:
                 return None
 
         try:
-            if self.llm.check_response_format():
-                response = JsonUtils.convert_entry(response)
+            # Only convert JSON if LLM doesn't support structured output
+            if not self.llm.check_response_format():
+                # Response is already converted above, just validate
+                pass
             entry_format = self._get_entry_response_format()
             entry = entry_format(**response)
             logger.debug(f"Dataset entry: {entry}")
@@ -407,8 +417,10 @@ class DatasetGenerator:
                 return None
 
         try:
-            if self.llm.check_response_format():
-                response = JsonUtils.convert_entry(response)
+            # Only convert JSON if LLM doesn't support structured output
+            if not self.llm.check_response_format():
+                # Response is already converted above, just validate
+                pass
             entry_format = self._get_entry_response_format()
             entry = entry_format(**response)
             logger.debug(f"Dataset entry: {entry}")
@@ -432,7 +444,6 @@ class DatasetGenerator:
             "Summarization Dataset": EntrySummaryDataset,
             "Sentiment Analysis Dataset": EntrySentimentDataset,
             "Text Classification Dataset": EntryTextClassificationDataset,
-            "Reasoning Dataset": EntryReasoningDataset,
         }
 
         return dataset_type_mapping.get(dataset_type)
@@ -449,6 +460,10 @@ class DatasetGenerator:
 
         if self.dataset.get_dataset_type() == "Text Classification Dataset":
             self._generate_labels()
+            # Re-set the entry response format after label generation
+            if self.llm.check_response_format():
+                entry_format = self._get_entry_response_format()
+                self.llm.set_response_format(entry_format)
 
         data = []
         keywords = self.dataset.get_keywords()
@@ -502,6 +517,10 @@ class DatasetGenerator:
 
         if self.dataset.get_dataset_type() == "Text Classification Dataset":
             self._generate_labels()
+            # Re-set the entry response format after label generation
+            if self.llm.check_response_format():
+                entry_format = self._get_entry_response_format()
+                self.llm.set_response_format(entry_format)
 
         data = []
         keywords = self.dataset.get_keywords()

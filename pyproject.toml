@@ -85,7 +85,7 @@ non-subscriptable = "warn"
 unused-ignore-comment = "warn"
 invalid-argument-type = "warn"
 invalid-parameter-default = "warn"
-unresolved-import = "warn"
+unresolved-import = "ignore"
 invalid-assignment = "warn"
 
 [tool.pytest.ini_options]

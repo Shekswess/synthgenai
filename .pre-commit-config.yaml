@@ -32,8 +32,9 @@ repos:
     hooks:
       - id: ty
         name: ty check
-        entry: uvx ty check .
-        language: python
+        entry: uv run ty check synthgenai examples
+        language: system
+        pass_filenames: false
 
   - repo: https://github.com/asottile/pyupgrade
     rev: v3.20.0

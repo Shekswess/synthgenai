@@ -16,7 +16,7 @@ class TqdmLoguruHandler:
         desc: Optional[str] = None,
         unit: str = "it",
         disable: bool = False,
-        **kwargs
+        **kwargs,
     ):
         """
         Initialize the progress bar with loguru compatibility.
@@ -36,7 +36,7 @@ class TqdmLoguruHandler:
             disable=disable,
             file=sys.stdout,
             dynamic_ncols=True,
-            **kwargs
+            **kwargs,
         )
         self.desc = desc or "Processing"
 
@@ -96,9 +96,8 @@ class ProgressManager:
             leave=True,
             ncols=100,
             bar_format=(
-                '{l_bar}{bar}| {n_fmt}/{total_fmt} '
-                '[{elapsed}<{remaining}, {rate_fmt}]'
-            )
+                "{l_bar}{bar}| {n_fmt}/{total_fmt} [{elapsed}<{remaining}, {rate_fmt}]"
+            ),
         )
 
     @staticmethod
@@ -120,6 +119,4 @@ class ProgressManager:
                 f"(Success rate: {success_rate:.1%})"
             )
         else:
-            logger.info(
-                f"{desc} completed - {completed}/{total} items processed"
-            )
+            logger.info(f"{desc} completed - {completed}/{total} items processed")

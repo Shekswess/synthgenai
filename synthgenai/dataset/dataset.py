@@ -180,7 +180,7 @@ class Dataset(BaseDataset):
         """
         return self.labels
 
-    def _prepare_local_save(self, dataset_path: str) -> str:
+    def _prepare_local_save(self, dataset_path: str | None) -> str:
         """
         Prepare the local save path.
 

@@ -1,6 +1,8 @@
 """Configuration models for the SynthGenAI package."""
 
-from pydantic import AnyUrl, BaseModel, Field
+from typing import Optional
+
+from pydantic import BaseModel, Field, HttpUrl
 
 
 class LLMConfig(BaseModel):
@@ -12,16 +14,16 @@ class LLMConfig(BaseModel):
         temperature (float): Temperature (0.0-1.0) controlling randomness.
         top_p (float): Top_p value (0.0-1.0) for nucleus sampling.
         max_tokens (int): Maximum tokens for completions (min 1000).
-        api_base (AnyUrl): The API base URL for the LLM service.
+        api_base (HttpUrl): The API base URL for the LLM service.
         api_key (str): The API key for authenticating with the LLM service.
     """
 
     model: str = Field(..., min_length=1)
-    temperature: float = Field(None, ge=0.0, le=1.0)
-    top_p: float = Field(None, ge=0.0, le=1.0)
-    max_tokens: int = Field(None, gt=1000)
-    api_base: AnyUrl = Field(None)
-    api_key: str = Field(None)
+    temperature: Optional[float] = Field(None, ge=0.0, le=1.0)
+    top_p: Optional[float] = Field(None, ge=0.0, le=1.0)
+    max_tokens: Optional[int] = Field(None, gt=1000)
+    api_base: Optional[HttpUrl] = Field(None)
+    api_key: Optional[str] = Field(None)
 
 
 class DatasetConfig(BaseModel):
@@ -37,10 +39,10 @@ class DatasetConfig(BaseModel):
     """
 
     topic: str = Field(..., min_length=1)
-    domains: list[str] = Field(..., min_items=1)
+    domains: list[str] = Field(..., min_length=1)
     language: str = Field("English", min_length=1)
     additional_description: str = Field("", max_length=1000)
-    num_entries: int = Field(1000, gt=10)
+    num_entries: int = Field(1000, ge=10)
 
 
 class DatasetGeneratorConfig(BaseModel):

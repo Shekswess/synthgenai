@@ -22,7 +22,7 @@ if __name__ == "__main__":
     # Defining the LLM used for generating the dataset and the settings of the LLM
     llm_config = LLMConfig(
         model="hosted_vllm/facebook/opt-125m",
-        api_base="https://hosted-vllm-api.co",  # change to the api base for your hosted vLLM model
+        # api_base can be set via environment variable VLLM_API_BASE
         temperature=0.5,
     )
 

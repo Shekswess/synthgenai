@@ -214,13 +214,15 @@ class LLM(BaseLLM):
         """
         return self.model
 
-    def set_response_format(self, response_format: Union[Dict, BaseModel]) -> None:
+    def set_response_format(
+        self, response_format: Union[Dict, BaseModel, type[BaseModel]]
+    ) -> None:
         """
         Set the response format for the LLM
 
         Args:
-            response_format (Union[dict, BaseModel]): The response format
-                to set
+            response_format (Union[dict, BaseModel, type[BaseModel]]):
+                The response format to set
         """
         self.response_format = response_format
 
@@ -236,10 +238,15 @@ class LLM(BaseLLM):
         else:
             custom_llm_provider = self.model.split("/")[0]
 
-        if "response_format" in get_supported_openai_params(
+        supported_params = get_supported_openai_params(
             model=self.model, custom_llm_provider=custom_llm_provider
-        ) and supports_response_schema(
-            model=self.model, custom_llm_provider=custom_llm_provider
+        )
+        if (
+            supported_params is not None
+            and "response_format" in supported_params
+            and supports_response_schema(
+                model=self.model, custom_llm_provider=custom_llm_provider
+            )
         ):
             return True
         else:
