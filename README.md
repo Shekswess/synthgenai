@@ -9,7 +9,7 @@ SynthGenAI is a package for generating Synthetic Datasets. The idea is to have a
 
 ## Why SynthGenAI now? 🤔
 
-Interest in synthetic data generation has surged recently, driven by the growing recognition of data as a critical asset in AI development. As Ilya Sutskever, one of the most important figures in AI, says: 'Data is the fossil fuel of AI.' The more quality data we have, the better our models can perform. However, access to data is often restricted due to privacy concerns, or it may be prohibitively expensive to collect. Additionally, the vast amount of high-quality data on the internet has already been extensively mined. Synthetic data generation addresses these challenges by allowing us to create diverse and useful datasets using current pre-trained Large Language Models (LLMs). Beyond LLMs, synthetic data also holds immense potential for training and fine-tuning Small Language Models (SLMs), which are gaining popularity due to their efficiency and suitability for specific, resource-constrained applications. By leveraging synthetic data for both LLMs and SLMs, we can enhance performance across a wide range of use cases while balancing resource efficiency and model effectiveness. This approach enables us to harness the strengths of both synthetic and authentic datasets to achieve optimal outcomes.
+Interest in synthetic data generation has surged recently, driven by the growing recognition of data as a critical asset in AI development. As [Ilya Sutskever](https://youtu.be/1yvBqasHLZs), one of the most important figures in AI, says: 'Data is the fossil fuel of AI.' The more quality data we have, the better our models can perform. However, access to data is often restricted due to privacy concerns, or it may be prohibitively expensive to collect. Additionally, the vast amount of high-quality data on the internet has already been extensively mined. Synthetic data generation addresses these challenges by allowing us to create diverse and useful datasets using current pre-trained Large Language Models (LLMs). Beyond LLMs, synthetic data also holds immense potential for pre-training and post-training of Small Language Models (SLMs), which are gaining popularity due to their efficiency and suitability for specific, resource-constrained applications. By leveraging synthetic data for both LLMs and SLMs, we can enhance performance across a wide range of use cases while balancing resource efficiency and model effectiveness. This approach enables us to harness the strengths of both synthetic and authentic datasets to achieve optimal outcomes.
 
 ## Tools used for building SynthGenAI 🧰
 
@@ -20,43 +20,6 @@ The package is built using Python and the following libraries:
 - [Langfuse](https://langfuse.com/), LLMOps platform for observability, tracebility and monitoring of LLMs.
 - [Pydantic](https://pydantic-docs.helpmanual.io/), Data validation and settings management using Python type annotations.
 - [Huggingface Hub](https://huggingface.co/) & [Datasets](https://huggingface.co/docs/datasets/), A Python library for saving generated datasets on Hugging Face Hub.
-- [Gradio](https://gradio.app/), A Python library for creating UIs for machine learning models.
-
-## Quick Start 🚀
-
-To quickly start using the SynthGenAI, you need to have the package installed. You can install it using the following command:
-
-```bash
-pip install synthgenai
-```
-
-After installation, simply run the following command in your terminal:
-
-```bash
-synthgenai
-```
-
-This will launch the Gradio UI for generating synthetic datasets. You can also try the Gradio UI deployed on HuggingFace spaces [here](https://huggingface.co/spaces/Shekswess/SynthGenAI-UI).
-
-![ui_example](./docs/assets/ui.png)
-
-To create datasets, you need to set up the following fields in the UI:
-
-- **LLM Model**: The LLM model to use (e.g., model_provider/model_name).
-- **Temperature**: The temperature for the LLM.
-- **Top P**: The top_p value for the LLM.
-- **Max Tokens**: The maximum number of tokens for the LLM.
-- **API Base**: The API base URL (optional).
-- **API Key**: The API key (optional).
-- **Dataset Type**: The type of dataset to generate (e.g., Raw, Instruction, Preference, Sentiment Analysis, Summarization, Text Classification).
-- **Topic**: The topic of the dataset.
-- **Domains**: The domains for the dataset (comma-separated).
-- **Language**: The language of the dataset.
-- **Additional Description**: Additional description for the dataset (optional).
-- **Number of Entries**: The number of entries in the dataset.
-- **Hugging Face Token**: The Hugging Face token.
-- **Hugging Face Repo Name**: The Hugging Face repository name.
-- **LLM Environment Variables**: Comma-separated environment variables for the LLM (e.g., KEY1=VALUE1, KEY2=VALUE2).
 
 ## Installation 🛠️
 
@@ -64,6 +27,12 @@ To install the package, you can use the following command:
 
 ```bash
 pip install synthgenai
+```
+
+or if you want to use uv package manager, you can use the following command:
+
+```bash
+uv add synthgenai
 ```
 
 or you can install the package directly from the source code using the following commands:
@@ -85,58 +54,84 @@ To use the package, you need to have the following requirements installed:
 - [Hugging Face Hub](https://huggingface.co/) account if you want to save the generated datasets on Hugging Face Hub with generated token (optional)
 - [Gradio](https://gradio.app/) for using the SynthGenAI UI (optional)
 
+## Quick Start 🚀
+
+After installation, get started quickly by using the CLI:
+
+```bash
+# 1. See what environment variables you need
+synthgenai env-setup
+
+# 2. Set up your API keys (example for OpenAI)
+export OPENAI_API_KEY="your-api-key-here"
+
+# 3. # List available dataset types
+synthgenai list-types
+
+# 4. Generate your first dataset
+synthgenai generate instruction \
+  --model "openai/gpt-5" \
+  --topic "Python Programming" \
+  --domain "Software Development" \
+  --entries 100
+
+# 5. See more examples
+synthgenai examples
+```
+
+### Available Commands
+
+- `synthgenai generate` - Generate synthetic datasets
+- `synthgenai list-types` - Show all available dataset types
+- `synthgenai examples` - Display example commands
+- `synthgenai providers` - List supported LLM providers
+- `synthgenai env-setup` - Show environment setup guide
+- `synthgenai --help` - Show help information
+
 ## Usage 👨‍💻
 
-The available API providers for LLMs are:
+### Supported API Providers 💪
 
-- **Groq**
-- **Mistral AI**
-- **Gemini**
-- **Bedrock**
-- **Anthropic**
-- **OpenAI**
-- **Hugging Face**
-- **Ollama**
-- **vLLM**
-- **SageMaker**
-- **Azure**
-- **Vertex AI**
+- [x] [Groq](https://groq.com/) - more info about Groq models that can be used, can be found [here](https://docs.litellm.ai/docs/providers/groq)
+- [x] [Mistral AI](https://mistral.ai/) - more info about Mistral AI models that can be used, can be found [here](https://docs.litellm.ai/docs/providers/mistral-ai)
+- [x] [Gemini](https://gemini.google.com/) - more info about Gemini models that can be used, can be found [here](https://docs.litellm.ai/docs/providers/gemini)
+- [x] [Bedrock](https://aws.amazon.com/bedrock) - more info about Bedrock models that can be used, can be found [here](https://docs.litellm.ai/docs/providers/bedrock)
+- [x] [Anthropic](https://www.anthropic.com/) - more info about Anthropic models that can be used, can be found [here](https://docs.litellm.ai/docs/providers/anthropic)
+- [x] [OpenAI](https://openai.com) - more info about OpenAI models that can be used, can be found [here](https://docs.litellm.ai/docs/providers/openai)
+- [x] [Hugging Face](https://huggingface.co/) - more info about Hugging Face models that can be used, can be found [here](https://docs.litellm.ai/docs/providers/hugging-face)
+- [x] [Ollama](https://ollama.com/) - more info about Ollama models that can be used, can be found [here](https://docs.litellm.ai/docs/providers/ollama)
+- [x] [vLLM](https://vllm.ai/) - more info about vLLM models that can be used, can be found [here](https://docs.litellm.ai/docs/providers/vllm)
+- [x] [SageMaker](https://aws.amazon.com/sagemaker/) - more info about SageMaker models that can be used, can be found [here](https://docs.litellm.ai/docs/providers/aws_sagemaker)
+- [x] [Azure](https://azure.microsoft.com/en-us/services/machine-learning/) - more info about Azure and Azure AI models that can be used, can be found [here](https://docs.litellm.ai/docs/providers/azure) & [here](https://docs.litellm.ai/docs/providers/azure_ai)
+- [x] [Vertex AI](https://cloud.google.com/vertex-ai) - more info about Vertex AI models that can be used, can be found [here](https://docs.litellm.ai/docs/providers/vertex)
+- [x] [DeepSeek](https://www.deepseek.com/) - more info about DeepSeek models that can be used, can be found [here](https://docs.litellm.ai/docs/providers/deepseek)
+- [x] [xAI](https://x.ai/) - more info about xAI models that can be used, can be found [here](https://docs.litellm.ai/docs/providers/xai)
+- [x] [OpenRouter](https://openrouter.ai/) - more info about OpenRouter models that can be used, can be found [here](https://docs.litellm.ai/docs/providers/openrouter)
+
+### Environment Setup & Configuration 🔐
+
+For detailed information about setting up environment variables for different API providers, observability tools, and dataset management, please refer to the [Installation Guide](./docs/installation/index.md#environment-variables-configuration-).
+
+#### Logging Configuration
+
+You can control the logging verbosity using the `SYNTHGENAI_DETAILED_MODE` environment variable:
+
+```bash
+# For detailed logging (shows all debug information)
+export SYNTHGENAI_DETAILED_MODE="false"
+
+# For NO logging (default)
+export SYNTHGENAI_DETAILED_MODE="true"
+```
+
+> [!NOTE]
+> By default, `SYNTHGENAI_DETAILED_MODE` is set to `"true"`, which provides NO logging output. Set it to `"false"` to enable detailed debugging information during dataset generation.
+
+### Observability & Saving Datasets 📊
 
 For observing the generated datasets, you can use **Langfuse** for tracebility and monitoring of the LLMs.
 
-To use the LLMs from different API providers, to observe the generated datasets, and to save the generated datasets on Hugging Face Hub, you need to set the following environment variables:
-
-```
-# API keys for different LLM providers
-GROQ_API_KEY=
-MISTRAL_API_KEY=
-GEMINI_API_KEY=
-AWS_ACCESS_KEY_ID=
-AWS_SECRET_ACCESS_KEY=
-AWS_REGION=
-AWS_PROFILE=
-ANTHROPIC_API_KEY=
-OPENAI_API_KEY=
-AZURE_API_KEY=
-AZURE_API_BASE=
-AZURE_API_VERSION=
-AZURE_AD_TOKEN=
-AZURE_API_TYPE=
-GOOGLE_APPLICATION_CREDENTIALS=
-VERTEXAI_LOCATION=
-VERTEXAI_PROJECT=
-HUGGINGFACE_API_KEY=
-DEEPSEEK_API_KEY=
-XAI_API_KEY=
-
-# Langfuse API keys
-LANGFUSE_PUBLIC_KEY=
-LANGFUSE_SECRET_KEY=
-LANGFUSE_HOST=
-
-# Huggingface token for uploading datasets on Huggingface
-HF_TOKEN=
-```
+For handling the datasets and saving them on **Hugging Face Hub**, you can use the **Hugging Face Datasets** library.
 
 Currently there are six types of datasets that can be generated using SynthGenAI:
 
@@ -155,520 +150,6 @@ The datasets can be generated:
 > [!NOTE]
 > Asynchronous generation is faster than synchronous generation, but some of LLM providers can have limitations on the number of tokens that can be generated at once.
 
-#### Raw Datasets 🥩
-
-To generate a raw dataset, you can use the following code:
-
-```python
-# For asynchronous dataset generation
-# import asyncio
-import os
-
-from synthgenai import (
-    DatasetConfig,
-    DatasetGeneratorConfig,
-    LLMConfig,
-    RawDatasetGenerator,
-)
-
-# Setting the API keys
-os.environ["LLM_API_KEY"] = ""
-
-# Optional for Langfuse Tracebility
-os.environ["LANGFUSE_SECRET_KEY"] = ""
-os.environ["LANGFUSE_PUBLIC_KEY"] = ""
-os.environ["LANGFUSE_HOST"] = ""
-
-# Optional for Hugging Face Hub upload
-os.environ["HF_TOKEN"] = ""
-
-# Creating the LLMConfig
-llm_config = LLMConfig(
-    model="model_provider/model_name", # Check liteLLM docs for more info
-    temperature=0.5,
-    top_p=0.9,
-    max_tokens=2048,
-)
-
-# Creating the DatasetConfig
-dataset_config = DatasetConfig(
-    topic="topic_name",
-    domains=["domain1", "domain2"],
-    language="English",
-    additional_description="Additional description",
-    num_entries=1000
-)
-
-# Creating the DatasetGeneratorConfig
-dataset_generator_config = DatasetGeneratorConfig(
-    llm_config=llm_config,
-    dataset_config=dataset_config,
-)
-
-# Creating the RawDatasetGenerator
-raw_dataset_generator = RawDatasetGenerator(dataset_generator_config)
-
-# Generating the dataset
-raw_dataset = raw_dataset_generator.generate_dataset()
-
-# Generating the dataset asynchronously
-# raw_dataset = asyncio.run(raw_dataset_generator.agenerate_dataset())
-
-# Name of the Hugging Face repository where the dataset will be saved
-hf_repo_name = "organization_or_user_name/dataset_name" # optional
-
-# Saving the dataset to the locally and to the Hugging Face repository(optional)
-raw_dataset.save_dataset(
-    hf_repo_name=hf_repo_name,
-)
-```
-
-Example of generated entry for the raw dataset:
-
-```json
-{
-  "keyword": "keyword",
-  "topic": "topic",
-  "language": "language",
-  "generated_entry": {
-    "text": "generated text"
-  }
-}
-```
-
-#### Instruction Datasets 💬
-
-To generate an instruction dataset, you can use the following code:
-
-```python
-# For asynchronous dataset generation
-# import asyncio
-import os
-
-from synthgenai import (
-    DatasetConfig,
-    DatasetGeneratorConfig,
-    LLMConfig,
-    InstructionDatasetGenerator,
-)
-
-# Setting the API keys
-os.environ["LLM_API_KEY"] = ""
-
-# Optional for Langfuse Tracebility
-os.environ["LANGFUSE_SECRET_KEY"] = ""
-os.environ["LANGFUSE_PUBLIC_KEY"] = ""
-os.environ["LANGFUSE_HOST"] = ""
-
-# Optional for Hugging Face Hub upload
-os.environ["HF_TOKEN"] = ""
-
-# Creating the LLMConfig
-llm_config = LLMConfig(
-    model="model_provider/model_name", # Check liteLLM docs for more info
-    temperature=0.5,
-    top_p=0.9,
-    max_tokens=2048,
-)
-
-# Creating the DatasetConfig
-dataset_config = DatasetConfig(
-    topic="topic_name",
-    domains=["domain1", "domain2"],
-    language="English",
-    additional_description="Additional description",
-    num_entries=1000
-)
-
-# Creating the DatasetGeneratorConfig
-dataset_generator_config = DatasetGeneratorConfig(
-    llm_config=llm_config,
-    dataset_config=dataset_config,
-)
-
-# Creating the InstructionDatasetGenerator
-instruction_dataset_generator = InstructionDatasetGenerator(dataset_generator_config)
-
-# Generating the dataset
-instruction_dataset = instruction_dataset_generator.generate_dataset()
-
-# Generating the dataset asynchronously
-# instruction_dataset = asyncio.run(instruction_dataset_generator.agenerate_dataset())
-
-# Name of the Hugging Face repository where the dataset will be saved
-hf_repo_name = "organization_or_user_name/dataset_name" # optional
-
-# Saving the dataset to the locally and to the Hugging Face repository(optional)
-instruction_dataset.save_dataset(
-    hf_repo_name=hf_repo_name,
-)
-```
-
-Example of generated entry for the instruction dataset:
-
-```json
-{
-  "keyword": "keyword",
-  "topic": "topic",
-  "language": "language",
-  "generated_entry": {
-    "messages": [
-      {
-        "role": "system",
-        "content": "generated system(instruction) prompt"
-      },
-      {
-        "role": "user",
-        "content": "generated user prompt"
-      },
-      {
-        "role": "assistant",
-        "content": "generated assistant prompt"
-      }
-    ]
-  }
-}
-```
-
-#### Preference Datasets 🌟
-
-To generate a preference dataset, you can use the following code:
-
-```python
-# For asynchronous dataset generation
-# import asyncio
-import os
-
-from synthgenai import (
-    DatasetConfig,
-    DatasetGeneratorConfig,
-    LLMConfig,
-    PreferenceDatasetGenerator,
-)
-
-# Setting the API keys
-os.environ["LLM_API_KEY"] = ""
-
-# Optional for Langfuse Tracebility
-os.environ["LANGFUSE_SECRET_KEY"] = ""
-os.environ["LANGFUSE_PUBLIC_KEY"] = ""
-os.environ["LANGFUSE_HOST"] = ""
-
-# Optional for Hugging Face Hub upload
-os.environ["HF_TOKEN"] = ""
-
-# Creating the LLMConfig
-llm_config = LLMConfig(
-    model="model_provider/model_name", # Check liteLLM docs for more info
-    temperature=0.5,
-    top_p=0.9,
-    max_tokens=2048,
-)
-
-# Creating the DatasetConfig
-dataset_config = DatasetConfig(
-    topic="topic_name",
-    domains=["domain1", "domain2"],
-    language="English",
-    additional_description="Additional description",
-    num_entries=1000
-)
-
-# Creating the DatasetGeneratorConfig
-dataset_generator_config = DatasetGeneratorConfig(
-    llm_config=llm_config,
-    dataset_config=dataset_config,
-)
-
-# Creating the PreferenceDatasetGenerator
-preference_dataset_generator = PreferenceDatasetGenerator(dataset_generator_config)
-
-# Generating the dataset
-preference_dataset = preference_dataset_generator.generate_dataset()
-
-# Generating the dataset asynchronously
-# preference_dataset = asyncio.run(preference_dataset_generator.agenerate_dataset())
-
-# Name of the Hugging Face repository where the dataset will be saved
-hf_repo_name = "organization_or_user_name/dataset_name" # optional
-
-# Saving the dataset to the locally and to the Hugging Face repository(optional)
-preference_dataset.save_dataset(
-    hf_repo_name=hf_repo_name,
-)
-```
-
-Example of generated entry for the preference dataset:
-
-```json
-{
-  "keyword": "keyword",
-  "topic": "topic",
-  "language": "language",
-  "generated_entry": {
-    "prompt": [
-      { "role": "system", "content": "generated system(instruction) prompt" },
-      { "role": "user", "content": "generated user prompt" }
-    ],
-    "chosen": [
-      { "role": "assistant", "content": "generated chosen assistant response" }
-    ],
-    "rejected": [
-      {
-        "role": "assistant",
-        "content": "generated rejected assistant response"
-      }
-    ]
-  }
-}
-```
-
-#### Sentiment Analysis Datasets 🎭
-
-To generate a sentiment analysis dataset, you can use the following code:
-
-```python
-# For asynchronous dataset generation
-# import asyncio
-import os
-
-from synthgenai import (
-    DatasetConfig,
-    DatasetGeneratorConfig,
-    LLMConfig,
-    SentimentAnalysisDatasetGenerator,
-)
-
-# Setting the API keys
-os.environ["LLM_API_KEY"] = ""
-
-# Optional for Langfuse Tracebility
-os.environ["LANGFUSE_SECRET_KEY"] = ""
-os.environ["LANGFUSE_PUBLIC_KEY"] = ""
-os.environ["LANGFUSE_HOST"] = ""
-
-# Optional for Hugging Face Hub upload
-os.environ["HF_TOKEN"] = ""
-
-# Creating the LLMConfig
-llm_config = LLMConfig(
-    model="model_provider/model_name", # Check liteLLM docs for more info
-    temperature=0.5,
-    top_p=0.9,
-    max_tokens=2048,
-)
-
-# Creating the DatasetConfig
-dataset_config = DatasetConfig(
-    topic="topic_name",
-    domains=["domain1", "domain2"],
-    language="English",
-    additional_description="Additional description",
-    num_entries=1000
-)
-
-# Creating the DatasetGeneratorConfig
-dataset_generator_config = DatasetGeneratorConfig(
-    llm_config=llm_config,
-    dataset_config=dataset_config,
-)
-
-# Creating the SentimentAnalysisDatasetGenerator
-sentiment_analysis_dataset_generator = SentimentAnalysisDatasetGenerator(dataset_generator_config)
-
-# Generating the dataset
-sentiment_analysis_dataset = sentiment_analysis_dataset_generator.generate_dataset()
-
-# Generating the dataset asynchronously
-# sentiment_analysis_dataset = asyncio.run(sentiment_analysis_dataset_generator.agenerate_dataset())
-
-# Name of the Hugging Face repository where the dataset will be saved
-hf_repo_name = "organization_or_user_name/dataset_name" # optional
-
-# Saving the dataset to the locally and to the Hugging Face repository(optional)
-sentiment_analysis_dataset.save_dataset(
-    hf_repo_name=hf_repo_name,
-)
-```
-
-Example of generated entry for the sentiment analysis dataset:
-
-```json
-{
-  "keyword": "keyword",
-  "topic": "topic",
-  "language": "language",
-  "generated_entry": {
-    "prompt": "generated text",
-    "label": "generated sentiment (which can be positive, negative, neutral)"
-  }
-}
-```
-
-#### Text Classification Datasets 🔠
-
-To generate a text classification dataset, you can use the following code:
-
-```python
-# For asynchronous dataset generation
-# import asyncio
-import os
-
-from synthgenai import (
-    DatasetConfig,
-    DatasetGeneratorConfig,
-    LLMConfig,
-    TextClassificationDatasetGenerator,
-)
-
-# Setting the API keys
-os.environ["LLM_API_KEY"] = ""
-
-# Optional for Langfuse Tracebility
-os.environ["LANGFUSE_SECRET_KEY"] = ""
-os.environ["LANGFUSE_PUBLIC_KEY"] = ""
-os.environ["LANGFUSE_HOST"] = ""
-
-# Optional for Hugging Face Hub upload
-os.environ["HF_TOKEN"] = ""
-
-# Creating the LLMConfig
-llm_config = LLMConfig(
-    model="model_provider/model_name", # Check liteLLM docs for more info
-    temperature=0.5,
-    top_p=0.9,
-    max_tokens=2048,
-)
-
-# Creating the DatasetConfig
-dataset_config = DatasetConfig(
-    topic="topic_name",
-    domains=["domain1", "domain2"],
-    language="English",
-    additional_description="Additional description",
-    num_entries=1000
-)
-
-# Creating the DatasetGeneratorConfig
-dataset_generator_config = DatasetGeneratorConfig(
-    llm_config=llm_config,
-    dataset_config=dataset_config,
-)
-
-# Creating the TextClassificationDatasetGenerator
-text_classification_dataset_generator = TextClassificationDatasetGenerator(dataset_generator_config)
-
-# Generating the dataset
-text_classification_dataset = text_classification_dataset_generator.generate_dataset()
-
-# Generating the dataset asynchronously
-# text_classification_dataset = asyncio.run(text_classification_dataset_generator.agenerate_dataset())
-
-# Name of the Hugging Face repository where the dataset will be saved
-hf_repo_name = "organization_or_user_name/dataset_name" # optional
-
-# Saving the dataset to the locally and to the Hugging Face repository(optional)
-text_classification_dataset.save_dataset(
-    hf_repo_name=hf_repo_name,
-)
-```
-
-Example of generated entry for the text classification dataset:
-
-```json
-{
-  "keyword": "keyword",
-  "topic": "topic",
-  "language": "language",
-  "generated_entry": {
-    "prompt": "generated text",
-    "label": "generated sentiment (which will be from a list of labels, created from the model)"
-  }
-}
-```
-
-#### Summarization Datasets 🧾
-
-To generate a summarization dataset, you can use the following code:
-
-```python
-# For asynchronous dataset generation
-# import asyncio
-import os
-
-from synthgenai import (
-    DatasetConfig,
-    DatasetGeneratorConfig,
-    LLMConfig,
-    SummarizationDatasetGenerator,
-)
-
-# Setting the API keys
-os.environ["LLM_API_KEY"] = ""
-
-# Optional for Langfuse Tracebility
-os.environ["LANGFUSE_SECRET_KEY"] = ""
-os.environ["LANGFUSE_PUBLIC_KEY"] = ""
-os.environ["LANGFUSE_HOST"] = ""
-
-# Optional for Hugging Face Hub upload
-os.environ["HF_TOKEN"] = ""
-
-# Creating the LLMConfig
-llm_config = LLMConfig(
-    model="model_provider/model_name", # Check liteLLM docs for more info
-    temperature=0.5,
-    top_p=0.9,
-    max_tokens=2048,
-)
-
-# Creating the DatasetConfig
-dataset_config = DatasetConfig(
-    topic="topic_name",
-    domains=["domain1", "domain2"],
-    language="English",
-    additional_description="Additional description",
-    num_entries=1000
-)
-
-# Creating the DatasetGeneratorConfig
-dataset_generator_config = DatasetGeneratorConfig(
-    llm_config=llm_config,
-    dataset_config=dataset_config,
-)
-
-# Creating the SummarizationDatasetGenerator
-summarization_dataset_generator = SummarizationDatasetGenerator(dataset_generator_config)
-
-# Generating the dataset
-summarization_dataset = summarization_dataset_generator.generate_dataset()
-
-# Generating the dataset asynchronously
-# summarization_dataset = asyncio.run(summarization_dataset_generator.agenerate_dataset())
-
-# Name of the Hugging Face repository where the dataset will be saved
-hf_repo_name = "organization_or_user_name/dataset_name" # optional
-
-# Saving the dataset to the locally and to the Hugging Face repository(optional)
-summarization_dataset.save_dataset(
-    hf_repo_name=hf_repo_name,
-)
-```
-
-Example of generated entry for the summarization dataset:
-
-```json
-{
-  "keyword": "keyword",
-  "topic": "topic",
-  "language": "language",
-  "generated_entry": {
-    "text": "generated text",
-    "summary": "generated summary"
-  }
-}
-```
-
 #### More Examples 📖
 
 More examples with different combinations of LLM API providers and dataset configurations can be found in the [examples](./examples) directory.
@@ -679,23 +160,6 @@ More examples with different combinations of LLM API providers and dataset confi
 ## Generated Datasets 📚
 
 Examples of generated synthetic datasets can be found on the [SynthGenAI Datasets Collection](https://huggingface.co/collections/Shekswess/synthgenai-datasets-6764ad878718b1e567653022) on Hugging Face Hub.
-
-## Supported API Providers 💪
-
-- [x] [Groq](https://groq.com/) - more info about Groq models that can be used, can be found [here](https://docs.litellm.ai/docs/providers/groq)
-- [x] [Mistral AI](https://mistral.ai/) - more info about Mistral AI models that can be used, can be found [here](https://docs.litellm.ai/docs/providers/mistral-ai)
-- [x] [Gemini](https://gemini.google.com/) - more info about Gemini models that can be used, can be found [here](https://docs.litellm.ai/docs/providers/gemini)
-- [x] [Bedrock](https://aws.amazon.com/bedrock) - more info about Bedrock models that can be used, can be found [here](https://docs.litellm.ai/docs/providers/bedrock)
-- [x] [Anthropic](https://www.anthropic.com/) - more info about Anthropic models that can be used, can be found [here](https://docs.litellm.ai/docs/providers/anthropic)
-- [x] [OpenAI](https://openai.com) - more info about OpenAI models that can be used, can be found [here](https://docs.litellm.ai/docs/providers/openai)
-- [x] [Hugging Face](https://huggingface.co/) - more info about Hugging Face models that can be used, can be found [here](https://docs.litellm.ai/docs/providers/hugging-face)
-- [x] [Ollama](https://ollama.com/) - more info about Ollama models that can be used, can be found [here](https://docs.litellm.ai/docs/providers/ollama)
-- [x] [vLLM](https://vllm.ai/) - more info about vLLM models that can be used, can be found [here](https://docs.litellm.ai/docs/providers/vllm)
-- [x] [SageMaker](https://aws.amazon.com/sagemaker/) - more info about SageMaker models that can be used, can be found [here](https://docs.litellm.ai/docs/providers/aws_sagemaker)
-- [x] [Azure](https://azure.microsoft.com/en-us/services/machine-learning/) - more info about Azure and Azure AI models that can be used, can be found [here](https://docs.litellm.ai/docs/providers/azure) & [here](https://docs.litellm.ai/docs/providers/azure_ai)
-- [x] [Vertex AI](https://cloud.google.com/vertex-ai) - more info about Vertex AI models that can be used, can be found [here](https://docs.litellm.ai/docs/providers/vertex)
-- [x] [DeepSeek](https://www.deepseek.com/) - more info about DeepSeek models that can be used, can be found [here](https://docs.litellm.ai/docs/providers/deepseek)
-- [x] [xAI](https://x.ai/) - more info about xAI models that can be used, can be found [here](https://docs.litellm.ai/docs/providers/xai)
 
 ## Contributing 🤝
 
@@ -709,40 +173,42 @@ This project is licensed under the MIT License - see the LICENSE.md file for det
 
 ```
 .
-├── .github
-│   └── workflows
-│       ├── build_n_release.yml
-│       ├── docs.yml
-│       └── tests.yml
+├── .github/                                                      # GitHub configuration files and workflows
+│   ├── workflows/                                                # GitHub Actions workflows
+│   │   ├── build_n_publish.yaml                                  # Build and publish workflow
+│   │   ├── docs.yaml                                             # Documentation deployment workflow
+│   │   └── uv-ci.yaml                                            # CI workflow using uv (pre-commit + unit tests)
+│   └── depandabot.yml                                            # Dependabot configuration file
 ├── docs
 │   ├── assets
 │   │   ├── favicon.png
 │   │   ├── logo_header.png
-│   │   ├── logo.svg
-│   │   └── ui.png
+│   │   └── logo.svg
 │   ├── configurations
 │   │   ├── dataset_configuration.md
 │   │   ├── dataset_generator_configuration.md
-│   │   └── index.md
+│   │   ├── index.md
+│   │   └── llm_configuration.md
 │   ├── contributing
 │   │   └── index.md
 │   ├── datasets
 │   │   ├── index.md
-│   │   ├── instruction_dataset.md
-│   │   ├── preference_dataset.md
-│   │   ├── raw_dataset.md
-│   │   ├── sentiment_analysis_dataset.md
-│   │   ├── summarization_dataset.md
-│   │   └── text_classification_dataset.md
+│   │   ├── instruction_datasets.md
+│   │   ├── preference_datasets.md
+│   │   ├── raw_datasets.md
+│   │   ├── sentiment_analysis_datasets.md
+│   │   ├── summarization_datasets.md
+│   │   └── text_classification_datasets.md
 │   ├── examples
 │   │   └── index.md
+│   ├── index.md
 │   ├── installation
 │   │   └── index.md
 │   ├── llm_providers
 │   │   └── index.md
-│   ├── ui
+│   ├── quick_start
 │   │   └── index.md
-│   └── index.md
+│   └── stylesheets
 ├── examples
 │   ├── anthropic_instruction_dataset_example.py
 │   ├── azure_ai_preference_dataset_example.py
@@ -755,25 +221,69 @@ This project is licensed under the MIT License - see the LICENSE.md file for det
 │   ├── mistral_preference_dataset_example.py
 │   ├── ollama_preference_dataset_example.py
 │   ├── openai_raw_dataset_example.py
+│   ├── openrouter_raw_dataset_example.py
 │   ├── sagemaker_summarization_dataset_example.py
 │   ├── vertex_ai_text_classification_dataset_example.py
 │   ├── vllm_sentiment_analysis_dataset_example.py
 │   └── xai_raw_dataset_example.py
 ├── synthgenai
-│   ├── data_model.py
-│   ├── dataset_generator.py
-│   ├── dataset.py
+│   ├── dataset
+│   │   ├── __init__.py
+│   │   ├── base_dataset.py
+│   │   └── dataset.py
+│   ├── dataset_genetors
+│   │   ├── __init__.py
+│   │   ├── classification_dataset_generator.py
+│   │   ├── dataset_generator.py
+│   │   ├── instruction_dataset_generator.py
+│   │   ├── preference_dataset_generator.py
+│   │   ├── raw_dataset_generator.py
+│   │   ├── sentiment_dataset_generator.py
+│   │   └── summarization_dataset_generator.py
+│   ├── llm
+│   │   ├── __init__.py
+│   │   ├── base_llm.py
+│   │   └── llm.py
+│   ├── prompts
+│   │   ├── description_system_prompt
+│   │   ├── description_user_prompt
+│   │   ├── entry_classification_system_prompt
+│   │   ├── entry_instruction_system_prompt
+│   │   ├── entry_preference_system_prompt
+│   │   ├── entry_raw_system_prompt
+│   │   ├── entry_sentiment_system_prompt
+│   │   ├── entry_summarization_system_prompt
+│   │   ├── entry_user_prompt
+│   │   ├── keyword_system_prompt
+│   │   ├── keyword_user_prompt
+│   │   ├── labels_system_prompt
+│   │   └── labels_user_prompt
+│   ├── schemas
+│   │   ├── __init__.py
+│   │   ├── config.py
+│   │   ├── datasets.py
+│   │   ├── enums.py
+│   │   └── messages.py
+│   ├── utils
+│   |   ├── file_utils.py
+│   |   ├── __init__.py
+│   |   ├── json_utils.py
+│   |   ├── progress_utils.py
+│   |   ├── prompt_utils.py
+│   |   ├── text_utils.py
+│   |   └── yaml_utils.py
 │   ├── __init__.py
-│   ├── llm.py
-│   ├── prompts.py
-│   ├── ui.py
-│   └── utils.py
+│   └── cli.py
 ├── tests
+│   ├── __init__.py
+│   ├── conftest.py
+│   ├── test_dataset_generator.py
 │   ├── test_dataset.py
 │   └── test_llm.py
 ├── .gitignore
+├── .pre-commit-config.yaml
 ├── .python-version
-├── LICENSE.txt
+├── LICENCE.txt
 ├── mkdocs.yml
 ├── pyproject.toml
 ├── README.md
