@@ -1,4 +1,4 @@
-"""Example of generating a preference dataset using the Mistral API"""
+"""Example of generating a raw dataset using the Bedrock API."""
 
 # For asynchronous dataset generation
 # import asyncio
@@ -8,16 +8,17 @@ from synthgenai import (
     DatasetConfig,
     DatasetGeneratorConfig,
     LLMConfig,
-    PreferenceDatasetGenerator,
+    RawDatasetGenerator,
 )
 
-os.environ["MISTRAL_API_KEY"] = ""
+os.environ["OPENROUTER_API_KEY"] = ""
+os.environ["OPENROUTER_API_BASE"] = ""
 
 os.environ["HF_TOKEN"] = ""
 
 if __name__ == "__main__":
     # Defining the LLM used for generating the dataset and the settings of the LLM
-    llm_config = LLMConfig(model="mistral/mmistral-medium-2508", temperature=0.5)
+    llm_config = LLMConfig(model="openrouter/openai/gpt-5-chat", temperature=0.5)
 
     # Defining the dataset configuration, the topic of the dataset, the domains, the language, the additional description, and the number of entries
     dataset_config = DatasetConfig(
@@ -38,8 +39,8 @@ if __name__ == "__main__":
         dataset_config=dataset_config, llm_config=llm_config
     )
 
-    # Defining the preference dataset generator based on the dataset generator configuration
-    dataset_generator = PreferenceDatasetGenerator(dataset_generator_config)
+    # Defining the raw dataset generator based on the dataset generator configuration
+    dataset_generator = RawDatasetGenerator(dataset_generator_config)
 
     # Generating the dataset
     dataset = dataset_generator.generate_dataset()
@@ -47,7 +48,7 @@ if __name__ == "__main__":
     # Generating the dataset asynchronously
     # dataset = asyncio.run(dataset_generator.agenerate_dataset())
 
-    # Saving the dataset to the locally and to the Hugging Face repository
+    # Saving the dataset locally and to the Hugging Face repository
     dataset.save_dataset(
         hf_repo_name=hf_repo_name,
     )

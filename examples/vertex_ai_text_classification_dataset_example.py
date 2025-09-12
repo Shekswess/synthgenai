@@ -7,10 +7,9 @@ import os
 from synthgenai import (
     DatasetConfig,
     DatasetGeneratorConfig,
-    TextClassificationDatasetGenerator,
     LLMConfig,
+    TextClassificationDatasetGenerator,
 )
-
 
 os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = ""
 os.environ["VERTEXAI_LOCATION"] = ""
@@ -32,7 +31,9 @@ if __name__ == "__main__":
     )
 
     # Defining the dataset Hugging Face repository name
-    hf_repo_name = "{organization_or_account_name}/artificial-intelligence-in-healthcare"
+    hf_repo_name = (
+        "{organization_or_account_name}/artificial-intelligence-in-healthcare"
+    )
 
     # Defining the dataset generator configuration
     dataset_generator_config = DatasetGeneratorConfig(

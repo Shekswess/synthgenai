@@ -7,8 +7,8 @@ import os
 from synthgenai import (
     DatasetConfig,
     DatasetGeneratorConfig,
-    LLMConfig,
     InstructionDatasetGenerator,
+    LLMConfig,
 )
 
 os.environ["HUGGINGFACE_API_KEY"] = ""
@@ -18,7 +18,7 @@ os.environ["HF_TOKEN"] = ""
 if __name__ == "__main__":
     # Defining the LLM used for generating the dataset and the settings of the LLM
     llm_config = LLMConfig(
-        model="huggingface/HuggingFaceTB/SmolLM2-1.7B-Instruct", temperature=0.5
+        model="huggingface/moonshotai/Kimi-K2-Instruct-0905", temperature=0.5
     )
 
     # Defining the dataset configuration, the topic of the dataset, the domains, the language, the additional description, and the number of entries
@@ -36,7 +36,9 @@ if __name__ == "__main__":
     )
 
     # Defining the dataset Hugging Face repository name
-    hf_repo_name = "{organization_or_account_name}/artificial-intelligence-in-healthcare"
+    hf_repo_name = (
+        "{organization_or_account_name}/artificial-intelligence-in-healthcare"
+    )
 
     # Defining the instruction dataset generator based on the dataset generator configuration
     dataset_generator = InstructionDatasetGenerator(dataset_generator_config)

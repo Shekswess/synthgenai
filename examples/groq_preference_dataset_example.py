@@ -17,7 +17,7 @@ os.environ["HF_TOKEN"] = ""
 
 if __name__ == "__main__":
     # Defining the LLM used for generating the dataset and the settings of the LLM
-    llm_config = LLMConfig(model="groq/llama-3.1-8b-instant", temperature=0.5)
+    llm_config = LLMConfig(model="groq/gpt-oss-120b", temperature=0.5)
 
     # Defining the dataset configuration, the topic of the dataset, the domains, the language, the additional description, and the number of entries
     dataset_config = DatasetConfig(
@@ -34,7 +34,9 @@ if __name__ == "__main__":
     )
 
     # Defining the dataset Hugging Face repository name
-    hf_repo_name = "{organization_or_account_name}/artificial-intelligence-in-healthcare"
+    hf_repo_name = (
+        "{organization_or_account_name}/artificial-intelligence-in-healthcare"
+    )
 
     # Defining the preference dataset generator based on the dataset generator configuration
     dataset_generator = PreferenceDatasetGenerator(dataset_generator_config)
