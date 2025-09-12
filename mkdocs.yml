@@ -55,12 +55,16 @@ theme:
   favicon: assets/favicon.png
   logo: assets/logo.svg
 
-  plugins:
-    - blog
-    - search:
-        separator: '[\s\u200b\-_,:!=\[\]()"`/]+|\.(?!\d)|&[lg]t;|(?!\b)(?=[A-Z][a-z])'
-    - minify:
-        minify_html: true
+plugins:
+  - search:
+      separator: '[\s\u200b\-_,:!=\[\]()"`/]+|\.(?!\d)|&[lg]t;|(?!\b)(?=[A-Z][a-z])'
+  - minify:
+      minify_html: true
+  - git-revision-date-localized:
+      enable_creation_date: true
+  - git-committers:
+      repository: Shekswess/synthgenai
+      branch: main
 
 markdown_extensions:
   - abbr
@@ -113,11 +117,12 @@ markdown_extensions:
 
 nav:
   - Home: index.md
-  - Quick Start: ui/index.md
+  - Quick Start: quick_start/index.md
   - Installation: installation/index.md
   - LLM Providers: llm_providers/index.md
   - Configuration:
-      - LLM Configuration: configurations/index.md
+      - Overview: configurations/index.md
+      - LLM Configuration: configurations/llm_configuration.md
       - Dataset Configuration: configurations/dataset_configuration.md
       - Dataset Generator Configuration: configurations/dataset_generator_configuration.md
   - Dataset Types:
