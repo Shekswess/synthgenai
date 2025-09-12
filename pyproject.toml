@@ -11,7 +11,7 @@ dependencies = [
     "boto3==1.40.28",
     "datasets==4.0.0",
     "huggingface-hub==0.34.4",
-    "jinja2==3.1.4",
+    "jinja2==3.1.6",
     "langfuse==3.3.4",
     "litellm==1.77.0",
     "loguru==0.7.3",
