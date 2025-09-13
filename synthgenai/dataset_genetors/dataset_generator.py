@@ -353,26 +353,42 @@ class DatasetGenerator:
         )
         response = self.llm.generate(messages)
 
-        if not self.llm.check_response_format():
+        # Always ensure response is a dictionary, regardless of LLM's
+        # claimed structured output support
+        if isinstance(response, str) or not self.llm.check_response_format():
             try:
                 response = JsonUtils.convert_entry(response)
                 if not response:  # convert_entry returns empty dict on error
-                    logger.error(f"Invalid JSON response for keyword {keyword}")
+                    logger.error(
+                        f"Invalid JSON response for keyword {keyword}"
+                    )
                     return None
             except Exception as e:
                 logger.error(f"JSON parsing error for keyword {keyword}: {e}")
                 return None
+        
+        # Ensure response is a dictionary before proceeding
+        if not isinstance(response, dict):
+            logger.error(
+                f"Response is not a dictionary for keyword {keyword}: "
+                f"{type(response)}"
+            )
+            return None
 
         try:
-            # Only convert JSON if LLM doesn't support structured output
-            if not self.llm.check_response_format():
-                # Response is already converted above, just validate
-                pass
             entry_format = self._get_entry_response_format()
             entry = entry_format(**response)
             logger.debug(f"Dataset entry: {entry}")
         except ValidationError as e:
             logger.error(f"Validation error for keyword {keyword}: {e}")
+            return None
+        except TypeError as e:
+            logger.error(
+                f"Type error when creating entry for keyword {keyword}: {e}"
+            )
+            logger.error(
+                f"Response type: {type(response)}, Response: {response}"
+            )
             return None
         return entry.model_dump()
 
@@ -380,19 +396,22 @@ class DatasetGenerator:
         self, system_prompt: str, user_prompt: str, keyword: str, **kwargs
     ):
         """
-        Generate an entry for the dataset asynchronously using specific prompt templates.
+        Generate an entry for the dataset asynchronously using specific
+        prompt templates.
 
         Args:
             system_prompt (str): The system prompt template name for the entry.
             user_prompt (str): The user prompt template name for the entry.
             keyword (str): The keyword for which to generate the entry.
-            **kwargs: Additional keyword arguments to be formatted into the prompts.
+            **kwargs: Additional keyword arguments to be formatted into the
+                prompts.
 
         Returns:
             dict: The generated dataset entry.
 
         Raises:
-            ValidationError: If the generated entry does not match the data model.
+            ValidationError: If the generated entry does not match the data
+                model.
         """
         messages = self._create_messages(
             system_prompt_name=system_prompt,
@@ -406,32 +425,50 @@ class DatasetGenerator:
         )
         response = await self.llm.agenerate(messages)
 
-        if not self.llm.check_response_format():
+        # Always ensure response is a dictionary, regardless of LLM's
+        # claimed structured output support
+        if isinstance(response, str) or not self.llm.check_response_format():
             try:
                 response = JsonUtils.convert_entry(response)
                 if not response:  # convert_entry returns empty dict on error
-                    logger.error(f"Invalid JSON response for keyword {keyword}")
+                    logger.error(
+                        f"Invalid JSON response for keyword {keyword}"
+                    )
                     return None
             except Exception as e:
                 logger.error(f"JSON parsing error for keyword {keyword}: {e}")
                 return None
+        
+        # Ensure response is a dictionary before proceeding
+        if not isinstance(response, dict):
+            logger.error(
+                f"Response is not a dictionary for keyword {keyword}: "
+                f"{type(response)}"
+            )
+            return None
 
         try:
-            # Only convert JSON if LLM doesn't support structured output
-            if not self.llm.check_response_format():
-                # Response is already converted above, just validate
-                pass
             entry_format = self._get_entry_response_format()
             entry = entry_format(**response)
             logger.debug(f"Dataset entry: {entry}")
         except ValidationError as e:
             logger.error(f"Validation error for keyword {keyword}: {e}")
             return None
+        except TypeError as e:
+            logger.error(
+                f"Type error when creating entry for keyword {keyword}: {e}"
+            )
+            logger.error(
+                f"Response type: {type(response)}, Response: {response}"
+            )
+            return None
         return entry.model_dump()
 
     def _set_dataset_type(self):
         """Set the dataset type. Must be implemented by subclasses."""
-        raise NotImplementedError("Subclasses must implement _set_dataset_type")
+        raise NotImplementedError(
+            "Subclasses must implement _set_dataset_type"
+        )
 
     def _get_entry_response_format(self):
         """Get the appropriate response format for the current dataset type."""
@@ -470,14 +507,20 @@ class DatasetGenerator:
         total_batches = (len(keywords) + BATCH_SIZE - 1) // BATCH_SIZE
 
         with ProgressManager.create_progress_bar(
-            total=len(keywords), desc="Generating entries (async)", unit="entries"
+            total=len(keywords),
+            desc="Generating entries (async)",
+            unit="entries"
         ) as pbar:
             for i in range(0, len(keywords), BATCH_SIZE):
-                batch_keywords = keywords[i : i + BATCH_SIZE]
+                batch_keywords = keywords[i:i + BATCH_SIZE]
                 batch_num = i // BATCH_SIZE + 1
-                pbar.set_description(f"Processing batch {batch_num}/{total_batches}")
+                pbar.set_description(
+                    f"Processing batch {batch_num}/{total_batches}"
+                )
 
-                tasks = [self._agenerate_entry(keyword) for keyword in batch_keywords]
+                tasks = [
+                    self._agenerate_entry(keyword) for keyword in batch_keywords
+                ]
                 entries = await asyncio.gather(*tasks)
                 await asyncio.sleep(10)
 
@@ -489,7 +532,8 @@ class DatasetGenerator:
                         logger.debug(f"Generated entry for keyword: {keyword}")
                     else:
                         logger.warning(
-                            f"Skipping entry for keyword: {keyword} due to validation error"
+                            f"Skipping entry for keyword: {keyword} due to "
+                            "validation error"
                         )
                     pbar.update(1)
 
@@ -539,7 +583,8 @@ class DatasetGenerator:
                     logger.debug(f"Generated entry for keyword: {keyword}")
                 else:
                     logger.warning(
-                        f"Skipping entry for keyword: {keyword} due to validation error"
+                        f"Skipping entry for keyword: {keyword} due to "
+                        "validation error"
                     )
                 pbar.update(1)
 
