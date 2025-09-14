@@ -278,7 +278,7 @@ class LLM(BaseLLM):
                 max_tokens=self.max_tokens,
                 api_base=self.api_base,
                 api_key=self.api_key,
-                timeout=120,
+                timeout=180,
             )
             logger.info(f"Successfully generated completion using model: {self.model}")
             model_response = response.choices[0].message.content
@@ -312,7 +312,7 @@ class LLM(BaseLLM):
                 max_tokens=self.max_tokens,
                 api_base=self.api_base,
                 api_key=self.api_key,
-                timeout=120,
+                timeout=180,
             )
             model_response = response.choices[0].message.content
             logger.info(f"Successfully generated async completion using: {self.model}")
