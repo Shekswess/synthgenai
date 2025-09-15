@@ -15,7 +15,7 @@ dependencies = [
     "langfuse==3.3.4",
     "litellm==1.77.0",
     "loguru==0.7.3",
-    "pydantic==2.11.7",
+    "pydantic==2.11.9",
     "python-dotenv>=1.1.1",
     "tqdm==4.67.1",
     "typer==0.17.4",
