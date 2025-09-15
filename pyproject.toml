@@ -8,7 +8,7 @@ authors = [
     { name = "Bojan Jakimovski - Shekswess", email = "jakimovski_bojan@outlook.com" },
 ]
 dependencies = [
-    "boto3==1.40.28",
+    "boto3==1.40.30",
     "datasets==4.0.0",
     "huggingface-hub==0.34.4",
     "jinja2==3.1.6",
