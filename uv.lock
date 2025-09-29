@@ -1051,7 +1051,7 @@ wheels = [
 
 [[package]]
 name = "langfuse"
-version = "3.3.4"
+version = "3.5.2"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "backoff" },
@@ -1064,9 +1064,9 @@ dependencies = [
     { name = "requests" },
     { name = "wrapt" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/27/9d/c9c422c660459687293727c9146185f92443b6c72fda564ab10e9e16ab41/langfuse-3.3.4.tar.gz", hash = "sha256:e5df4e7284298990b522e02a1dc6c3c72ebc4a7a411dc7d39255fb8c2e5a7c3a", size = 164745, upload-time = "2025-09-02T15:02:39.16Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/7e/12/8813d38f49d13c3d9d9c25a6d9545e028ca2ed96071fcbc26a5cdf498769/langfuse-3.5.2.tar.gz", hash = "sha256:bfd94f6cd768129d004da812bb85a34d81c28c23e4d4c1fb3a29b086c94d4269", size = 188047, upload-time = "2025-09-28T14:14:43.262Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/dc/46/edd370d47ca72ed4ca36b3c3b8f3a4ce71a310629d0bcb6ed760b04b08b1/langfuse-3.3.4-py3-none-any.whl", hash = "sha256:15b9d20878cf39a48ca9cfa7e52acdfeb043603d3a9cef8cf451687a4d838c6b", size = 318389, upload-time = "2025-09-02T15:02:37.171Z" },
+    { url = "https://files.pythonhosted.org/packages/14/c9/44189f008cac5f1bb252fb1a4f89dd3cf466f808d7f44eb56c8ed3c0319a/langfuse-3.5.2-py3-none-any.whl", hash = "sha256:51527aed5a3237410e587b04e07268382063435a4af2d53e7d9096a7b6535c94", size = 349012, upload-time = "2025-09-28T14:14:41.629Z" },
 ]
 
 [[package]]
@@ -2664,7 +2664,7 @@ requires-dist = [
     { name = "datasets", specifier = "==4.0.0" },
     { name = "huggingface-hub", specifier = "==0.34.4" },
     { name = "jinja2", specifier = "==3.1.6" },
-    { name = "langfuse", specifier = "==3.3.4" },
+    { name = "langfuse", specifier = "==3.5.2" },
     { name = "litellm", specifier = "==1.77.1" },
     { name = "loguru", specifier = "==0.7.3" },
     { name = "pydantic", specifier = "==2.11.9" },
